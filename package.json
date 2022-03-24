@@ -11,6 +11,15 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^17.0.22",
+    "ts-standard": "^11.0.0",
     "typescript": "^4.6.2"
+  },
+  "ts-standard": {
+    "project": "./tsconfig.json"
+  },
+  "standard": {
+    "ignore": [
+      "dist/"
+    ]
   }
 }
