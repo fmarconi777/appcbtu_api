@@ -1,8 +1,12 @@
 export class ControladorDeEstacoes {
   tratar (requisicaoHttp: any): any {
-    return {
-      codigoDeStatus: 400,
-      corpo: new Error('Falta parametro: todos ou id')
+    if (!requisicaoHttp) { // eslint-disable-line
+      return {
+        codigoDeStatus: 200,
+        corpo: {
+          Estação: 'Todas as estações'
+        }
+      }
     }
   }
 }
