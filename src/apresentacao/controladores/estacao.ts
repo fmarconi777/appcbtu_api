@@ -11,10 +11,12 @@ export class ControladorDeEstacao implements Controlador {
   }
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
-    if (!requisicaoHttp.corpo) { // eslint-disable-line
+    const parametro = requisicaoHttp.corpo
+    if (!parametro) { // eslint-disable-line
       const todasEstacoes = await this.consultaEstacao.consultaTodas()
       return resposta(todasEstacoes)
     }
+    await this.consultaEstacao.consulta(parametro)
     return {
       codigoDeStatus: 1,
       corpo: 'any'
