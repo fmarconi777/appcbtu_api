@@ -1,7 +1,7 @@
 import { ConsultaEstacao } from '../../dominio/caos-de-uso/consulta-estacao'
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
-import { resposta } from '../utilitarios/utilitario-http'
+import { resposta } from '../auxiliares/auxiliar-http'
 
 export class ControladorDeEstacao implements Controlador {
   private readonly consultaEstacao: ConsultaEstacao
@@ -16,10 +16,7 @@ export class ControladorDeEstacao implements Controlador {
       const todasEstacoes = await this.consultaEstacao.consultaTodas()
       return resposta(todasEstacoes)
     }
-    await this.consultaEstacao.consulta(parametro)
-    return {
-      codigoDeStatus: 1,
-      corpo: 'any'
-    }
+    const estacao = await this.consultaEstacao.consulta(parametro)
+    return resposta(estacao)
   }
 }

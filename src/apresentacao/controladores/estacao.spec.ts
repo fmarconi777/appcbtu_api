@@ -19,13 +19,13 @@ const makeConsultaEstacao = (): ConsultaEstacao => {
 
     async consulta (parametro: string): Promise<ModeloEstacao> {
       const estacaoFalsa = {
-        id: 'id_qualquer',
-        nome: 'nome_qualquer',
+        id: 'id_valida',
+        nome: 'nome_valido',
         sigla: parametro,
-        codigo: 'codigo_qualquer',
-        endereco: 'endereco_qualquer',
-        latitude: 'latitude_qualquer',
-        longitude: 'longitude_qualquer'
+        codigo: 'codigo_valido',
+        endereco: 'endereco_valido',
+        latitude: 'latitude_valida',
+        longitude: 'longitude_valida'
       }
       return await new Promise(resolve => resolve(estacaoFalsa))
     }
