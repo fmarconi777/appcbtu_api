@@ -7,21 +7,21 @@ const makeConsultaEstacao = (): ConsultaEstacao => {
     async consultaTodas (): Promise<ModeloEstacao[]> {
       const listaFalsa = [{
         id: 'id_qualquer',
-        nome: 'id_qualquer',
-        sigla: 'id_qualquer',
-        codigo: 'id_qualquer',
-        endereco: 'id_qualquer',
-        latitude: 'id_qualquer',
-        longitude: 'id_qualquer'
+        nome: 'nome_qualquer',
+        sigla: 'sigla_qualquer',
+        codigo: 'codigo_qualquer',
+        endereco: 'endereco_qualquer',
+        latitude: 'latitude_qualquer',
+        longitude: 'longitude_qualquer'
       }]
       return await new Promise(resolve => resolve(listaFalsa))
     }
 
-    async consulta (requisicaoHttp: string): Promise<ModeloEstacao> {
+    async consulta (parametro: string): Promise<ModeloEstacao> {
       const estacaoFalsa = {
         id: 'id_qualquer',
         nome: 'nome_qualquer',
-        sigla: 'sigla_qualquer',
+        sigla: parametro,
         codigo: 'codigo_qualquer',
         endereco: 'endereco_qualquer',
         latitude: 'latitude_qualquer',
@@ -55,12 +55,20 @@ describe('Controlador de estações', () => {
     expect(respostaHttp.codigoDeStatus).toBe(200)
     expect(respostaHttp.corpo).toEqual([{
       id: 'id_qualquer',
-      nome: 'id_qualquer',
-      sigla: 'id_qualquer',
-      codigo: 'id_qualquer',
-      endereco: 'id_qualquer',
-      latitude: 'id_qualquer',
-      longitude: 'id_qualquer'
+      nome: 'nome_qualquer',
+      sigla: 'sigla_qualquer',
+      codigo: 'codigo_qualquer',
+      endereco: 'endereco_qualquer',
+      latitude: 'latitude_qualquer',
+      longitude: 'longitude_qualquer'
     }])
+  })
+
+  test('Deve chamar ConsultaEstacao com o valor correto', async () => {
+    const { sut, consultaEstacaoStub } = makeSut()
+    const spyConsula = jest.spyOn(consultaEstacaoStub, 'consulta')
+    const requisicaoHttp = { corpo: 'sigla_qualquer' }
+    await sut.tratar(requisicaoHttp)
+    expect(spyConsula).toHaveBeenCalledWith('sigla_qualquer')
   })
 })
