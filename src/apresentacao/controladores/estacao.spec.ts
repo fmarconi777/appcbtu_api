@@ -71,4 +71,20 @@ describe('Controlador de estações', () => {
     await sut.tratar(requisicaoHttp)
     expect(spyConsula).toHaveBeenCalledWith('sigla_qualquer')
   })
+
+  test('Deve retornar codigo 200 e uma estação se o parâmetro estiver correto', async () => {
+    const { sut } = makeSut()
+    const requisicaoHttp = { corpo: 'sigla_valida' }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.codigoDeStatus).toBe(200)
+    expect(respostaHttp.corpo).toEqual({
+      id: 'id_valida',
+      nome: 'nome_valido',
+      sigla: 'sigla_valida',
+      codigo: 'codigo_valido',
+      endereco: 'endereco_valido',
+      latitude: 'latitude_valida',
+      longitude: 'longitude_valida'
+    })
+  })
 })
