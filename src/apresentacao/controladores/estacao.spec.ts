@@ -1,6 +1,8 @@
 import { ControladorDeEstacao } from './estacao'
 import { ConsultaEstacao } from '../../dominio/caos-de-uso/consulta-estacao'
 import { ModeloEstacao } from '../../dominio/modelos/estacao'
+import { ValidaParametro } from '../protocolos/valida-parametro'
+import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 
 const makeConsultaEstacao = (): ConsultaEstacao => {
   class ConsultaEstacaoStub implements ConsultaEstacao {
@@ -33,17 +35,29 @@ const makeConsultaEstacao = (): ConsultaEstacao => {
   return new ConsultaEstacaoStub()
 }
 
+const makeValidaParametro = (): ValidaParametro => {
+  class ValidaParametroStub implements ValidaParametro {
+    validar (parametro: string): boolean {
+      return true
+    }
+  }
+  return new ValidaParametroStub()
+}
+
 interface SutTypes {
   sut: ControladorDeEstacao
   consultaEstacaoStub: ConsultaEstacao
+  validaParametroStub: ValidaParametro
 }
 
 const makeSut = (): SutTypes => {
   const consultaEstacaoStub = makeConsultaEstacao()
-  const sut = new ControladorDeEstacao(consultaEstacaoStub)
+  const validaParametroStub = makeValidaParametro()
+  const sut = new ControladorDeEstacao(consultaEstacaoStub, validaParametroStub)
   return {
     sut,
-    consultaEstacaoStub
+    consultaEstacaoStub,
+    validaParametroStub
   }
 }
 
@@ -86,5 +100,14 @@ describe('Controlador de estações', () => {
       latitude: 'latitude_valida',
       longitude: 'longitude_valida'
     })
+  })
+
+  test('Deve retornar codigo 400 se o parâmetro estiver incorreto', async () => {
+    const { sut, validaParametroStub } = makeSut()
+    jest.spyOn(validaParametroStub, 'validar').mockReturnValueOnce(false)
+    const requisicaoHttp = { corpo: 'sigla_invalida' }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.codigoDeStatus).toBe(400)
+    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('sigla'))
   })
 })
