@@ -3,6 +3,7 @@ import { ConsultaEstacao } from '../../dominio/caos-de-uso/consulta-estacao'
 import { ModeloEstacao } from '../../dominio/modelos/estacao'
 import { ValidaParametro } from '../protocolos/valida-parametro'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
+import { ErroDeServidor } from '../erros/erro-de-servidor'
 
 const makeConsultaEstacao = (): ConsultaEstacao => {
   class ConsultaEstacaoStub implements ConsultaEstacao {
@@ -109,5 +110,23 @@ describe('Controlador de estações', () => {
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.codigoDeStatus).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('sigla'))
+  })
+
+  test('Deve retornar codigo 500 se o ConsultaEstacao retornar um erro', async () => {
+    const { sut, consultaEstacaoStub } = makeSut()
+    jest.spyOn(consultaEstacaoStub, 'consultaTodas').mockImplementationOnce(async () => {
+      return await new Promise((resolve, reject) => reject(new Error()))
+    })
+    jest.spyOn(consultaEstacaoStub, 'consulta').mockImplementationOnce(async () => {
+      return await new Promise((resolve, reject) => reject(new Error()))
+    })
+    const requisicaoHttpSemSigla = { corpo: '' }
+    const requisicaoHttpComSigla = { corpo: 'sigla_qualquer' }
+    const respostaHttpSemSigla = await sut.tratar(requisicaoHttpSemSigla)
+    const respostaHttpComSigla = await sut.tratar(requisicaoHttpComSigla)
+    expect(respostaHttpSemSigla.codigoDeStatus).toBe(500)
+    expect(respostaHttpSemSigla.corpo).toEqual(new ErroDeServidor())
+    expect(respostaHttpComSigla.codigoDeStatus).toBe(500)
+    expect(respostaHttpComSigla.corpo).toEqual(new ErroDeServidor())
   })
 })
