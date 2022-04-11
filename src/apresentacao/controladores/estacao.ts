@@ -5,6 +5,14 @@ import { resposta, requisicaoImpropria, erroDeServidor } from '../auxiliares/aux
 import { ValidaParametro } from '../protocolos/valida-parametro'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 
+/*
+A classe ControladorDeEstacao ao ser instanciada recebe duas outras classes
+como parâmetro, as classes ConsultaEstacao e ValidaParametro.
+O método tratar desta classes tem duas responsabilidades, que é retornar
+todas as estações, caso o parâmetro passado seja nulo ou produza o valor false
+no teste booleano, e retornar uma estação especifica caso o parâmetro recebido
+seja válido.
+*/
 export class ControladorDeEstacao implements Controlador {
   private readonly consultaEstacao: ConsultaEstacao
   private readonly validaParametro: ValidaParametro
