@@ -67,7 +67,7 @@ describe('Controlador de estações', () => {
     const { sut } = makeSut()
     const requisicaoHttp = { corpo: '' }
     const respostaHttp = await sut.tratar(requisicaoHttp)
-    expect(respostaHttp.codigoDeStatus).toBe(200)
+    expect(respostaHttp.status).toBe(200)
     expect(respostaHttp.corpo).toEqual([{
       id: 'id_qualquer',
       nome: 'nome_qualquer',
@@ -91,7 +91,7 @@ describe('Controlador de estações', () => {
     const { sut } = makeSut()
     const requisicaoHttp = { corpo: 'sigla_valida' }
     const respostaHttp = await sut.tratar(requisicaoHttp)
-    expect(respostaHttp.codigoDeStatus).toBe(200)
+    expect(respostaHttp.status).toBe(200)
     expect(respostaHttp.corpo).toEqual({
       id: 'id_valida',
       nome: 'nome_valido',
@@ -108,7 +108,7 @@ describe('Controlador de estações', () => {
     jest.spyOn(validaParametroStub, 'validar').mockReturnValueOnce(false)
     const requisicaoHttp = { corpo: 'sigla_invalida' }
     const respostaHttp = await sut.tratar(requisicaoHttp)
-    expect(respostaHttp.codigoDeStatus).toBe(400)
+    expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('sigla'))
   })
 
@@ -124,9 +124,9 @@ describe('Controlador de estações', () => {
     const requisicaoHttpComSigla = { corpo: 'sigla_qualquer' }
     const respostaHttpSemSigla = await sut.tratar(requisicaoHttpSemSigla)
     const respostaHttpComSigla = await sut.tratar(requisicaoHttpComSigla)
-    expect(respostaHttpSemSigla.codigoDeStatus).toBe(500)
+    expect(respostaHttpSemSigla.status).toBe(500)
     expect(respostaHttpSemSigla.corpo).toEqual(new ErroDeServidor())
-    expect(respostaHttpComSigla.codigoDeStatus).toBe(500)
+    expect(respostaHttpComSigla.status).toBe(500)
     expect(respostaHttpComSigla.corpo).toEqual(new ErroDeServidor())
   })
 })

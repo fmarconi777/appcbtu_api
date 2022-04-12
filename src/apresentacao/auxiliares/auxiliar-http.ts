@@ -7,16 +7,16 @@ quer sejam dados válidos ou erros.
 */
 
 export const resposta = (dados: any): RespostaHttp => ({
-  codigoDeStatus: 200,
+  status: 200,
   corpo: dados
 })
 
 export const requisicaoImpropria = (erro: Error): RespostaHttp => ({
-  codigoDeStatus: 400,
+  status: 400,
   corpo: erro
 })
 
 export const erroDeServidor = (): RespostaHttp => ({
-  codigoDeStatus: 500,
+  status: 500,
   corpo: new ErroDeServidor()
 })

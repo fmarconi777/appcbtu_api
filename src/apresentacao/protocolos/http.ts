@@ -5,7 +5,7 @@ E também define como a resposta http será retornada.
  */
 
 export interface RespostaHttp {
-  codigoDeStatus: number
+  status: number
   corpo: any
 }
 
