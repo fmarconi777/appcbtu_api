@@ -48,8 +48,16 @@ describe('Caso de uso ConsultaEstacaoBD', () => {
   test('Deve chamar ConsultaRepositorioEstacao com o valor correto', async () => {
     const { sut, consultaRepositorioEstacaoStub } = makeSut()
     const consultaSpy = jest.spyOn(consultaRepositorioEstacaoStub, 'consulta')
-    const sigla = 'sigla_valida'
+    const sigla = 'sigla_qualquer'
     await sut.consulta(sigla)
-    expect(consultaSpy).toHaveBeenCalledWith('sigla_valida')
+    expect(consultaSpy).toHaveBeenCalledWith('sigla_qualquer')
+  })
+
+  test('Metodo consulta deve retornar um erro se o ConsultaRepositorioEstacao retornar um erro', async () => {
+    const { sut, consultaRepositorioEstacaoStub } = makeSut()
+    jest.spyOn(consultaRepositorioEstacaoStub, 'consulta').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const sigla = 'sigla_qualquer'
+    const consulta1 = sut.consulta(sigla)
+    await expect(consulta1).rejects.toThrow()
   })
 })
