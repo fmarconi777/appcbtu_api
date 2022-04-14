@@ -81,4 +81,19 @@ describe('Caso de uso ConsultaEstacaoBD', () => {
       longitude: 'longitude_valida'
     }])
   })
+
+  test('Deve retornar uma estação se um parâmetro for fornecido', async () => {
+    const { sut } = makeSut()
+    const sigla = 'sigla_valida'
+    const consulta = await sut.consulta(sigla)
+    expect(consulta).toEqual({
+      id: 'id_valida',
+      nome: 'nome_valido',
+      sigla: 'sigla_valida',
+      codigo: 'codigo_valido',
+      endereco: 'endereco_valido',
+      latitude: 'latitude_valida',
+      longitude: 'longitude_valida'
+    })
+  })
 })
