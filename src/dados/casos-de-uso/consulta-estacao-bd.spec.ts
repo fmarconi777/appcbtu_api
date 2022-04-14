@@ -19,7 +19,7 @@ const makeConsultaRepositorioEstacao = (): ConsultaRepositorioEstacao => {
       return await new Promise(resolve => resolve({
         id: 'id_valida',
         nome: 'nome_valido',
-        sigla: 'sigla_valida',
+        sigla: sigla,
         codigo: 'codigo_valido',
         endereco: 'endereco_valido',
         latitude: 'latitude_valida',
@@ -66,5 +66,19 @@ describe('Caso de uso ConsultaEstacaoBD', () => {
     jest.spyOn(consultaRepositorioEstacaoStub, 'consulta').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const consulta = sut.consultaTodas()
     await expect(consulta).rejects.toThrow()
+  })
+
+  test('Deve retornar array com todas as estações se um parâmetro não for fornecido', async () => {
+    const { sut } = makeSut()
+    const consulta = await sut.consultaTodas()
+    expect(consulta).toEqual([{
+      id: 'id_valida',
+      nome: 'nome_valido',
+      sigla: 'sigla_valida',
+      codigo: 'codigo_valido',
+      endereco: 'endereco_valido',
+      latitude: 'latitude_valida',
+      longitude: 'longitude_valida'
+    }])
   })
 })
