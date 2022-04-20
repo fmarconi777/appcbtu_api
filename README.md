@@ -22,7 +22,14 @@ Na pasta do projeto
 
 `npm install`
 
-No VScode sugiro a instalação das extenções "StandardJS", para melhor integração com a dependencia
+Após executar o `npm install`, crie um arquivo '.env' na raiz do projeto com as seguintes variáveis de ambiente e insira o dados correspondentes ao banco de dados local:
+* ENDERECO_BANCODEDADOS = ''
+* PORTA_BANCODEDADOS = ''
+* NOME_BANCODEDADOS = 'AppCbtuBD'
+* USUARIO_BANCODEDADOS = ''
+* SENHA_BANCODEDADOS = ''
+
+No VScode é necessário a instalação das extenções "StandardJS", para melhor integração com a dependencia
 "ts-standard", e "Jest Snippets".
 
 ## Rodando os testes

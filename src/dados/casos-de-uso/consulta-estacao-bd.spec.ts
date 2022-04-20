@@ -1,4 +1,3 @@
-
 import { ConsultaRepositorioEstacao, ModelosEstacoes } from '../protocolos/consulta-repositorio-estacao'
 import { ConsultaEstacaoBD } from './consulta-estacao-bd'
 
