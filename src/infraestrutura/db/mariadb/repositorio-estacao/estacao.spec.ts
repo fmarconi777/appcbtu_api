@@ -55,7 +55,6 @@ describe('Repositorio mariaDB Estacao', () => {
     expect(estacao).toBeTruthy()
     expect(estacao[0].id).toBeTruthy()
     expect(estacao[1].id).toBeTruthy()
-    expect(estacao[0]).toMatchObject(resutadoEsperado[0])
-    expect(estacao[1]).toMatchObject(resutadoEsperado[1])
+    expect(estacao).toMatchObject(resutadoEsperado)
   })
 })
