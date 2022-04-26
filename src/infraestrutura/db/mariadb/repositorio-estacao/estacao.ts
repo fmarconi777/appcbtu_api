@@ -3,7 +3,9 @@ import { Estacao } from '../models/modelo-estacao'
 
 export class RepositorioEstacaoMariaDB implements ConsultaRepositorioEstacao {
   async consulta (sigla?: string): Promise<ModelosEstacoes> {
-    const estacao = await Estacao.findOne({ where: { sigla: sigla } })
-    return estacao
+    if (!sigla) { // eslint-disable-line 
+      return await Estacao.findAll()
+    }
+    return await Estacao.findOne({ where: { sigla: sigla } })
   }
 }
