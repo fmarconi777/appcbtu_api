@@ -1,8 +1,11 @@
 import { Express, Router } from 'express'
-import getEstacao from '../rotas/rotas-estacoes'
+import fg from 'fast-glob'
 
 export default (app: Express): void => {
   const router = Router()
   app.use('/api', router)
-  app.use(getEstacao(router))
+  fg.sync('**/src/principal/rotas/**rotas.ts').map(async arquivo => {
+    const rota = (await import(`../../../${arquivo}`)).default(router)
+    app.use(rota)
+  })
 }
