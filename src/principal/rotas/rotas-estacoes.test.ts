@@ -20,7 +20,7 @@ describe('Rotas estações', () => {
   })
   test('Deve retornar uma estação se um parâmetro for passado em caso de sucesso', async () => {
     await request(app)
-      .get('/estacao/sigla')
+      .get('/estacao/ulg')
       .expect(200)
   })
 })

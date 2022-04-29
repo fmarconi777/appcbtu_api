@@ -82,14 +82,14 @@ describe('Controlador de estações', () => {
   test('Deve chamar ConsultaEstacao com o valor correto', async () => {
     const { sut, consultaEstacaoStub } = makeSut()
     const spyConsula = jest.spyOn(consultaEstacaoStub, 'consulta')
-    const requisicaoHttp = { corpo: 'sigla_qualquer' }
+    const requisicaoHttp = { parametro: 'sigla_qualquer' }
     await sut.tratar(requisicaoHttp)
     expect(spyConsula).toHaveBeenCalledWith('sigla_qualquer')
   })
 
   test('Deve retornar codigo 200 e uma estação se o parâmetro estiver correto', async () => {
     const { sut } = makeSut()
-    const requisicaoHttp = { corpo: 'sigla_valida' }
+    const requisicaoHttp = { parametro: 'sigla_valida' }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(200)
     expect(respostaHttp.corpo).toEqual({
@@ -106,7 +106,7 @@ describe('Controlador de estações', () => {
   test('Deve retornar codigo 400 se o parâmetro estiver incorreto', async () => {
     const { sut, validaParametroStub } = makeSut()
     jest.spyOn(validaParametroStub, 'validar').mockReturnValueOnce(false)
-    const requisicaoHttp = { corpo: 'sigla_invalida' }
+    const requisicaoHttp = { parametro: 'sigla_invalida' }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('sigla'))
@@ -120,8 +120,8 @@ describe('Controlador de estações', () => {
     jest.spyOn(consultaEstacaoStub, 'consulta').mockImplementationOnce(async () => {
       return await new Promise((resolve, reject) => reject(new Error()))
     })
-    const requisicaoHttpSemSigla = { corpo: '' }
-    const requisicaoHttpComSigla = { corpo: 'sigla_qualquer' }
+    const requisicaoHttpSemSigla = { parametro: '' }
+    const requisicaoHttpComSigla = { parametro: 'sigla_qualquer' }
     const respostaHttpSemSigla = await sut.tratar(requisicaoHttpSemSigla)
     const respostaHttpComSigla = await sut.tratar(requisicaoHttpComSigla)
     expect(respostaHttpSemSigla.status).toBe(500)

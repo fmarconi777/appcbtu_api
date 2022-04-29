@@ -24,7 +24,7 @@ export class ControladorDeEstacao implements Controlador {
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
     try {
-      const parametro = requisicaoHttp.corpo
+      const parametro = requisicaoHttp.parametro
       if (!parametro) { // eslint-disable-line
         const todasEstacoes = await this.consultaEstacao.consultaTodas()
         return resposta(todasEstacoes)
