@@ -29,7 +29,7 @@ create table if not exists Equipamento(
     nome varchar(255) not null,
     tipo varchar(255) not null,
     num_falha int not null,
-    ativo varchar(10) not null,
+    estado int not null,
     estacaoId int,
     constraint fk_Equipamento_Estacao
     foreign key (estacaoId)
