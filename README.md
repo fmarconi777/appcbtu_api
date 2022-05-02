@@ -25,7 +25,7 @@ Na pasta do projeto
 Após executar o `npm install`, crie um arquivo '.env' na raiz do projeto com as seguintes variáveis de ambiente e insira o dados correspondentes ao banco de dados local:
 * ENDERECO_BANCODEDADOS = ''
 * PORTA_BANCODEDADOS = ''
-* NOME_BANCODEDADOS = 'AppCbtuBD'
+* NOME_BANCODEDADOS = 'appabtubd'
 * USUARIO_BANCODEDADOS = ''
 * SENHA_BANCODEDADOS = ''
 
@@ -33,6 +33,8 @@ No VScode é necessário a instalação das extenções "StandardJS", para melho
 "ts-standard", e "Jest Snippets".
 
 ## Rodando os testes
+
+`npm start` - Inicia a aplicação
 
 `npm run test` - Todos os testes serão executados, mesmo com testes falhando, e não serão exibidos os erros
 
