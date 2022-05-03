@@ -1,4 +1,4 @@
-import { ConsultaEstacao } from '../../dominio/caos-de-uso/consulta-estacao'
+import { ConsultaEstacao } from '../../dominio/casos-de-uso/consulta-estacao'
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { resposta, requisicaoImpropria, erroDeServidor } from '../auxiliares/auxiliar-http'

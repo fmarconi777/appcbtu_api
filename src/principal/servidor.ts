@@ -1,4 +1,4 @@
-import { bd } from '../infraestrutura/db/mariadb/auxiliares/auxiliar-mariadb'
+import { bd } from '../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 
 bd.authenticate()
   .then(async () => {

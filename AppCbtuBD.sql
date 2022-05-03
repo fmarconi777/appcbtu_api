@@ -25,7 +25,7 @@ create table if not exists Alerta(
 );
 
 create table if not exists Equipamento(
-	id int auto_increment primary key,
+	  id int auto_increment primary key,
     nome varchar(255) not null,
     tipo varchar(255) not null,
     num_falha int not null,

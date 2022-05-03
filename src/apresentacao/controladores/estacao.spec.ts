@@ -1,5 +1,5 @@
 import { ControladorDeEstacao } from './estacao'
-import { ConsultaEstacao } from '../../dominio/caos-de-uso/consulta-estacao'
+import { ConsultaEstacao } from '../../dominio/casos-de-uso/consulta-estacao'
 import { ModeloEstacao } from '../../dominio/modelos/estacao'
 import { ValidaParametro } from '../protocolos/valida-parametro'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'

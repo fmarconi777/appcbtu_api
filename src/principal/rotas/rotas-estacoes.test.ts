@@ -1,6 +1,6 @@
 import request from 'supertest'
 import app from '../config/app'
-import { bd } from '../../infraestrutura/db/mariadb/auxiliares/auxiliar-mariadb'
+import { bd } from '../../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 
 describe('Rotas estações', () => {
   beforeAll(async () => {

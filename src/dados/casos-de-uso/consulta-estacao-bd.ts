@@ -1,4 +1,4 @@
-import { ConsultaEstacao } from '../../dominio/caos-de-uso/consulta-estacao'
+import { ConsultaEstacao } from '../../dominio/casos-de-uso/consulta-estacao'
 import { ModeloEstacao } from '../../dominio/modelos/estacao'
 import { ConsultaRepositorioEstacao } from '../protocolos/consulta-repositorio-estacao'
 
