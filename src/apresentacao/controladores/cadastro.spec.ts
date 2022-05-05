@@ -1,4 +1,4 @@
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
+import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ControladorDeCadastro } from './cadastro'
 
 const makeSut = (): ControladorDeCadastro => {
@@ -18,7 +18,7 @@ describe('Controlador de Cadastro', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
-    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('nome'))
+    expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('nome'))
   })
   test('Retornar 400 quando o email não for fornecido', async () => {
     const sut = makeSut()
@@ -32,7 +32,7 @@ describe('Controlador de Cadastro', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
-    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('email'))
+    expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('email'))
   })
   test('Retornar 400 quando a area não for fornecido', async () => {
     const sut = makeSut()
@@ -46,7 +46,7 @@ describe('Controlador de Cadastro', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
-    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('area'))
+    expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('area'))
   })
   test('Retornar 400 quando a senha não for fornecido', async () => {
     const sut = makeSut()
@@ -60,7 +60,7 @@ describe('Controlador de Cadastro', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
-    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('senha'))
+    expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('senha'))
   })
   test('Retornar 400 quando o confirmarsenha não for fornecido', async () => {
     const sut = makeSut()
@@ -74,6 +74,6 @@ describe('Controlador de Cadastro', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
-    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('confirmarSenha'))
+    expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('confirmarSenha'))
   })
 })
