@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "sucrase-node src/principal/servidor.ts",
+    "start": "ts-node-dev src/principal/servidor.ts",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
@@ -20,9 +20,9 @@
     "@types/sequelize": "^4.28.11",
     "@types/supertest": "^2.0.12",
     "jest": "^27.5.1",
-    "sucrase": "^3.21.0",
     "supertest": "^6.2.3",
     "ts-jest": "^27.1.3",
+    "ts-node-dev": "^1.1.8",
     "ts-standard": "^11.0.0",
     "typescript": "^4.6.2"
   },
