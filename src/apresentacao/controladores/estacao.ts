@@ -2,7 +2,7 @@ import { ConsultaEstacao } from '../../dominio/casos-de-uso/consulta-estacao'
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { resposta, requisicaoImpropria, erroDeServidor } from '../auxiliares/auxiliar-http'
-import { ValidaParametro } from '../protocolos/valida-parametro'
+import { Validador } from '../protocolos/validador'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 
 /*
@@ -15,9 +15,9 @@ seja válido.
 */
 export class ControladorDeEstacao implements Controlador {
   private readonly consultaEstacao: ConsultaEstacao
-  private readonly validaParametro: ValidaParametro
+  private readonly validaParametro: Validador
 
-  constructor (consultaEstacao: ConsultaEstacao, validaParametro: ValidaParametro) {
+  constructor (consultaEstacao: ConsultaEstacao, validaParametro: Validador) {
     this.consultaEstacao = consultaEstacao
     this.validaParametro = validaParametro
   }

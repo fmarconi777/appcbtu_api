@@ -1,8 +1,8 @@
-import { ValidaParametro } from '../apresentacao/protocolos/valida-parametro'
+import { Validador } from '../apresentacao/protocolos/validador'
 import { ValidadorDeParametro } from './validador-de-parametro'
 import { validador } from './auxiliares/auxiliar-validador'
 
-const makeSut = (): ValidaParametro => {
+const makeSut = (): Validador => {
   const sut = new ValidadorDeParametro()
   return sut
 }
