@@ -6,7 +6,7 @@ const makeSut = (): ControladorDeCadastro => {
 }
 
 describe('Controlador de Cadastro', () => {
-  test('Retornar 400 quando o nome não for fornecido', () => {
+  test('Retornar 400 quando o nome não for fornecido', async () => {
     const sut = makeSut()
     const requisicaoHttp = {
       corpo: {
@@ -16,11 +16,11 @@ describe('Controlador de Cadastro', () => {
         confirmarSenha: 'qualquer_senha'
       }
     }
-    const respostaHttp = sut.tratar(requisicaoHttp)
+    const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('nome'))
   })
-  test('Retornar 400 quando o email não for fornecido', () => {
+  test('Retornar 400 quando o email não for fornecido', async () => {
     const sut = makeSut()
     const requisicaoHttp = {
       corpo: {
@@ -30,11 +30,11 @@ describe('Controlador de Cadastro', () => {
         confirmarSenha: 'qualquer_senha'
       }
     }
-    const respostaHttp = sut.tratar(requisicaoHttp)
+    const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('email'))
   })
-  test('Retornar 400 quando a area não for fornecido', () => {
+  test('Retornar 400 quando a area não for fornecido', async () => {
     const sut = makeSut()
     const requisicaoHttp = {
       corpo: {
@@ -44,11 +44,11 @@ describe('Controlador de Cadastro', () => {
         confirmarSenha: 'qualquer_senha'
       }
     }
-    const respostaHttp = sut.tratar(requisicaoHttp)
+    const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('area'))
   })
-  test('Retornar 400 quando a senha não for fornecido', () => {
+  test('Retornar 400 quando a senha não for fornecido', async () => {
     const sut = makeSut()
     const requisicaoHttp = {
       corpo: {
@@ -58,11 +58,11 @@ describe('Controlador de Cadastro', () => {
         confirmarSenha: 'qualquer_senha'
       }
     }
-    const respostaHttp = sut.tratar(requisicaoHttp)
+    const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('senha'))
   })
-  test('Retornar 400 quando o confirmarsenha não for fornecido', () => {
+  test('Retornar 400 quando o confirmarsenha não for fornecido', async () => {
     const sut = makeSut()
     const requisicaoHttp = {
       corpo: {
@@ -72,7 +72,7 @@ describe('Controlador de Cadastro', () => {
         senha: 'qualquer_senha'
       }
     }
-    const respostaHttp = sut.tratar(requisicaoHttp)
+    const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('confirmarSenha'))
   })
