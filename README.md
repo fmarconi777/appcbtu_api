@@ -23,11 +23,21 @@ Na pasta do projeto
 `npm install`
 
 Após executar o `npm install`, crie um arquivo '.env' na raiz do projeto com as seguintes variáveis de ambiente e insira o dados correspondentes ao banco de dados local:
+### Configuração do Banco de dados
 * ENDERECO_BANCODEDADOS = ''
 * PORTA_BANCODEDADOS = ''
 * NOME_BANCODEDADOS = 'appcbtubd'
 * USUARIO_BANCODEDADOS = ''
 * SENHA_BANCODEDADOS = ''
+
+### Configuração da aplicação
+* PORTA_APLICACAO = '5000'
+
+### Configuração do CORS
+* ORIGEM = '*'
+* METODO = '*'
+* CABECALHO = '*'
+
 
 No VScode é necessário a instalação das extenções "StandardJS", para melhor integração com a dependencia
 "ts-standard", e "Jest Snippets".
