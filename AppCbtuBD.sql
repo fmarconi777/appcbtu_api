@@ -45,6 +45,37 @@ create table if not exists Telefone(
 		references Estacao(id)
 );
 
+create table if not exists Horario(
+	id int auto_increment primary key,
+    trem_painel int not null,
+    descricao varchar(255) not null,
+    ar_con boolean not null,
+    tempo time not null,
+    trem_tipo int not null,
+    estacaoId int,
+    constraint fk_Horario_Estacao
+    foreign key (estacaoId)
+		references Estacao(id)
+);
+
+create table if not exists Coordenada(
+	id int auto_increment primary key,
+    latitude varchar(20) not null,
+    longitude varchar(20) not null
+);
+
+create table if not exists Horario_Coordenada(
+	id int auto_increment primary key,
+    horarioId int,
+    constraint fk_tabela_Horario
+    foreign key (horarioId)
+		references Horario(id),
+	coordenadaId int,
+    constraint fk_tabela_Coordenada
+    foreign key (coordenadaId)
+		references Coordenada(id)
+);
+
 create table if not exists Area(
 	id int auto_increment primary key,
     nome varchar(255) not null 
@@ -56,6 +87,18 @@ create table if not exists Contato(
     valor varchar(255) not null,
     areaId int,
     constraint fk_Contato_Area
+    foreign key (areaId)
+		references Area(id)
+);
+
+create table if not exists Funcionario(
+	id int auto_increment primary key,
+    nome varchar(255) not null,
+    email varchar(255) not null,
+    senha varchar(255) not null,
+    administrador boolean not null,
+    areaId int,
+    constraint fk_Funcionario_Area
     foreign key (areaId)
 		references Area(id)
 );
