@@ -2,6 +2,7 @@ import { ControladorDeEquipamento } from './equipamento'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { CadastroDeEquipamento, InserirModeloEquipamento } from '../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
 import { ModeloEquipamento } from '../../dominio/modelos/equipamento'
+import { ErroDeServidor } from '../erros/erro-de-servidor'
 
 const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
   class CadastroDeEquipamentoStub implements CadastroDeEquipamento {
@@ -125,5 +126,23 @@ describe('Controlador de equipamentos', () => {
       estado: 'estado_qualquer',
       estacaoId: 'estacaoId_qualquer'
     })
+  })
+  test('Deve retornar codigoo 500 se o CadastroDeEquipamentos retornar um erro', async () => {
+    const { sut, cadastroDeEquipamentoStub } = makeSut()
+    jest.spyOn(cadastroDeEquipamentoStub, 'inserir').mockImplementationOnce(async () => {
+      return await new Promise((resolve, reject) => reject(new Error()))
+    })
+    const requisicaoHttp = {
+      corpo: {
+        nome: 'qualquer_nome',
+        tipo: 'qualquer_tipo',
+        num_falha: 'num_falha_qualquer',
+        estado: 'estado_qualquer',
+        estacaoId: 'estacaoId_qualquer'
+      }
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(500)
+    expect(respostaHttp.corpo).toEqual(new ErroDeServidor())
   })
 })
