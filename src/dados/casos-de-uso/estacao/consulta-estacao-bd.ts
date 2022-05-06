@@ -1,11 +1,11 @@
-import { ConsultaEstacao } from '../../dominio/casos-de-uso/consulta-estacao'
-import { ModeloEstacao } from '../../dominio/modelos/estacao'
-import { ConsultaRepositorioEstacao } from '../protocolos/consulta-repositorio-estacao'
+import { ConsultaEstacao } from '../../../dominio/casos-de-uso/estacao/consulta-estacao'
+import { ModeloEstacao } from '../../../dominio/modelos/estacao'
+import { RepositorioEstacao } from '../../protocolos/repositorio-estacao'
 
 export class ConsultaEstacaoBD implements ConsultaEstacao {
-  private readonly consultaRepositorioEstacao: ConsultaRepositorioEstacao
+  private readonly consultaRepositorioEstacao: RepositorioEstacao
 
-  constructor (consultaRepositorioEstacao: ConsultaRepositorioEstacao) {
+  constructor (consultaRepositorioEstacao: RepositorioEstacao) {
     this.consultaRepositorioEstacao = consultaRepositorioEstacao
   }
 

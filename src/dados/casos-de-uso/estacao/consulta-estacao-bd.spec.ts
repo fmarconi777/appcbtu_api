@@ -1,8 +1,8 @@
-import { ConsultaRepositorioEstacao, ModelosEstacoes } from '../protocolos/consulta-repositorio-estacao'
+import { RepositorioEstacao, ModelosEstacoes } from '../../protocolos/repositorio-estacao'
 import { ConsultaEstacaoBD } from './consulta-estacao-bd'
 
-const makeConsultaRepositorioEstacao = (): ConsultaRepositorioEstacao => {
-  class ConsultaRepositorioEstacaoStub implements ConsultaRepositorioEstacao {
+const makeConsultaRepositorioEstacao = (): RepositorioEstacao => {
+  class ConsultaRepositorioEstacaoStub implements RepositorioEstacao {
     async consulta (sigla?: string): Promise<ModelosEstacoes> {
       if (!sigla) { // eslint-disable-line
         return await new Promise(resolve => resolve([{
@@ -31,7 +31,7 @@ const makeConsultaRepositorioEstacao = (): ConsultaRepositorioEstacao => {
 
 interface SutTypes {
   sut: ConsultaEstacaoBD
-  consultaRepositorioEstacaoStub: ConsultaRepositorioEstacao
+  consultaRepositorioEstacaoStub: RepositorioEstacao
 }
 
 const makeSut = (): SutTypes => {
