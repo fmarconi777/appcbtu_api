@@ -9,11 +9,11 @@ const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
     async inserir (equipamento: InserirModeloEquipamento): Promise<ModeloEquipamento> {
       const equipamentoFalso = {
         id: 'qualquer_id',
-        nome: 'qualquer_nome',
-        tipo: 'qualquer_tipo',
-        num_falha: 'num_falha_qualquer',
-        estado: 'estado_qualquer',
-        estacaoId: 'estacaoId_qualquer'
+        nome: equipamento.nome,
+        tipo: equipamento.tipo,
+        num_falha: equipamento.num_falha,
+        estado: equipamento.estado,
+        estacaoId: equipamento.estacaoId
       }
       return await new Promise(resolve => resolve(equipamentoFalso))
     }
@@ -144,5 +144,27 @@ describe('Controlador de equipamentos', () => {
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(500)
     expect(respostaHttp.corpo).toEqual(new ErroDeServidor())
+  })
+  test('Deve retornar codigoo 200 se dados válidos forem passados', async () => {
+    const { sut } = makeSut()
+    const requisicaoHttp = {
+      corpo: {
+        nome: 'qualquer_nome',
+        tipo: 'qualquer_tipo',
+        num_falha: 'num_falha_qualquer',
+        estado: 'estado_qualquer',
+        estacaoId: 'estacaoId_qualquer'
+      }
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(200)
+    expect(respostaHttp.corpo).toEqual({
+      id: 'qualquer_id',
+      nome: 'qualquer_nome',
+      tipo: 'qualquer_tipo',
+      num_falha: 'num_falha_qualquer',
+      estado: 'estado_qualquer',
+      estacaoId: 'estacaoId_qualquer'
+    })
   })
 })
