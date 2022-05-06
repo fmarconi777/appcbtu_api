@@ -1,13 +1,28 @@
-import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
+import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ControladorDeCadastro } from './cadastro'
+import { Validador } from '../protocolos/validador'
 
-const makeSut = (): ControladorDeCadastro => {
-  return new ControladorDeCadastro()
+interface SutTipos {
+  sut: ControladorDeCadastro
+  validadorDeEmailStub: Validador
+}
+const makeSut = (): SutTipos => {
+  class ValidadorDeEmailStub implements Validador {
+    validar (email: string): boolean {
+      return true
+    }
+  }
+  const validadorDeEmailStub = new ValidadorDeEmailStub()
+  const sut = new ControladorDeCadastro(validadorDeEmailStub)
+  return {
+    sut,
+    validadorDeEmailStub
+  }
 }
 
 describe('Controlador de Cadastro', () => {
   test('Retornar 400 quando o nome não for fornecido', async () => {
-    const sut = makeSut()
+    const { sut } = makeSut()
     const requisicaoHttp = {
       corpo: {
         area: 'qualquer_area',
@@ -18,10 +33,11 @@ describe('Controlador de Cadastro', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
-    expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('nome'))
+    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('nome'))
   })
   test('Retornar 400 quando o email não for fornecido', async () => {
-    const sut = makeSut()
+    const { sut, validadorDeEmailStub } = makeSut()
+    jest.spyOn(validadorDeEmailStub, "valido").mockReturnValueOnce(false)
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
@@ -32,10 +48,10 @@ describe('Controlador de Cadastro', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
-    expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('email'))
+    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('email'))
   })
   test('Retornar 400 quando a area não for fornecido', async () => {
-    const sut = makeSut()
+    const { sut } = makeSut()
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
@@ -46,10 +62,10 @@ describe('Controlador de Cadastro', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
-    expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('area'))
+    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('area'))
   })
   test('Retornar 400 quando a senha não for fornecido', async () => {
-    const sut = makeSut()
+    const { sut } = makeSut()
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
@@ -60,10 +76,10 @@ describe('Controlador de Cadastro', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
-    expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('senha'))
+    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('senha'))
   })
   test('Retornar 400 quando o confirmarsenha não for fornecido', async () => {
-    const sut = makeSut()
+    const { sut } = makeSut()
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
@@ -74,6 +90,6 @@ describe('Controlador de Cadastro', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
-    expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('confirmarSenha'))
+    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('confirmarSenha'))
   })
 })
