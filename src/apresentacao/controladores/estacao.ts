@@ -1,7 +1,7 @@
 import { ConsultaEstacao } from '../../dominio/casos-de-uso/consulta-estacao'
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
-import { resposta, requisicaoImpropria, erroDeServidor } from '../auxiliares/auxiliar-http'
+import { resposta, requisicaoNaoEncontrada, erroDeServidor } from '../auxiliares/auxiliar-http'
 import { Validador } from '../protocolos/validador'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 
@@ -31,7 +31,7 @@ export class ControladorDeEstacao implements Controlador {
       }
       const parametroValido = this.validaParametro.validar(parametro)
       if (!parametroValido) {
-        return requisicaoImpropria(new ErroParametroInvalido('sigla'))
+        return requisicaoNaoEncontrada(new ErroParametroInvalido('sigla'))
       }
       const estacao = await this.consultaEstacao.consulta(parametro)
       return resposta(estacao)

@@ -16,6 +16,11 @@ export const requisicaoImpropria = (erro: Error): RespostaHttp => ({
   corpo: erro
 })
 
+export const requisicaoNaoEncontrada = (erro: Error): RespostaHttp => ({
+  status: 404,
+  corpo: erro
+})
+
 export const erroDeServidor = (): RespostaHttp => ({
   status: 500,
   corpo: new ErroDeServidor()
