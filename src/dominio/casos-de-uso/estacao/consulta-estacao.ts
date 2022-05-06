@@ -1,4 +1,4 @@
-import { ModeloEstacao } from '../modelos/estacao'
+import { ModeloEstacao } from '../../modelos/estacao'
 
 /*
 Este protocolo define os métodos que classe ConsultaEstacao
