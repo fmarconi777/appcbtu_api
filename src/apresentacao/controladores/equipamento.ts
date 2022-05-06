@@ -1,4 +1,4 @@
-import { requisicaoImpropria, resposta } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoImpropria, resposta } from '../auxiliares/auxiliar-http'
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
@@ -12,13 +12,17 @@ export class ControladorDeEquipamento implements Controlador {
   }
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
-    const camposRequeridos = ['nome', 'tipo', 'num_falha', 'estado', 'estacaoId']
-    for (const campo of camposRequeridos) {
-      if(!requisicaoHttp.corpo[campo]) { // eslint-disable-line
-        return requisicaoImpropria(new ErroFaltaParametro(campo))
+    try {
+      const camposRequeridos = ['nome', 'tipo', 'num_falha', 'estado', 'estacaoId']
+      for (const campo of camposRequeridos) {
+        if(!requisicaoHttp.corpo[campo]) { // eslint-disable-line
+          return requisicaoImpropria(new ErroFaltaParametro(campo))
+        }
       }
+      const equipamento = await this.cadastroDeEquipamento.inserir(requisicaoHttp.corpo)
+      return resposta(equipamento)
+    } catch (erro) {
+      return erroDeServidor()
     }
-    const equipamento = this.cadastroDeEquipamento.inserir(requisicaoHttp.corpo)
-    return resposta(equipamento)
   }
 }
