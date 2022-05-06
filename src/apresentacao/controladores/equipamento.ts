@@ -2,8 +2,15 @@ import { requisicaoImpropria, resposta } from '../auxiliares/auxiliar-http'
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
+import { CadastroDeEquipamento } from '../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
 
 export class ControladorDeEquipamento implements Controlador {
+  private readonly cadastroDeEquipamento: CadastroDeEquipamento
+
+  constructor (cadastroDeEquipamento: CadastroDeEquipamento) {
+    this.cadastroDeEquipamento = cadastroDeEquipamento
+  }
+
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
     const camposRequeridos = ['nome', 'tipo', 'num_falha', 'estado', 'estacaoId']
     for (const campo of camposRequeridos) {
@@ -11,6 +18,7 @@ export class ControladorDeEquipamento implements Controlador {
         return requisicaoImpropria(new ErroFaltaParametro(campo))
       }
     }
-    return resposta('resposta')
+    const equipamento = this.cadastroDeEquipamento.inserir(requisicaoHttp.corpo)
+    return resposta(equipamento)
   }
 }

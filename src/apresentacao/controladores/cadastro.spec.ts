@@ -37,7 +37,7 @@ describe('Controlador de Cadastro', () => {
   })
   test('Retornar 400 quando o email não for fornecido', async () => {
     const { sut, validadorDeEmailStub } = makeSut()
-    jest.spyOn(validadorDeEmailStub, "valido").mockReturnValueOnce(false)
+    jest.spyOn(validadorDeEmailStub, 'validar').mockReturnValueOnce(false)
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
