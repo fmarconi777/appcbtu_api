@@ -1,5 +1,5 @@
 import { ControladorDeEstacao } from './estacao'
-import { ConsultaEstacao } from '../../dominio/casos-de-uso/consulta-estacao'
+import { ConsultaEstacao } from '../../dominio/casos-de-uso/estacao/consulta-estacao'
 import { ModeloEstacao } from '../../dominio/modelos/estacao'
 import { Validador } from '../protocolos/validador'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
@@ -108,7 +108,7 @@ describe('Controlador de estações', () => {
     jest.spyOn(validaParametroStub, 'validar').mockReturnValueOnce(false)
     const requisicaoHttp = { parametro: 'sigla_invalida' }
     const respostaHttp = await sut.tratar(requisicaoHttp)
-    expect(respostaHttp.status).toBe(400)
+    expect(respostaHttp.status).toBe(404)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('sigla'))
   })
 

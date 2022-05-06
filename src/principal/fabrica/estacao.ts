@@ -1,5 +1,5 @@
 import { ControladorDeEstacao } from '../../apresentacao/controladores/estacao'
-import { ConsultaEstacaoBD } from '../../dados/casos-de-uso/consulta-estacao-bd'
+import { ConsultaEstacaoBD } from '../../dados/casos-de-uso/estacao/consulta-estacao-bd'
 import { RepositorioEstacaoMariaDB } from '../../infraestrutura/bd/mariadb/repositorio-estacao/estacao'
 import { ValidadorDeParametro } from '../../utilidades/validador-de-parametro'
 
