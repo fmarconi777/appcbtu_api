@@ -60,4 +60,23 @@ describe('Caso de uso CadastroDeEquipamentoBd', () => {
     const inserir = sut.inserir(equipamentoFalso)
     await expect(inserir).rejects.toThrow()
   })
+  test('Deve retornar um equipamento em caso de sucesso', async () => {
+    const { sut } = makeStu()
+    const equipamentoFalso = {
+      nome: 'qualquer_nome',
+      tipo: 'qualquer_tipo',
+      num_falha: 'num_falha_qualquer',
+      estado: 'estado_qualquer',
+      estacaoId: 'estacaoId_qualquer'
+    }
+    const inserir = await sut.inserir(equipamentoFalso)
+    expect(inserir).toEqual({
+      id: 'id_valida',
+      nome: 'nome_valido',
+      tipo: 'tipo_valido',
+      num_falha: 'num_falha_valido',
+      estado: 'estado_valido',
+      estacaoId: 'estacaoId_valido'
+    })
+  })
 })

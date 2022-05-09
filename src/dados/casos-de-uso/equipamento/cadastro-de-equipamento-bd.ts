@@ -9,7 +9,7 @@ export class CadastroDeEquipamentoBd implements CadastroDeEquipamento {
     this.inserirRepositorioEquipamento = inserirRepositorioEquipamento
   }
 
-  async inserir (equipamento: InserirModeloEquipamento): Promise<ModeloEquipamento> {
-    return await this.inserirRepositorioEquipamento.inserir(equipamento)
+  async inserir (dadsoDoEquipamento: InserirModeloEquipamento): Promise<ModeloEquipamento> {
+    return await this.inserirRepositorioEquipamento.inserir(dadsoDoEquipamento)
   }
 }
