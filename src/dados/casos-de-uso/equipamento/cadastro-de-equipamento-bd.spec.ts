@@ -47,4 +47,17 @@ describe('Caso de uso CadastroDeEquipamentoBd', () => {
     await sut.inserir(equipamentoFalso)
     expect(inserirSpy).toHaveBeenCalledWith(equipamentoFalso)
   })
+  test('Deve retornar um erro se o RepositorioEquipamento retornar um erro', async () => {
+    const { sut, repositorioEquipamentoStub } = makeStu()
+    jest.spyOn(repositorioEquipamentoStub, 'inserir').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const equipamentoFalso = {
+      nome: 'qualquer_nome',
+      tipo: 'qualquer_tipo',
+      num_falha: 'num_falha_qualquer',
+      estado: 'estado_qualquer',
+      estacaoId: 'estacaoId_qualquer'
+    }
+    const inserir = sut.inserir(equipamentoFalso)
+    await expect(inserir).rejects.toThrow()
+  })
 })
