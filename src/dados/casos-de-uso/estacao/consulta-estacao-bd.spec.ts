@@ -1,8 +1,8 @@
 import { RepositorioEstacao, ModelosEstacoes } from '../../protocolos/repositorio-estacao'
 import { ConsultaEstacaoBD } from './consulta-estacao-bd'
 
-const makeConsultaRepositorioEstacao = (): RepositorioEstacao => {
-  class ConsultaRepositorioEstacaoStub implements RepositorioEstacao {
+const makeRepositorioEstacao = (): RepositorioEstacao => {
+  class RepositorioEstacaoStub implements RepositorioEstacao {
     async consulta (sigla?: string): Promise<ModelosEstacoes> {
       if (!sigla) { // eslint-disable-line
         return await new Promise(resolve => resolve([{
@@ -26,43 +26,43 @@ const makeConsultaRepositorioEstacao = (): RepositorioEstacao => {
       }))
     }
   }
-  return new ConsultaRepositorioEstacaoStub()
+  return new RepositorioEstacaoStub()
 }
 
 interface SutTypes {
   sut: ConsultaEstacaoBD
-  consultaRepositorioEstacaoStub: RepositorioEstacao
+  RepositorioEstacaoStub: RepositorioEstacao
 }
 
 const makeSut = (): SutTypes => {
-  const consultaRepositorioEstacaoStub = makeConsultaRepositorioEstacao()
-  const sut = new ConsultaEstacaoBD(consultaRepositorioEstacaoStub)
+  const RepositorioEstacaoStub = makeRepositorioEstacao()
+  const sut = new ConsultaEstacaoBD(RepositorioEstacaoStub)
   return {
     sut,
-    consultaRepositorioEstacaoStub
+    RepositorioEstacaoStub
   }
 }
 
 describe('Caso de uso ConsultaEstacaoBD', () => {
-  test('Deve chamar ConsultaRepositorioEstacao com o valor correto', async () => {
-    const { sut, consultaRepositorioEstacaoStub } = makeSut()
-    const consultaSpy = jest.spyOn(consultaRepositorioEstacaoStub, 'consulta')
+  test('Deve chamar RepositorioEstacao com o valor correto', async () => {
+    const { sut, RepositorioEstacaoStub } = makeSut()
+    const consultaSpy = jest.spyOn(RepositorioEstacaoStub, 'consulta')
     const sigla = 'sigla_qualquer'
     await sut.consulta(sigla)
     expect(consultaSpy).toHaveBeenCalledWith('sigla_qualquer')
   })
 
-  test('Metodo consulta deve retornar um erro se o ConsultaRepositorioEstacao retornar um erro', async () => {
-    const { sut, consultaRepositorioEstacaoStub } = makeSut()
-    jest.spyOn(consultaRepositorioEstacaoStub, 'consulta').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+  test('Metodo consulta deve retornar um erro se o RepositorioEstacao retornar um erro', async () => {
+    const { sut, RepositorioEstacaoStub } = makeSut()
+    jest.spyOn(RepositorioEstacaoStub, 'consulta').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const sigla = 'sigla_qualquer'
     const consulta = sut.consulta(sigla)
     await expect(consulta).rejects.toThrow()
   })
 
-  test('Metodo consultaTodas deve retornar um erro se o ConsultaRepositorioEstacao retornar um erro', async () => {
-    const { sut, consultaRepositorioEstacaoStub } = makeSut()
-    jest.spyOn(consultaRepositorioEstacaoStub, 'consulta').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+  test('Metodo consultaTodas deve retornar um erro se o RepositorioEstacao retornar um erro', async () => {
+    const { sut, RepositorioEstacaoStub } = makeSut()
+    jest.spyOn(RepositorioEstacaoStub, 'consulta').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const consulta = sut.consultaTodas()
     await expect(consulta).rejects.toThrow()
   })
