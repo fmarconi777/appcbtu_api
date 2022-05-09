@@ -1,6 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize'
 import { bd } from '../auxiliares/auxiliar-mariadb'
 import { ModeloEstacao } from '../../../../dominio/modelos/estacao'
+import { Equipamento } from './modelo-equipamento'
 
 interface AtributosEstacao extends Optional<ModeloEstacao, 'id'> {}
 
@@ -46,3 +47,14 @@ export const Estacao = bd.define<InstanciaEstacao>(
     timestamps: false
   }
 )
+
+Estacao.hasMany(Equipamento, {
+  sourceKey: 'id',
+  foreignKey: 'estacaoId',
+  as: 'equipamento'
+})
+
+Equipamento.belongsTo(Estacao, {
+  foreignKey: 'estacaoId',
+  as: 'estacao'
+})
