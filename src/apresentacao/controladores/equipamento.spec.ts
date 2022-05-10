@@ -1,19 +1,19 @@
 import { ControladorDeEquipamento } from './equipamento'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
-import { CadastroDeEquipamento, InserirModeloEquipamento } from '../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
+import { CadastroDeEquipamento, DadosEquipamento } from '../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
 import { ModeloEquipamento } from '../../dominio/modelos/equipamento'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 
 const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
   class CadastroDeEquipamentoStub implements CadastroDeEquipamento {
-    async inserir (equipamento: InserirModeloEquipamento): Promise<ModeloEquipamento> {
+    async inserir (dadosEquipamento: DadosEquipamento): Promise<ModeloEquipamento> {
       const equipamentoFalso = {
         id: 'qualquer_id',
-        nome: equipamento.nome,
-        tipo: equipamento.tipo,
-        num_falha: equipamento.num_falha,
-        estado: equipamento.estado,
-        estacaoId: equipamento.estacaoId
+        nome: dadosEquipamento.nome,
+        tipo: dadosEquipamento.tipo,
+        numFalha: dadosEquipamento.numFalha,
+        estado: dadosEquipamento.estado,
+        estacaoId: dadosEquipamento.estacaoId
       }
       return await new Promise(resolve => resolve(equipamentoFalso))
     }
@@ -41,7 +41,7 @@ describe('Controlador de equipamentos', () => {
     const requisicaoHttp = {
       corpo: {
         tipo: 'qualquer_tipo',
-        num_falha: 'num_falha_qualquer',
+        numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
       }
@@ -55,7 +55,7 @@ describe('Controlador de equipamentos', () => {
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_tipo',
-        num_falha: 'num_falha_qualquer',
+        numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
       }
@@ -64,7 +64,7 @@ describe('Controlador de equipamentos', () => {
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('tipo'))
   })
-  test('Deve retornar codigo 400 se um num_falha não for fornecido', async () => {
+  test('Deve retornar codigo 400 se um numFalha não for fornecido', async () => {
     const { sut } = makeSut()
     const requisicaoHttp = {
       corpo: {
@@ -76,7 +76,7 @@ describe('Controlador de equipamentos', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
-    expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('num_falha'))
+    expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('numFalha'))
   })
   test('Deve retornar codigo 400 se um estado não for fornecido', async () => {
     const { sut } = makeSut()
@@ -84,7 +84,7 @@ describe('Controlador de equipamentos', () => {
       corpo: {
         nome: 'qualquer_nome',
         tipo: 'qualquer_tipo',
-        num_falha: 'num_falha_qualquer',
+        numFalha: 'numFalha_qualquer',
         estacaoId: 'estacaoId_qualquer'
       }
     }
@@ -98,7 +98,7 @@ describe('Controlador de equipamentos', () => {
       corpo: {
         nome: 'qualquer_nome',
         tipo: 'qualquer_tipo',
-        num_falha: 'num_falha_qualquer',
+        numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer'
       }
     }
@@ -113,7 +113,7 @@ describe('Controlador de equipamentos', () => {
       corpo: {
         nome: 'qualquer_nome',
         tipo: 'qualquer_tipo',
-        num_falha: 'num_falha_qualquer',
+        numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
       }
@@ -122,7 +122,7 @@ describe('Controlador de equipamentos', () => {
     expect(inserirSpy).toHaveBeenCalledWith({
       nome: 'qualquer_nome',
       tipo: 'qualquer_tipo',
-      num_falha: 'num_falha_qualquer',
+      numFalha: 'numFalha_qualquer',
       estado: 'estado_qualquer',
       estacaoId: 'estacaoId_qualquer'
     })
@@ -136,7 +136,7 @@ describe('Controlador de equipamentos', () => {
       corpo: {
         nome: 'qualquer_nome',
         tipo: 'qualquer_tipo',
-        num_falha: 'num_falha_qualquer',
+        numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
       }
@@ -151,7 +151,7 @@ describe('Controlador de equipamentos', () => {
       corpo: {
         nome: 'qualquer_nome',
         tipo: 'qualquer_tipo',
-        num_falha: 'num_falha_qualquer',
+        numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
       }
@@ -162,7 +162,7 @@ describe('Controlador de equipamentos', () => {
       id: 'qualquer_id',
       nome: 'qualquer_nome',
       tipo: 'qualquer_tipo',
-      num_falha: 'num_falha_qualquer',
+      numFalha: 'numFalha_qualquer',
       estado: 'estado_qualquer',
       estacaoId: 'estacaoId_qualquer'
     })

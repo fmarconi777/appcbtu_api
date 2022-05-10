@@ -1,13 +1,13 @@
 import { ModeloEquipamento } from '../../modelos/equipamento'
 
-export interface InserirModeloEquipamento {
+export interface DadosEquipamento {
   nome: string
   tipo: string
-  num_falha: string
+  numFalha: string
   estado: string
   estacaoId: string
 }
 
 export interface CadastroDeEquipamento {
-  inserir: (equipamento: InserirModeloEquipamento) => Promise<ModeloEquipamento>
+  inserir: (equipamento: DadosEquipamento) => Promise<ModeloEquipamento>
 }

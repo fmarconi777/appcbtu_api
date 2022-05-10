@@ -13,7 +13,7 @@ export class ControladorDeEquipamento implements Controlador {
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
     try {
-      const camposRequeridos = ['nome', 'tipo', 'num_falha', 'estado', 'estacaoId']
+      const camposRequeridos = ['nome', 'tipo', 'numFalha', 'estado', 'estacaoId']
       for (const campo of camposRequeridos) {
         if(!requisicaoHttp.corpo[campo]) { // eslint-disable-line
           return requisicaoImpropria(new ErroFaltaParametro(campo))

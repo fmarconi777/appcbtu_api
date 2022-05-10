@@ -1,16 +1,23 @@
-import { DataTypes, Model, Optional } from 'sequelize'
-import { bd } from '../auxiliares/auxiliar-mariadb'
-import { ModeloEquipamento } from '../../../../dominio/modelos/equipamento'
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import { bd as sequelize } from '../auxiliares/auxiliar-mariadb'
+// import { ModeloEquipamento } from '../../../../dominio/modelos/equipamento'
 
-interface AtributosEquipamento extends Optional<ModeloEquipamento, 'id'> {}
+export class Equipamento extends Model<
+InferAttributes<Equipamento>,
+InferCreationAttributes<Equipamento>
+> {
+  declare id: CreationOptional<number>
+  declare nome: string
+  declare tipo: string
+  declare numFalha: number
+  declare estado: number
+  declare estacaoId: number
+}
 
-export interface InstanciaEquipamento extends Model<ModeloEquipamento, AtributosEquipamento> {}
-
-export const Equipamento = bd.define<InstanciaEquipamento>(
-  'Equipamento',
+Equipamento.init(
   {
     id: {
-      allowNull: false,
+      // allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.UUID,
@@ -24,7 +31,7 @@ export const Equipamento = bd.define<InstanciaEquipamento>(
       allowNull: false,
       type: DataTypes.TEXT
     },
-    num_falha: {
+    numFalha: {
       allowNull: true,
       type: DataTypes.INTEGER
     },
@@ -38,6 +45,7 @@ export const Equipamento = bd.define<InstanciaEquipamento>(
     }
   },
   {
+    sequelize,
     tableName: 'Equipamento',
     timestamps: false
   }

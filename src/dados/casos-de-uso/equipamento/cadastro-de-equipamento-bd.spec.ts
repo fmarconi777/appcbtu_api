@@ -1,16 +1,16 @@
-import { InserirModeloEquipamento } from '../../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
+import { DadosEquipamento } from '../../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
 import { ModeloEquipamento } from '../../../dominio/modelos/equipamento'
 import { RepositorioEquipamento } from '../../protocolos/repositorio-equipamento'
 import { CadastroDeEquipamentoBd } from './cadastro-de-equipamento-bd'
 
 const makeRepositorioEquimento = (): RepositorioEquipamento => {
   class RepositorioEquipamentoStub implements RepositorioEquipamento {
-    async inserir (inserirModeloEquipamento: InserirModeloEquipamento): Promise<ModeloEquipamento> {
+    async inserir (dadosEquipamento: DadosEquipamento): Promise<ModeloEquipamento> {
       return await new Promise(resolve => resolve({
         id: 'id_valida',
         nome: 'nome_valido',
         tipo: 'tipo_valido',
-        num_falha: 'num_falha_valido',
+        numFalha: 'numFalha_valido',
         estado: 'estado_valido',
         estacaoId: 'estacaoId_valido'
       }))
@@ -40,7 +40,7 @@ describe('Caso de uso CadastroDeEquipamentoBd', () => {
     const equipamentoFalso = {
       nome: 'qualquer_nome',
       tipo: 'qualquer_tipo',
-      num_falha: 'num_falha_qualquer',
+      numFalha: 'numFalha_qualquer',
       estado: 'estado_qualquer',
       estacaoId: 'estacaoId_qualquer'
     }
@@ -53,7 +53,7 @@ describe('Caso de uso CadastroDeEquipamentoBd', () => {
     const equipamentoFalso = {
       nome: 'qualquer_nome',
       tipo: 'qualquer_tipo',
-      num_falha: 'num_falha_qualquer',
+      numFalha: 'numFalha_qualquer',
       estado: 'estado_qualquer',
       estacaoId: 'estacaoId_qualquer'
     }
@@ -65,7 +65,7 @@ describe('Caso de uso CadastroDeEquipamentoBd', () => {
     const equipamentoFalso = {
       nome: 'qualquer_nome',
       tipo: 'qualquer_tipo',
-      num_falha: 'num_falha_qualquer',
+      numFalha: 'numFalha_qualquer',
       estado: 'estado_qualquer',
       estacaoId: 'estacaoId_qualquer'
     }
@@ -74,7 +74,7 @@ describe('Caso de uso CadastroDeEquipamentoBd', () => {
       id: 'id_valida',
       nome: 'nome_valido',
       tipo: 'tipo_valido',
-      num_falha: 'num_falha_valido',
+      numFalha: 'numFalha_valido',
       estado: 'estado_valido',
       estacaoId: 'estacaoId_valido'
     })
