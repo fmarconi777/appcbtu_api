@@ -67,13 +67,10 @@ describe('Controlador de Cadastro', () => {
     expect(validarEspionar).toHaveBeenLastCalledWith('qualquer_email@mail.com')
   })
   test('Retornar 500 quando o ValidadorDeEmail retornar uma excessão', async () => {
-    class ValidadorDeEmailStub implements Validador {
-      validar (email: string): boolean {
-        throw new Error()
-      }
-    }
-    const validadorDeEmailStub = new ValidadorDeEmailStub()
-    const sut = new ControladorDeFuncionario(validadorDeEmailStub)
+    const { sut, validadorDeEmailStub } = makeSut()
+    jest.spyOn(validadorDeEmailStub, 'validar').mockImplementationOnce(() => {
+      throw new Error()
+    })
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
@@ -124,6 +121,21 @@ describe('Controlador de Cadastro', () => {
         area: 'qualquer_area',
         email: 'qualquer_email@mail.com',
         senha: 'qualquer_senha'
+      }
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(400)
+    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('confirmarSenha'))
+  })
+  test('Retornar 400 quando a confirmação de senha falhar', async () => {
+    const { sut } = makeSut()
+    const requisicaoHttp = {
+      corpo: {
+        nome: 'qualquer_nome',
+        area: 'qualquer_area',
+        email: 'qualquer_email@mail.com',
+        senha: 'qualquer_senha',
+        confirmarSenha: 'invalida_senha'
       }
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
