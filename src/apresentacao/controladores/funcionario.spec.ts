@@ -2,22 +2,41 @@ import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ControladorDeFuncionario } from './funcionario'
 import { Validador } from '../protocolos/validador'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
-
+import { AdicionarConta, InserirModeloFuncionario } from '../../dominio/casos-de-uso/adicionarconta/cadastro-de-funcionario'
+import { ModeloFuncionario } from '../../dominio/modelos/cadastrofuncionario'
 interface SutTipos {
   sut: ControladorDeFuncionario
   validadorDeEmailStub: Validador
+  adicionarContaStub: AdicionarConta
+}
+const makeAdicionarConta = (): AdicionarConta => {
+  class AdicionarContaStub implements AdicionarConta {
+    async adicionar (conta: InserirModeloFuncionario): Promise<ModeloFuncionario> {
+      const contafalsa = {
+        id: 'id_valido',
+        nome: 'nome_valido',
+        area: 'area_valido',
+        email: 'email_valido@mail.com',
+        senha: 'senha_valido'
+      }
+      return contafalsa
+    }
+  }
+  return new AdicionarContaStub()
 }
 const makeSut = (): SutTipos => {
+  const adicionarContaStub = makeAdicionarConta()
   class ValidadorDeEmailStub implements Validador {
     validar (email: string): boolean {
       return true
     }
   }
   const validadorDeEmailStub = new ValidadorDeEmailStub()
-  const sut = new ControladorDeFuncionario(validadorDeEmailStub)
+  const sut = new ControladorDeFuncionario(validadorDeEmailStub, adicionarContaStub)
   return {
     sut,
-    validadorDeEmailStub
+    validadorDeEmailStub,
+    adicionarContaStub
   }
 }
 
@@ -141,5 +160,26 @@ describe('Controlador de Cadastro', () => {
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('confirmarSenha'))
+  })
+  test('Deverá chamar AdicionarConta quando os valores corretos forem fornecidos', async () => {
+    const { sut, adicionarContaStub } = makeSut()
+    const adicionarEspionar = jest.spyOn(adicionarContaStub, 'adicionar')
+    const requisicaoHttp = {
+      corpo: {
+        nome: 'qualquer_nome',
+        email: 'qualquer_email@mail.com',
+        area: 'qualquer_area',
+        senha: 'qualquer_senha',
+        confirmarSenha: 'qualquer_senha'
+      }
+    }
+    await sut.tratar(requisicaoHttp)
+    expect(adicionarEspionar).toHaveBeenCalledWith({
+      nome: 'qualquer_nome',
+      email: 'qualquer_email@mail.com',
+      area: 'qualquer_area',
+      senha: 'qualquer_senha',
+      confirmarSenha: 'qualquer_senha'
+    })
   })
 })
