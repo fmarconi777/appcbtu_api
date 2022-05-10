@@ -3,10 +3,13 @@ import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { erroDeServidor, requisicaoImpropria, resposta } from '../auxiliares/auxiliar-http'
 import { Controlador } from '../protocolos/controlador'
 import { Validador } from '../protocolos/validador'
+import { AdicionarConta } from '../../dominio/casos-de-uso/adicionarconta/cadastro-de-funcionario'
 export class ControladorDeFuncionario implements Controlador {
   private readonly validadorDeEmail: Validador
-  constructor (validadorDeEmail: Validador) {
+  private readonly adicionarConta: AdicionarConta
+  constructor (validadorDeEmail: Validador, adicionarConta: AdicionarConta) {
     this.validadorDeEmail = validadorDeEmail
+    this.adicionarConta = adicionarConta
   }
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
@@ -17,7 +20,7 @@ export class ControladorDeFuncionario implements Controlador {
           return requisicaoImpropria(new ErroParametroInvalido(campo))
         }
       }
-      const { email, senha, confirmarSenha } = requisicaoHttp.corpo
+      const { nome, email, area, senha, confirmarSenha } = requisicaoHttp.corpo
       if (senha !== confirmarSenha) {
         return requisicaoImpropria(new ErroParametroInvalido('confirmarSenha'))
       }
@@ -25,6 +28,13 @@ export class ControladorDeFuncionario implements Controlador {
       if (!validar) {
         return requisicaoImpropria(new ErroParametroInvalido('email'))
       }
+      await this.adicionarConta.adicionar({
+        nome,
+        email,
+        area,
+        senha,
+        confirmarSenha
+      })
       return resposta('retornou')
     } catch (erro) {
       return erroDeServidor()
