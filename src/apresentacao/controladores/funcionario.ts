@@ -17,10 +17,11 @@ export class ControladorDeFuncionario implements Controlador {
           return requisicaoImpropria(new ErroParametroInvalido(campo))
         }
       }
-      if (requisicaoHttp.corpo.senha !== requisicaoHttp.corpo.confirmarSenha) {
+      const { email, senha, confirmarSenha } = requisicaoHttp.corpo
+      if (senha !== confirmarSenha) {
         return requisicaoImpropria(new ErroParametroInvalido('confirmarSenha'))
       }
-      const validar = this.validadorDeEmail.validar(requisicaoHttp.corpo.email)
+      const validar = this.validadorDeEmail.validar(email)
       if (!validar) {
         return requisicaoImpropria(new ErroParametroInvalido('email'))
       }
