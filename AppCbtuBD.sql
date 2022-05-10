@@ -15,8 +15,8 @@ create table if not exists Alerta(
 	id int auto_increment primary key,
     descricao varchar(255) not null,
     prioridade varchar(10) not null,
-    data_inicio timestamp not null,
-    data_fim timestamp not null,
+    dataInicio timestamp not null,
+    dataFim timestamp not null,
     ativo varchar(10) not null,
     estacaoId int not null,
     constraint fk_Alerta_Estacao
@@ -25,10 +25,10 @@ create table if not exists Alerta(
 );
 
 create table if not exists Equipamento(
-	  id int auto_increment primary key,
+	id int auto_increment primary key,
     nome varchar(255) not null,
     tipo varchar(255) not null,
-    num_falha int,
+    numFalha int,
     estado int not null,
     estacaoId int not null,
     constraint fk_Equipamento_Estacao
@@ -47,11 +47,11 @@ create table if not exists Telefone(
 
 create table if not exists Horario(
 	id int auto_increment primary key,
-    trem_painel int not null,
+    tremPainel int not null,
     descricao varchar(255) not null,
-    ar_con boolean not null,
+    arCon boolean not null,
     tempo time not null,
-    trem_tipo int not null,
+    tremTipo int not null,
     estacaoId int not null,
     constraint fk_Horario_Estacao
     foreign key (estacaoId)
