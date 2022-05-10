@@ -1,9 +1,10 @@
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { ControladorDeCadastro } from './cadastro'
+import { ControladorDeFuncionario } from './funcionario'
 import { Validador } from '../protocolos/validador'
+import { ErroDeServidor } from '../erros/erro-de-servidor'
 
 interface SutTipos {
-  sut: ControladorDeCadastro
+  sut: ControladorDeFuncionario
   validadorDeEmailStub: Validador
 }
 const makeSut = (): SutTipos => {
@@ -13,7 +14,7 @@ const makeSut = (): SutTipos => {
     }
   }
   const validadorDeEmailStub = new ValidadorDeEmailStub()
-  const sut = new ControladorDeCadastro(validadorDeEmailStub)
+  const sut = new ControladorDeFuncionario(validadorDeEmailStub)
   return {
     sut,
     validadorDeEmailStub
@@ -50,6 +51,43 @@ describe('Controlador de Cadastro', () => {
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('email'))
   })
+  test('Deverá chamar ValidadorDeEmail quando o email correto for fornecido', async () => {
+    const { sut, validadorDeEmailStub } = makeSut()
+    const validarEspionar = jest.spyOn(validadorDeEmailStub, 'validar')
+    const requisicaoHttp = {
+      corpo: {
+        nome: 'qualquer_nome',
+        email: 'qualquer_email@mail.com',
+        area: 'qualquer_area',
+        senha: 'qualquer_senha',
+        confirmarSenha: 'qualquer_senha'
+      }
+    }
+    await sut.tratar(requisicaoHttp)
+    expect(validarEspionar).toHaveBeenLastCalledWith('qualquer_email@mail.com')
+  })
+  test('Retornar 500 quando o ValidadorDeEmail retornar uma excessão', async () => {
+    class ValidadorDeEmailStub implements Validador {
+      validar (email: string): boolean {
+        throw new Error()
+      }
+    }
+    const validadorDeEmailStub = new ValidadorDeEmailStub()
+    const sut = new ControladorDeFuncionario(validadorDeEmailStub)
+    const requisicaoHttp = {
+      corpo: {
+        nome: 'qualquer_nome',
+        email: 'qualquer_email@mail.com',
+        area: 'qualquer_area',
+        senha: 'qualquer_senha',
+        confirmarSenha: 'qualquer_senha'
+      }
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(500)
+    expect(respostaHttp.corpo).toEqual(new ErroDeServidor())
+  })
+
   test('Retornar 400 quando a area não for fornecido', async () => {
     const { sut } = makeSut()
     const requisicaoHttp = {
