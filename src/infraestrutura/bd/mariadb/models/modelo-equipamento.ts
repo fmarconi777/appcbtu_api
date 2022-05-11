@@ -1,6 +1,5 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { bd as sequelize } from '../auxiliares/auxiliar-mariadb'
-// import { ModeloEquipamento } from '../../../../dominio/modelos/equipamento'
 
 export class Equipamento extends Model<
 InferAttributes<Equipamento>,
