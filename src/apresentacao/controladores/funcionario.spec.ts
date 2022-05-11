@@ -19,7 +19,7 @@ const makeAdicionarConta = (): AdicionarConta => {
         email: 'email_valido@mail.com',
         senha: 'senha_valido'
       }
-      return contafalsa
+      return await new Promise(resolve => resolve(contafalsa))
     }
   }
   return new AdicionarContaStub()

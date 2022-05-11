@@ -28,14 +28,14 @@ export class ControladorDeFuncionario implements Controlador {
       if (!validar) {
         return requisicaoImpropria(new ErroParametroInvalido('email'))
       }
-      await this.adicionarConta.adicionar({
+      const conta = await this.adicionarConta.adicionar({
         nome,
         email,
         area,
         senha,
         confirmarSenha
       })
-      return resposta('retornou')
+      return resposta(conta)
     } catch (erro) {
       return erroDeServidor()
     }
