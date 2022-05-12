@@ -2,11 +2,12 @@ import { RepositorioEquipamento } from '../../../../dados/protocolos/repositorio
 import { DadosEquipamento } from '../../../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
 import { ModeloEquipamento } from '../../../../dominio/modelos/equipamento'
 import { Equipamento } from '../models/modelo-equipamento'
+import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
 
 export class RepositorioEquipamentoMariaDB implements RepositorioEquipamento {
   async inserir (dadosEquipamento: DadosEquipamento): Promise<ModeloEquipamento> {
     const equipamento = await Equipamento.create(this.transformaDados(dadosEquipamento))
-    return this.mapeadorDeDados(equipamento)
+    return FuncoesAuxiliares.mapeadorDeDados(equipamento)
   }
 
   private transformaDados (dadosEquipamento: DadosEquipamento): any {
@@ -18,16 +19,5 @@ export class RepositorioEquipamentoMariaDB implements RepositorioEquipamento {
       estado: +estado,
       estacaoId: +estacaoId
     }
-  }
-
-  private mapeadorDeDados (dados: any): any {
-    return Object.assign({}, {
-      id: dados.id.toString(),
-      nome: dados.nome,
-      tipo: dados.tipo,
-      numFalha: dados.numFalha.toString(),
-      estado: dados.estado.toString(),
-      estacaoId: dados.estacaoId.toString()
-    })
   }
 }
