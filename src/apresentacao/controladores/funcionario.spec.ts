@@ -17,7 +17,9 @@ const makeAdicionarConta = (): AdicionarConta => {
         nome: 'nome_valido',
         area: 'area_valido',
         email: 'email_valido@mail.com',
-        senha: 'senha_valido'
+        senha: 'senha_valido',
+        administrador: 'administrador_valido',
+        areaId: 'idarea_valida'
       }
       return await new Promise(resolve => resolve(contafalsa))
     }
@@ -48,6 +50,8 @@ describe('Controlador de Cadastro', () => {
         area: 'qualquer_area',
         email: 'qualquer_email@mail.com',
         senha: 'qualquer_senha',
+        administrador: 'administrador_valido',
+        areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
       }
     }
@@ -63,6 +67,8 @@ describe('Controlador de Cadastro', () => {
         nome: 'qualquer_nome',
         area: 'qualquer_area',
         senha: 'qualquer_senha',
+        administrador: 'administrador_valido',
+        areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
       }
     }
@@ -79,6 +85,8 @@ describe('Controlador de Cadastro', () => {
         email: 'qualquer_email@mail.com',
         area: 'qualquer_area',
         senha: 'qualquer_senha',
+        administrador: 'administrador_valido',
+        areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
       }
     }
@@ -96,6 +104,8 @@ describe('Controlador de Cadastro', () => {
         email: 'qualquer_email@mail.com',
         area: 'qualquer_area',
         senha: 'qualquer_senha',
+        administrador: 'administrador_valido',
+        areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
       }
     }
@@ -111,6 +121,8 @@ describe('Controlador de Cadastro', () => {
         nome: 'qualquer_nome',
         email: 'qualquer_email@mail.com',
         senha: 'qualquer_senha',
+        administrador: 'administrador_valido',
+        areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
       }
     }
@@ -124,6 +136,8 @@ describe('Controlador de Cadastro', () => {
       corpo: {
         nome: 'qualquer_nome',
         area: 'qualquer_area',
+        administrador: 'administrador_valido',
+        areaId: 'idarea_valida',
         email: 'qualquer_email@mail.com',
         confirmarSenha: 'qualquer_senha'
       }
@@ -139,7 +153,9 @@ describe('Controlador de Cadastro', () => {
         nome: 'qualquer_nome',
         area: 'qualquer_area',
         email: 'qualquer_email@mail.com',
-        senha: 'qualquer_senha'
+        senha: 'qualquer_senha',
+        administrador: 'administrador_valido',
+        areaId: 'idarea_valida'
       }
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -154,6 +170,8 @@ describe('Controlador de Cadastro', () => {
         area: 'qualquer_area',
         email: 'qualquer_email@mail.com',
         senha: 'qualquer_senha',
+        administrador: 'administrador_valido',
+        areaId: 'idarea_valida',
         confirmarSenha: 'invalida_senha'
       }
     }
@@ -169,6 +187,8 @@ describe('Controlador de Cadastro', () => {
         email: 'qualquer_email@mail.com',
         area: 'qualquer_area',
         senha: 'qualquer_senha',
+        administrador: 'administrador_valido',
+        areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
       }
     }
@@ -179,7 +199,9 @@ describe('Controlador de Cadastro', () => {
       nome: 'nome_valido',
       area: 'area_valido',
       email: 'email_valido@mail.com',
-      senha: 'senha_valido'
+      senha: 'senha_valido',
+      administrador: 'administrador_valido',
+      areaId: 'idarea_valida'
     })
   })
   test('Retornar 400 quando o email for invalido', async () => {
@@ -191,6 +213,8 @@ describe('Controlador de Cadastro', () => {
         area: 'qualquer_area',
         email: 'email_invalido',
         senha: 'qualquer_senha',
+        administrador: 'administrador_valido',
+        areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
       }
     }

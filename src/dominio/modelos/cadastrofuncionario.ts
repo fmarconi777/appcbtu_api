@@ -4,4 +4,6 @@ export interface ModeloFuncionario {
   area: string
   email: string
   senha: string
+  administrador: string
+  areaId: string
 }

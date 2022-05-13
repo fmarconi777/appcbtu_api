@@ -33,6 +33,8 @@ describe('CasodeUso BdAdicionarConta', () => {
       email: 'email_valido',
       area: 'area_valido',
       senha: 'senha_valido',
+      administrador: 'administrador_valido',
+      areaId: 'areaid_valido',
       confirmarSenha: 'confirmarsenha_valido'
     }
     await sut.adicionar(dataConta)
@@ -46,6 +48,8 @@ describe('CasodeUso BdAdicionarConta', () => {
       email: 'email_valido',
       area: 'area_valido',
       senha: 'senha_valido',
+      administrador: 'administrador_valido',
+      areaId: 'areaid_valido',
       confirmarSenha: 'confirmarsenha_valido'
     }
     const promise = sut.adicionar(dataConta)

@@ -5,6 +5,8 @@ export interface InserirModeloFuncionario {
   area: string
   email: string
   senha: string
+  administrador: string
+  areaId: string
   confirmarSenha: string
 }
 

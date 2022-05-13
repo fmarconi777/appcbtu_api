@@ -15,7 +15,9 @@ export class BdAdicionarConta implements AdicionarConta {
       nome: '',
       area: '',
       email: '',
-      senha: ''
+      senha: '',
+      administrador: '',
+      areaId: ''
     }))
   }
 }

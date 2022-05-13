@@ -14,13 +14,13 @@ export class ControladorDeFuncionario implements Controlador {
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
     try {
-      const camposRequeridos = ['nome', 'email', 'area', 'senha', 'confirmarSenha']
+      const camposRequeridos = ['nome', 'email', 'area', 'senha', 'administrador', 'areaId', 'confirmarSenha']
       for (const campo of camposRequeridos) {
       if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
           return requisicaoImpropria(new ErroParametroInvalido(campo))
         }
       }
-      const { nome, email, area, senha, confirmarSenha } = requisicaoHttp.corpo
+      const { nome, email, area, senha, administrador, areaId, confirmarSenha } = requisicaoHttp.corpo
       if (senha !== confirmarSenha) {
         return requisicaoImpropria(new ErroParametroInvalido('confirmarSenha'))
       }
@@ -33,6 +33,8 @@ export class ControladorDeFuncionario implements Controlador {
         email,
         area,
         senha,
+        administrador,
+        areaId,
         confirmarSenha
       })
       return resposta(conta)
