@@ -24,13 +24,13 @@ const makeAdicionarConta = (): AdicionarConta => {
   }
   return new AdicionarContaStub()
 }
+class ValidadorDeEmailStub implements Validador {
+  validar (email: string): boolean {
+    return true
+  }
+}
 const makeSut = (): SutTipos => {
   const adicionarContaStub = makeAdicionarConta()
-  class ValidadorDeEmailStub implements Validador {
-    validar (email: string): boolean {
-      return true
-    }
-  }
   const validadorDeEmailStub = new ValidadorDeEmailStub()
   const sut = new ControladorDeFuncionario(validadorDeEmailStub, adicionarContaStub)
   return {
@@ -162,8 +162,7 @@ describe('Controlador de Cadastro', () => {
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('confirmarSenha'))
   })
   test('Deverá chamar AdicionarConta quando os valores corretos forem fornecidos', async () => {
-    const { sut, adicionarContaStub } = makeSut()
-    const adicionarEspionar = jest.spyOn(adicionarContaStub, 'adicionar')
+    const { sut } = makeSut()
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
@@ -173,13 +172,30 @@ describe('Controlador de Cadastro', () => {
         confirmarSenha: 'qualquer_senha'
       }
     }
-    await sut.tratar(requisicaoHttp)
-    expect(adicionarEspionar).toHaveBeenCalledWith({
-      nome: 'qualquer_nome',
-      email: 'qualquer_email@mail.com',
-      area: 'qualquer_area',
-      senha: 'qualquer_senha',
-      confirmarSenha: 'qualquer_senha'
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(200)
+    expect(respostaHttp.corpo).toEqual({
+      id: 'id_valido',
+      nome: 'nome_valido',
+      area: 'area_valido',
+      email: 'email_valido@mail.com',
+      senha: 'senha_valido'
     })
+  })
+  test('Retornar 400 quando o email for invalido', async () => {
+    const { sut, validadorDeEmailStub } = makeSut()
+    jest.spyOn(validadorDeEmailStub, 'validar').mockReturnValueOnce(false)
+    const requisicaoHttp = {
+      corpo: {
+        nome: 'qualquer_nome',
+        area: 'qualquer_area',
+        email: 'email_invalido',
+        senha: 'qualquer_senha',
+        confirmarSenha: 'qualquer_senha'
+      }
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(400)
+    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('email'))
   })
 })
