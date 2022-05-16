@@ -102,4 +102,19 @@ describe('CasodeUso BdAdicionarConta', () => {
       confirmarSenha: 'confirmarsenha_valido'
     })
   })
+  test('Deverá jogar o Encriptador se o AdicionarContaRepositorio estiver na condiçao de throw', async () => {
+    const { sut, adicionarContaRepositorioStub } = makeSut()
+    jest.spyOn(adicionarContaRepositorioStub, 'adicionar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const dataConta = {
+      nome: 'nome_valido',
+      email: 'email_valido',
+      area: 'area_valido',
+      senha: 'senha_valido',
+      administrador: 'administrador_valido',
+      areaId: 'areaid_valido',
+      confirmarSenha: 'confirmarsenha_valido'
+    }
+    const promise = sut.adicionar(dataConta)
+    await expect(promise).rejects.toThrow()
+  })
 })
