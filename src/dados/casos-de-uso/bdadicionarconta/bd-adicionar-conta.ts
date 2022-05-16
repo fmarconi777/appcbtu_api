@@ -13,15 +13,7 @@ export class BdAdicionarConta implements AdicionarConta {
 
   async adicionar (contaData: InserirModeloFuncionario): Promise<ModeloFuncionario> {
     const senhaHashed = await this.encriptar.encriptar(contaData.senha)
-    await this.adicionarContaRepositorio.adicionar(Object.assign({}, contaData, { senha: senhaHashed }))
-    return await new Promise(resolve => resolve({
-      id: '',
-      nome: '',
-      area: '',
-      email: '',
-      senha: '',
-      administrador: '',
-      areaId: ''
-    }))
+    const conta = await this.adicionarContaRepositorio.adicionar(Object.assign({}, contaData, { senha: senhaHashed }))
+    return conta
   }
 }
