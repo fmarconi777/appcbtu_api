@@ -41,4 +41,17 @@ describe('Decorador do ControladorLog', () => {
     await sut.tratar(requisicaoHttp)
     expect(tratarSpy).toHaveBeenCalledWith(requisicaoHttp)
   })
+  test('Deve retornar o mesmo resultado que o controlador', async () => {
+    const { sut } = makeStu()
+    const requisicaoHttp = {
+      parametro: 'usg'
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp).toEqual({
+      status: 200,
+      corpo: {
+        estacao: 'uma estação'
+      }
+    })
+  })
 })
