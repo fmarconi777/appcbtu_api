@@ -123,10 +123,12 @@ describe('Controlador de estações', () => {
     const requisicaoHttpSemSigla = { parametro: '' }
     const requisicaoHttpComSigla = { parametro: 'sigla_qualquer' }
     const respostaHttpSemSigla = await sut.tratar(requisicaoHttpSemSigla)
+    const stack1 = respostaHttpSemSigla.corpo.stack
     const respostaHttpComSigla = await sut.tratar(requisicaoHttpComSigla)
+    const stack2 = respostaHttpComSigla.corpo.stack
     expect(respostaHttpSemSigla.status).toBe(500)
-    expect(respostaHttpSemSigla.corpo).toEqual(new ErroDeServidor())
+    expect(respostaHttpSemSigla.corpo).toEqual(new ErroDeServidor(stack1))
     expect(respostaHttpComSigla.status).toBe(500)
-    expect(respostaHttpComSigla.corpo).toEqual(new ErroDeServidor())
+    expect(respostaHttpComSigla.corpo).toEqual(new ErroDeServidor(stack2))
   })
 })

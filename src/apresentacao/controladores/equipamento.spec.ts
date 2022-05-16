@@ -142,8 +142,9 @@ describe('Controlador de equipamentos', () => {
       }
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
+    const stack = respostaHttp.corpo.stack
     expect(respostaHttp.status).toBe(500)
-    expect(respostaHttp.corpo).toEqual(new ErroDeServidor())
+    expect(respostaHttp.corpo).toEqual(new ErroDeServidor(stack))
   })
   test('Deve retornar codigoo 200 se dados válidos forem passados', async () => {
     const { sut } = makeSut()

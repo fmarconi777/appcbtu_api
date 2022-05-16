@@ -110,8 +110,9 @@ describe('Controlador de Cadastro', () => {
       }
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
+    const stack = respostaHttp.corpo.stack
     expect(respostaHttp.status).toBe(500)
-    expect(respostaHttp.corpo).toEqual(new ErroDeServidor())
+    expect(respostaHttp.corpo).toEqual(new ErroDeServidor(stack))
   })
 
   test('Retornar 400 quando a area não for fornecido', async () => {

@@ -21,8 +21,8 @@ export class ControladorDeEquipamento implements Controlador {
       }
       const equipamento = await this.cadastroDeEquipamento.inserir(requisicaoHttp.corpo)
       return resposta(equipamento)
-    } catch (erro) {
-      return erroDeServidor()
+    } catch (erro: any) {
+      return erroDeServidor(erro)
     }
   }
 }
