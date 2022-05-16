@@ -117,4 +117,27 @@ describe('CasodeUso BdAdicionarConta', () => {
     const promise = sut.adicionar(dataConta)
     await expect(promise).rejects.toThrow()
   })
+  test('Deverá retornar uma conta se der sucesso', async () => {
+    const { sut } = makeSut()
+    const dataConta = {
+      nome: 'nome_valido',
+      email: 'email_valido',
+      area: 'area_valido',
+      senha: 'senha_valido',
+      administrador: 'administrador_valido',
+      areaId: 'areaid_valido',
+      confirmarSenha: 'confirmarsenha_valido'
+    }
+    const conta = await sut.adicionar(dataConta)
+    expect(conta).toEqual({
+      id: 'id_valido',
+      nome: 'nome_valido',
+      email: 'email_valido',
+      area: 'area_valido',
+      senha: 'senha_hashed',
+      administrador: 'administrador_valido',
+      areaId: 'areaid_valido',
+      confirmarSenha: 'confirmarsenha_valido'
+    })
+  })
 })
