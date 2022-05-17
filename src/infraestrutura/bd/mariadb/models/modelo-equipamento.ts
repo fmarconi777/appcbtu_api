@@ -16,7 +16,7 @@ InferCreationAttributes<Equipamento>
 Equipamento.init(
   {
     id: {
-      // allowNull: false,
+      allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.UUID,
