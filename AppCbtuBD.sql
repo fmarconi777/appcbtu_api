@@ -102,3 +102,9 @@ create table if not exists Funcionario(
     foreign key (areaId)
 		references Area(id)
 );
+
+create table if not exists Erros(
+  id int auto_increment primary key,
+  stack varchar(255) not null,
+  dataDoErro timestamp not null
+);
