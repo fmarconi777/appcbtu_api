@@ -2,7 +2,7 @@ import { Controlador } from '../../apresentacao/protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../../apresentacao/protocolos/http'
 import { DecoradorControladorLog } from './log'
 import { erroDeServidor } from '../../apresentacao/auxiliares/auxiliar-http'
-import { RepositorioLogdeErro } from '../../dados/protocolos/repositorio-log-de-erro'
+import { RepositorioLogDeErro } from '../../dados/protocolos/repositorio-log-de-erro'
 
 const makeControlador = (): Controlador => {
   class ControladorStub implements Controlador {
@@ -19,29 +19,29 @@ const makeControlador = (): Controlador => {
   return new ControladorStub()
 }
 
-const makeRepositorioLogdeErro = (): RepositorioLogdeErro => {
-  class RepositorioLogdeErroStub implements RepositorioLogdeErro {
-    async log (stack: string): Promise<void> {
+const makeRepositorioLogDeErro = (): RepositorioLogDeErro => {
+  class RepositorioLogDeErroStub implements RepositorioLogDeErro {
+    async logErro (stack: string): Promise<void> {
       return await new Promise(resolve => resolve())
     }
   }
-  return new RepositorioLogdeErroStub()
+  return new RepositorioLogDeErroStub()
 }
 
 interface SubTypes {
   sut: DecoradorControladorLog
   controladorStub: Controlador
-  repositorioLogdeErroStub: RepositorioLogdeErro
+  repositorioLogDeErroStub: RepositorioLogDeErro
 }
 
 const makeStu = (): SubTypes => {
   const controladorStub = makeControlador()
-  const repositorioLogdeErroStub = makeRepositorioLogdeErro()
-  const sut = new DecoradorControladorLog(controladorStub, repositorioLogdeErroStub)
+  const repositorioLogDeErroStub = makeRepositorioLogDeErro()
+  const sut = new DecoradorControladorLog(controladorStub, repositorioLogDeErroStub)
   return {
     sut,
     controladorStub,
-    repositorioLogdeErroStub
+    repositorioLogDeErroStub
   }
 }
 
@@ -69,11 +69,11 @@ describe('Decorador do ControladorLog', () => {
     })
   })
   test('Deve chamar o RepositorioLogDeErro com o valor correto de erro se o controlador retornar um erro de servidor', async () => {
-    const { sut, controladorStub, repositorioLogdeErroStub } = makeStu()
+    const { sut, controladorStub, repositorioLogDeErroStub } = makeStu()
     const erroFalso = new Error()
     erroFalso.stack = 'stack_qualquer'
     const erro = erroDeServidor(erroFalso)
-    const logSpy = jest.spyOn(repositorioLogdeErroStub, 'log')
+    const logSpy = jest.spyOn(repositorioLogDeErroStub, 'logErro')
     jest.spyOn(controladorStub, 'tratar').mockReturnValueOnce(new Promise(resolve => (resolve(erro))))
     const requisicaoHttp = {
       parametro: 'usg'
