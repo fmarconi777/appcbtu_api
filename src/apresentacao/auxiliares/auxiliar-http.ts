@@ -21,7 +21,7 @@ export const requisicaoNaoEncontrada = (erro: Error): RespostaHttp => ({
   corpo: erro
 })
 
-export const erroDeServidor = (): RespostaHttp => ({
+export const erroDeServidor = (erro: Error): RespostaHttp => ({
   status: 500,
-  corpo: new ErroDeServidor()
+  corpo: new ErroDeServidor(erro.stack as string)
 })

@@ -129,8 +129,10 @@ describe('Controlador de equipamentos', () => {
   })
   test('Deve retornar codigoo 500 se o CadastroDeEquipamentos retornar um erro', async () => {
     const { sut, cadastroDeEquipamentoStub } = makeSut()
+    const erroFalso = new Error()
+    erroFalso.stack = 'stack_qualquer'
     jest.spyOn(cadastroDeEquipamentoStub, 'inserir').mockImplementationOnce(async () => {
-      return await new Promise((resolve, reject) => reject(new Error()))
+      return await new Promise((resolve, reject) => reject(erroFalso))
     })
     const requisicaoHttp = {
       corpo: {
@@ -143,7 +145,7 @@ describe('Controlador de equipamentos', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(500)
-    expect(respostaHttp.corpo).toEqual(new ErroDeServidor())
+    expect(respostaHttp.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
   })
   test('Deve retornar codigoo 200 se dados válidos forem passados', async () => {
     const { sut } = makeSut()

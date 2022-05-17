@@ -38,8 +38,8 @@ export class ControladorDeFuncionario implements Controlador {
         confirmarSenha
       })
       return resposta(conta)
-    } catch (erro) {
-      return erroDeServidor()
+    } catch (erro: any) {
+      return erroDeServidor(erro)
     }
   }
 }

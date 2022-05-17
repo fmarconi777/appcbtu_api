@@ -35,8 +35,8 @@ export class ControladorDeEstacao implements Controlador {
       }
       const estacao = await this.consultaEstacao.consulta(parametro)
       return resposta(estacao)
-    } catch (erro) {
-      return erroDeServidor()
+    } catch (erro: any) {
+      return erroDeServidor(erro)
     }
   }
 }

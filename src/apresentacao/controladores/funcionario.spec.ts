@@ -95,8 +95,10 @@ describe('Controlador de Cadastro', () => {
   })
   test('Retornar 500 quando o ValidadorDeEmail retornar uma excessão', async () => {
     const { sut, validadorDeEmailStub } = makeSut()
+    const erroFalso = new Error()
+    erroFalso.stack = 'stack_qualquer'
     jest.spyOn(validadorDeEmailStub, 'validar').mockImplementationOnce(() => {
-      throw new Error()
+      throw erroFalso
     })
     const requisicaoHttp = {
       corpo: {
@@ -111,7 +113,7 @@ describe('Controlador de Cadastro', () => {
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(500)
-    expect(respostaHttp.corpo).toEqual(new ErroDeServidor())
+    expect(respostaHttp.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
   })
 
   test('Retornar 400 quando a area não for fornecido', async () => {
