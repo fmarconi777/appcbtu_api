@@ -1,11 +1,33 @@
 import bcrypt from 'bcrypt'
 import { BcryptAdaptador } from './bcrypt-adaptador'
+import 'dotenv/config'
+
+jest.mock('bcrypt', () => ({
+  async hash (): Promise<string> {
+    return await new Promise(resolve => resolve('hash'))
+  }
+}))
+
+const salt = process.env.SALT
+const makeSut = (): BcryptAdaptador => {
+  return new BcryptAdaptador(+(salt as string))
+}
 describe('Bcrypt Adaptador', () => {
   test('Deverá chamar o bcrypt com valores corretos', async () => {
-    const salt = 12
-    const sut = new BcryptAdaptador(salt)
+    const sut = makeSut()
     const hashEspionar = jest.spyOn(bcrypt, 'hash')
     await sut.encriptar('qualquer_valor')
-    expect(hashEspionar).toHaveBeenLastCalledWith('qualquer_valor', salt)
+    expect(hashEspionar).toHaveBeenCalledWith('qualquer_valor', +(salt as string))
+  })
+  test('Deverá retornar um hash em caso de sucesso', async () => {
+    const sut = makeSut()
+    const hash = await sut.encriptar('qualquer_valor')
+    expect(hash).toBe('hash')
+  })
+  test('Deverá retornar condição throw caso bcrypt esteja em throw ', async () => {
+    const sut = makeSut()
+    jest.spyOn(bcrypt, 'hash').mockImplementationOnce(() => Promise.reject(new Error())) // eslint-disable-line
+    const promise = sut.encriptar('qualquer_valor')
+    await expect(promise).rejects.toThrow()
   })
 })
