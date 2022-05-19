@@ -9,6 +9,10 @@ export const adaptadorDeRota = (controlador: Controlador) => {
       parametro: req.params.parametro
     }
     const respostaHttp = await controlador.tratar(requisicaoHttp)
-    res.status(respostaHttp.status).json(respostaHttp.corpo)
+    if (respostaHttp.status === 200) {
+      res.status(respostaHttp.status).json(respostaHttp.corpo)
+    } else {
+      res.status(respostaHttp.status).json({ erro: respostaHttp.corpo.message })
+    }
   }
 }
