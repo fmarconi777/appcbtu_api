@@ -53,3 +53,12 @@ No VScode é necessário a instalação das extenções "StandardJS", para melho
 `npm run test:unit` - Todos os testes unitários recentemente alterados, do tipo .spec.ts, serão executados e não serão exibidos os erros
 
 `npm run test:integration` - Todos os testes de integração recentemente alterados, do tipo .test.ts, serão executados e não serão exibidos os erros
+
+## Endpoints e métodos HTTP suportados (servidor de testes)
+
+Para utilizar os endpoints acesse o servidor de testes, vá para o diretório da API (cd appcbtu_api/) e execute o comando "npm start".
+(Note que ao sair do servidor de testes a aplicação irá parar de executar)
+
+* `http://10.10.20.202:5000/api/estacao` - Métodos: GET
+* `http://10.10.20.202:5000/api/estacao/(sigla da estação)` - Métodos: GET
+* `http://10.10.20.202:5000/api/equipamento` - Métodos: POST
