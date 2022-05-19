@@ -105,6 +105,6 @@ create table if not exists Funcionario(
 
 create table if not exists Erros(
   id int auto_increment primary key,
-  stack varchar(255) not null,
+  stack text not null,
   dataDoErro timestamp not null
 );
