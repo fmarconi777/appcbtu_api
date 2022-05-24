@@ -1,3 +1,4 @@
+import { Autenticador } from '../../dominio/casos-de-uso/autenticador/autenticador'
 import { erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
@@ -7,9 +8,11 @@ import { Validador } from '../protocolos/validador'
 
 export class ControladorDeLogin implements Controlador {
   private readonly validadorDeEmail: Validador
+  private readonly autenticador: Autenticador
 
-  constructor (validadorDeEmail: Validador) {
+  constructor (validadorDeEmail: Validador, autenticador: Autenticador) {
     this.validadorDeEmail = validadorDeEmail
+    this.autenticador = autenticador
   }
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
@@ -20,11 +23,12 @@ export class ControladorDeLogin implements Controlador {
           return requisicaoImpropria(new ErroFaltaParametro(campo))
         }
       }
-      const { email } = requisicaoHttp.corpo
+      const { email, senha } = requisicaoHttp.corpo
       const validar = this.validadorDeEmail.validar(email)
       if (!validar) {
         return requisicaoImpropria(new ErroParametroInvalido('email'))
       }
+      await this.autenticador.autenticar({ email, senha })
       return await new Promise(resolve => resolve({ status: 200, corpo: '' }))
     } catch (erro: any) {
       return erroDeServidor(erro)
