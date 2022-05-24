@@ -1,5 +1,6 @@
 import { requisicaoImpropria } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
+import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { Validador } from '../protocolos/validador'
@@ -19,7 +20,10 @@ export class ControladorDeLogin implements Controlador {
       }
     }
     const { email } = requisicaoHttp.corpo
-    this.validadorDeEmail.validar(email)
+    const validar = this.validadorDeEmail.validar(email)
+    if (!validar) {
+      return requisicaoImpropria(new ErroParametroInvalido('email'))
+    }
     return await new Promise(resolve => resolve({ status: 200, corpo: '' }))
   }
 }
