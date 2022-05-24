@@ -158,4 +158,17 @@ describe('Controlador de login', () => {
     expect(respostaHttp.status).toBe(500)
     expect(respostaHttp.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
   })
+
+  test('Deve retornar erro 200 se parametros válidos forem passados', async () => {
+    const { sut } = makeSut()
+    const requisicaoHttp = {
+      corpo: {
+        email: 'email_qualquer@mail.com',
+        senha: 'senha_qualquer'
+      }
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(200)
+    expect(respostaHttp.corpo).toEqual({ tokenDeAcesso: 'token_qualquer' })
+  })
 })
