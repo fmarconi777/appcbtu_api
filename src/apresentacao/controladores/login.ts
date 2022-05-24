@@ -1,4 +1,4 @@
-import { requisicaoImpropria } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { Controlador } from '../protocolos/controlador'
@@ -13,17 +13,21 @@ export class ControladorDeLogin implements Controlador {
   }
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
-    const camposRequeridos = ['email', 'senha']
-    for (const campo of camposRequeridos) {
-      if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
-        return requisicaoImpropria(new ErroFaltaParametro(campo))
+    try {
+      const camposRequeridos = ['email', 'senha']
+      for (const campo of camposRequeridos) {
+        if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
+          return requisicaoImpropria(new ErroFaltaParametro(campo))
+        }
       }
+      const { email } = requisicaoHttp.corpo
+      const validar = this.validadorDeEmail.validar(email)
+      if (!validar) {
+        return requisicaoImpropria(new ErroParametroInvalido('email'))
+      }
+      return await new Promise(resolve => resolve({ status: 200, corpo: '' }))
+    } catch (erro: any) {
+      return erroDeServidor(erro)
     }
-    const { email } = requisicaoHttp.corpo
-    const validar = this.validadorDeEmail.validar(email)
-    if (!validar) {
-      return requisicaoImpropria(new ErroParametroInvalido('email'))
-    }
-    return await new Promise(resolve => resolve({ status: 200, corpo: '' }))
   }
 }
