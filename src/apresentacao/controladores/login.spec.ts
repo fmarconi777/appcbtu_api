@@ -1,4 +1,5 @@
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
+import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { Validador } from '../protocolos/validador'
 import { ControladorDeLogin } from './login'
 
@@ -61,5 +62,19 @@ describe('Controlador de login', () => {
     }
     await sut.tratar(requisicaoHttp)
     expect(validadorSpy).toHaveBeenCalledWith('email_qualquer')
+  })
+
+  test('Deve retornar erro 400 se o email fornecido não for válido', async () => {
+    const { sut, validadorDeEmailStub } = makeSut()
+    jest.spyOn(validadorDeEmailStub, 'validar').mockReturnValueOnce(false)
+    const requisicaoHttp = {
+      corpo: {
+        email: 'email_qualquer',
+        senha: 'senha_qualquer'
+      }
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(400)
+    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('email'))
   })
 })
