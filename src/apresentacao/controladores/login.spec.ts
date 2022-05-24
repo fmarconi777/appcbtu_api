@@ -4,6 +4,7 @@ import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { Validador } from '../protocolos/validador'
 import { ControladorDeLogin } from './login'
 import { Autenticador, ModeloAutenticacao } from '../../dominio/casos-de-uso/autenticador/autenticador'
+import { ErroDeAutorizacao } from '../erros/erro-nao-autorizado'
 
 const makeValidadorDeEmail = (): Validador => {
   class ValidadorDeEmailStub implements Validador {
@@ -124,5 +125,19 @@ describe('Controlador de login', () => {
       email: 'email_qualquer@mail.com',
       senha: 'senha_qualquer'
     })
+  })
+
+  test('Deve retornar erro 401 se parametros inválidos forem passados', async () => {
+    const { sut, autenticadorStub } = makeSut()
+    jest.spyOn(autenticadorStub, 'autenticar').mockReturnValueOnce(new Promise(resolve => resolve('')))
+    const requisicaoHttp = {
+      corpo: {
+        email: 'email_qualquer@mail.com',
+        senha: 'senha_qualquer'
+      }
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(401)
+    expect(respostaHttp.corpo).toEqual(new ErroDeAutorizacao())
   })
 })
