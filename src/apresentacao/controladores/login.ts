@@ -1,6 +1,7 @@
 import { Autenticador } from '../../dominio/casos-de-uso/autenticador/autenticador'
-import { erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoImpropria, requisicaoNaoAutorizada } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
+import { ErroDeAutorizacao } from '../erros/erro-nao-autorizado'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
@@ -28,7 +29,10 @@ export class ControladorDeLogin implements Controlador {
       if (!validar) {
         return requisicaoImpropria(new ErroParametroInvalido('email'))
       }
-      await this.autenticador.autenticar({ email, senha })
+      const tokenDeAcesso = await this.autenticador.autenticar({ email, senha })
+      if (!tokenDeAcesso) { // eslint-disable-line
+        return requisicaoNaoAutorizada(new ErroDeAutorizacao())
+      }
       return await new Promise(resolve => resolve({ status: 200, corpo: '' }))
     } catch (erro: any) {
       return erroDeServidor(erro)
