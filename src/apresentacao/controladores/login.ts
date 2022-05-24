@@ -1,5 +1,5 @@
 import { Autenticador } from '../../dominio/casos-de-uso/autenticador/autenticador'
-import { erroDeServidor, requisicaoImpropria, requisicaoNaoAutorizada } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoImpropria, requisicaoNaoAutorizada, resposta } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroDeAutorizacao } from '../erros/erro-nao-autorizado'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
@@ -33,7 +33,7 @@ export class ControladorDeLogin implements Controlador {
       if (!tokenDeAcesso) { // eslint-disable-line
         return requisicaoNaoAutorizada(new ErroDeAutorizacao())
       }
-      return await new Promise(resolve => resolve({ status: 200, corpo: '' }))
+      return resposta({ tokenDeAcesso })
     } catch (erro: any) {
       return erroDeServidor(erro)
     }
