@@ -17,7 +17,7 @@ const makeValidadorDeEmail = (): Validador => {
 
 const makeAutenticador = (): Autenticador => {
   class AutenticadorStub implements Autenticador {
-    async autenticar (modeloAtenticacao: ModeloAutenticacao): Promise<string> {
+    async autenticar (atenticacao: ModeloAutenticacao): Promise<string> {
       return await new Promise(resolve => resolve('token_qualquer'))
     }
   }
