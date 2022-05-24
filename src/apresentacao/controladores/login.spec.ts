@@ -3,11 +3,7 @@ import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { Validador } from '../protocolos/validador'
 import { ControladorDeLogin } from './login'
-
-interface SubTipos {
-  sut: ControladorDeLogin
-  validadorDeEmailStub: Validador
-}
+import { Autenticador, ModeloAutenticacao } from '../../dominio/casos-de-uso/autenticador/autenticador'
 
 const makeValidadorDeEmail = (): Validador => {
   class ValidadorDeEmailStub implements Validador {
@@ -18,12 +14,29 @@ const makeValidadorDeEmail = (): Validador => {
   return new ValidadorDeEmailStub()
 }
 
+const makeAutenticador = (): Autenticador => {
+  class AutenticadorStub implements Autenticador {
+    async autenticar (modeloAtenticacao: ModeloAutenticacao): Promise<string> {
+      return await new Promise(resolve => resolve('token_qualquer'))
+    }
+  }
+  return new AutenticadorStub()
+}
+
+interface SubTipos {
+  sut: ControladorDeLogin
+  validadorDeEmailStub: Validador
+  autenticadorStub: Autenticador
+}
+
 const makeSut = (): SubTipos => {
   const validadorDeEmailStub = makeValidadorDeEmail()
-  const sut = new ControladorDeLogin(validadorDeEmailStub)
+  const autenticadorStub = makeAutenticador()
+  const sut = new ControladorDeLogin(validadorDeEmailStub, autenticadorStub)
   return {
     sut,
-    validadorDeEmailStub
+    validadorDeEmailStub,
+    autenticadorStub
   }
 }
 
@@ -95,5 +108,21 @@ describe('Controlador de login', () => {
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(500)
     expect(respostaHttp.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
+  })
+
+  test('Deve chamar o Autenticador com os parametros corretos', async () => {
+    const { sut, autenticadorStub } = makeSut()
+    const autenticarSpy = jest.spyOn(autenticadorStub, 'autenticar')
+    const requisicaoHttp = {
+      corpo: {
+        email: 'email_qualquer@mail.com',
+        senha: 'senha_qualquer'
+      }
+    }
+    await sut.tratar(requisicaoHttp)
+    expect(autenticarSpy).toHaveBeenCalledWith({
+      email: 'email_qualquer@mail.com',
+      senha: 'senha_qualquer'
+    })
   })
 })
