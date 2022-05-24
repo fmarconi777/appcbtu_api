@@ -140,4 +140,22 @@ describe('Controlador de login', () => {
     expect(respostaHttp.status).toBe(401)
     expect(respostaHttp.corpo).toEqual(new ErroDeAutorizacao())
   })
+
+  test('Deve retornar erro 500 se o autenticador retornar um erro', async () => {
+    const { sut, autenticadorStub } = makeSut()
+    const erroFalso = new Error()
+    erroFalso.stack = 'stack_qualquer'
+    jest.spyOn(autenticadorStub, 'autenticar').mockImplementationOnce(() => {
+      throw erroFalso
+    })
+    const requisicaoHttp = {
+      corpo: {
+        email: 'email_qualquer@mail.com',
+        senha: 'senha_qualquer'
+      }
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(500)
+    expect(respostaHttp.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
+  })
 })
