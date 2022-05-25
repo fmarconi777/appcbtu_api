@@ -1,5 +1,5 @@
 import { ModeloFuncionario } from '../../dominio/modelos/cadastrofuncionario'
 
-export interface RepositorioConsultaContaPorEmail {
+export interface RepositorioConsultaFuncionarioPorEmail {
   consulta: (email: string) => Promise<ModeloFuncionario>
 }
