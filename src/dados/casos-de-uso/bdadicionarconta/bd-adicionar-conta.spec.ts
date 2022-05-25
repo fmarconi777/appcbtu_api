@@ -1,4 +1,4 @@
-import { Encriptador } from '../../../apresentacao/protocolos/encriptador'
+import { Encriptador } from '../../protocolos/encriptador'
 import { BdAdicionarConta } from './bd-adicionar-conta'
 import { InserirModeloFuncionario, RepositorioFuncionario } from './bd-adicionar-conta-protocolos'
 import { ModeloFuncionario } from '../../../dominio/modelos/cadastrofuncionario'
