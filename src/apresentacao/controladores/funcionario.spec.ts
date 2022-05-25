@@ -2,20 +2,19 @@ import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ControladorDeFuncionario } from './funcionario'
 import { Validador } from '../protocolos/validador'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
-import { AdicionarConta, InserirModeloFuncionario } from '../../dominio/casos-de-uso/adicionarconta/cadastro-de-funcionario'
+import { CadastroDeFuncionario, InserirModeloFuncionario } from '../../dominio/casos-de-uso/adicionarconta/cadastro-de-funcionario'
 import { ModeloFuncionario } from '../../dominio/modelos/cadastrofuncionario'
 interface SutTipos {
   sut: ControladorDeFuncionario
   validadorDeEmailStub: Validador
-  adicionarContaStub: AdicionarConta
+  CadastroDeFuncionarioStub: CadastroDeFuncionario
 }
-const makeAdicionarConta = (): AdicionarConta => {
-  class AdicionarContaStub implements AdicionarConta {
+const makeCadastroDeFuncionario = (): CadastroDeFuncionario => {
+  class CadastroDeFuncionarioStub implements CadastroDeFuncionario {
     async adicionar (conta: InserirModeloFuncionario): Promise<ModeloFuncionario> {
       const contafalsa = {
         id: 'id_valido',
         nome: 'nome_valido',
-        area: 'area_valido',
         email: 'email_valido@mail.com',
         senha: 'senha_valido',
         administrador: 'administrador_valido',
@@ -24,7 +23,7 @@ const makeAdicionarConta = (): AdicionarConta => {
       return await new Promise(resolve => resolve(contafalsa))
     }
   }
-  return new AdicionarContaStub()
+  return new CadastroDeFuncionarioStub()
 }
 class ValidadorDeEmailStub implements Validador {
   validar (email: string): boolean {
@@ -32,13 +31,13 @@ class ValidadorDeEmailStub implements Validador {
   }
 }
 const makeSut = (): SutTipos => {
-  const adicionarContaStub = makeAdicionarConta()
+  const CadastroDeFuncionarioStub = makeCadastroDeFuncionario()
   const validadorDeEmailStub = new ValidadorDeEmailStub()
-  const sut = new ControladorDeFuncionario(validadorDeEmailStub, adicionarContaStub)
+  const sut = new ControladorDeFuncionario(validadorDeEmailStub, CadastroDeFuncionarioStub)
   return {
     sut,
     validadorDeEmailStub,
-    adicionarContaStub
+    CadastroDeFuncionarioStub
   }
 }
 
@@ -47,7 +46,6 @@ describe('Controlador de Cadastro', () => {
     const { sut } = makeSut()
     const requisicaoHttp = {
       corpo: {
-        area: 'qualquer_area',
         email: 'qualquer_email@mail.com',
         senha: 'qualquer_senha',
         administrador: 'administrador_valido',
@@ -65,7 +63,6 @@ describe('Controlador de Cadastro', () => {
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
-        area: 'qualquer_area',
         senha: 'qualquer_senha',
         administrador: 'administrador_valido',
         areaId: 'idarea_valida',
@@ -83,7 +80,6 @@ describe('Controlador de Cadastro', () => {
       corpo: {
         nome: 'qualquer_nome',
         email: 'qualquer_email@mail.com',
-        area: 'qualquer_area',
         senha: 'qualquer_senha',
         administrador: 'administrador_valido',
         areaId: 'idarea_valida',
@@ -104,7 +100,6 @@ describe('Controlador de Cadastro', () => {
       corpo: {
         nome: 'qualquer_nome',
         email: 'qualquer_email@mail.com',
-        area: 'qualquer_area',
         senha: 'qualquer_senha',
         administrador: 'administrador_valido',
         areaId: 'idarea_valida',
@@ -116,7 +111,7 @@ describe('Controlador de Cadastro', () => {
     expect(respostaHttp.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
   })
 
-  test('Retornar 400 quando a area não for fornecido', async () => {
+  test('Retornar 400 quando a areaId não for fornecido', async () => {
     const { sut } = makeSut()
     const requisicaoHttp = {
       corpo: {
@@ -124,20 +119,18 @@ describe('Controlador de Cadastro', () => {
         email: 'qualquer_email@mail.com',
         senha: 'qualquer_senha',
         administrador: 'administrador_valido',
-        areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
       }
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
-    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('area'))
+    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('areaId'))
   })
   test('Retornar 400 quando a senha não for fornecido', async () => {
     const { sut } = makeSut()
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
-        area: 'qualquer_area',
         administrador: 'administrador_valido',
         areaId: 'idarea_valida',
         email: 'qualquer_email@mail.com',
@@ -153,7 +146,6 @@ describe('Controlador de Cadastro', () => {
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
-        area: 'qualquer_area',
         email: 'qualquer_email@mail.com',
         senha: 'qualquer_senha',
         administrador: 'administrador_valido',
@@ -169,7 +161,6 @@ describe('Controlador de Cadastro', () => {
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
-        area: 'qualquer_area',
         email: 'qualquer_email@mail.com',
         senha: 'qualquer_senha',
         administrador: 'administrador_valido',
@@ -181,13 +172,12 @@ describe('Controlador de Cadastro', () => {
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('confirmarSenha'))
   })
-  test('Deverá chamar AdicionarConta quando os valores corretos forem fornecidos', async () => {
+  test('Deverá chamar CadastroDeFuncionario quando os valores corretos forem fornecidos', async () => {
     const { sut } = makeSut()
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
         email: 'qualquer_email@mail.com',
-        area: 'qualquer_area',
         senha: 'qualquer_senha',
         administrador: 'administrador_valido',
         areaId: 'idarea_valida',
@@ -199,7 +189,6 @@ describe('Controlador de Cadastro', () => {
     expect(respostaHttp.corpo).toEqual({
       id: 'id_valido',
       nome: 'nome_valido',
-      area: 'area_valido',
       email: 'email_valido@mail.com',
       senha: 'senha_valido',
       administrador: 'administrador_valido',
@@ -212,7 +201,6 @@ describe('Controlador de Cadastro', () => {
     const requisicaoHttp = {
       corpo: {
         nome: 'qualquer_nome',
-        area: 'qualquer_area',
         email: 'email_invalido',
         senha: 'qualquer_senha',
         administrador: 'administrador_valido',

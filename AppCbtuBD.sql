@@ -108,3 +108,6 @@ create table if not exists Erros(
   stack text not null,
   dataDoErro timestamp not null
 );
+
+insert into Area(nome)
+values ("coinf");
