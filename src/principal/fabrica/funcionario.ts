@@ -7,9 +7,8 @@ import { Controlador } from '../../apresentacao/protocolos/controlador'
 import { RepositorioLogDeErroMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/log'
 import { RepositorioFuncionarioMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/funcionario'
 export const criaControladorDeFuncionario = (): Controlador => {
-  const salt = 12
   const validadorDeEmail = new ValidadorDeEmailAdaptador()
-  const bcryptAdaptador = new BcryptAdaptador(salt)
+  const bcryptAdaptador = new BcryptAdaptador()
   const repositorioFuncionario = new RepositorioFuncionarioMariaDB()
   const bdAdiconarConta = new BdAdicionarConta(bcryptAdaptador, repositorioFuncionario)
   const controladorFuncionario = new ControladorDeFuncionario(validadorDeEmail, bdAdiconarConta)
