@@ -1,19 +1,19 @@
-import { AdicionarConta, InserirModeloFuncionario } from '../../../dominio/casos-de-uso/adicionarconta/cadastro-de-funcionario'
+import { CadastroDeFuncionario, InserirModeloFuncionario } from '../../../dominio/casos-de-uso/adicionarconta/cadastro-de-funcionario'
 import { ModeloFuncionario } from '../../../dominio/modelos/cadastrofuncionario'
 import { Encriptador } from '../../../apresentacao/protocolos/encriptador'
-import { AdicionarContaRepositorio } from '../../protocolos/repositorio-funcionario'
+import { RepositorioFuncionario } from '../../protocolos/repositorio-funcionario'
 
-export class BdAdicionarConta implements AdicionarConta {
+export class BdAdicionarConta implements CadastroDeFuncionario {
   private readonly encriptar: Encriptador
-  private readonly adicionarContaRepositorio: AdicionarContaRepositorio
-  constructor (encriptar: Encriptador, adicionarContaRepositorio: AdicionarContaRepositorio) {
+  private readonly repositorioFuncionario: RepositorioFuncionario
+  constructor (encriptar: Encriptador, RepositorioFuncionario: RepositorioFuncionario) {
     this.encriptar = encriptar
-    this.adicionarContaRepositorio = adicionarContaRepositorio
+    this.repositorioFuncionario = RepositorioFuncionario
   }
 
   async adicionar (contaData: InserirModeloFuncionario): Promise<ModeloFuncionario> {
     const senhaHashed = await this.encriptar.encriptar(contaData.senha)
-    const conta = await this.adicionarContaRepositorio.adicionar(Object.assign({}, contaData, { senha: senhaHashed }))
+    const conta = await this.repositorioFuncionario.adicionar(Object.assign({}, contaData, { senha: senhaHashed }))
     return conta
   }
 }
