@@ -38,6 +38,10 @@ Após executar o `npm install`, crie um arquivo '.env' na raiz do projeto com as
 * METODO = '*'
 * CABECALHO = '*'
 
+# Salt do Encriptador
+
+SALT = '12'
+
 
 No VScode é necessário a instalação das extenções "StandardJS", para melhor integração com a dependencia
 "ts-standard", e "Jest Snippets".
