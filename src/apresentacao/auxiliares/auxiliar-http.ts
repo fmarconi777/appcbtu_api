@@ -1,4 +1,5 @@
 import { ErroDeServidor } from '../erros/erro-de-servidor'
+import { ErroDeAutorizacao } from '../erros/erro-nao-autorizado'
 import { RespostaHttp } from '../protocolos/http'
 
 /*
@@ -14,6 +15,11 @@ export const resposta = (dados: any): RespostaHttp => ({
 export const requisicaoImpropria = (erro: Error): RespostaHttp => ({
   status: 400,
   corpo: erro
+})
+
+export const requisicaoNaoAutorizada = (erro: Error): RespostaHttp => ({
+  status: 401,
+  corpo: new ErroDeAutorizacao()
 })
 
 export const requisicaoNaoEncontrada = (erro: Error): RespostaHttp => ({
