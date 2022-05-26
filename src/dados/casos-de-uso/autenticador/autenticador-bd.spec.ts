@@ -148,4 +148,14 @@ describe('Autenticação no banco de dados', () => {
     const promise = sut.autenticar(autenticacao)
     await expect(promise).rejects.toThrow()
   })
+
+  test('Deve retornar um token em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const autenticacao = {
+      email: 'email_qualquer@mail.com',
+      senha: 'senha_qualquer'
+    }
+    const token = await sut.autenticar(autenticacao)
+    expect(token).toBe('token_qualquer')
+  })
 })
