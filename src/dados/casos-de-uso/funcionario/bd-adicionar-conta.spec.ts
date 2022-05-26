@@ -1,7 +1,7 @@
 import { Encriptador } from '../../protocolos/criptografia/encriptador'
 import { BdAdicionarConta } from './bd-adicionar-conta'
 import { InserirModeloFuncionario, RepositorioFuncionario } from './bd-adicionar-conta-protocolos'
-import { ModeloFuncionario } from '../../../dominio/modelos/cadastrofuncionario'
+import { ModeloFuncionario } from '../../../dominio/modelos/funcionario'
 
 const makeEncriptador = (): Encriptador => {
   class EncriptadorStub implements Encriptador {

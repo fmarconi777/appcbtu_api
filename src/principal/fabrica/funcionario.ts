@@ -1,6 +1,6 @@
 import { ControladorDeFuncionario } from '../../apresentacao/controladores/funcionario'
 import { ValidadorDeEmailAdaptador } from '../../utilidades/validador-de-email'
-import { BdAdicionarConta } from '../../dados/casos-de-uso/bdadicionarconta/bd-adicionar-conta'
+import { BdAdicionarConta } from '../../dados/casos-de-uso/funcionario/bd-adicionar-conta'
 import { BcryptAdaptador } from '../../infraestrutura/criptografia/bcrypt-adaptador'
 import { DecoradorControladorLog } from '../decoradores/log'
 import { Controlador } from '../../apresentacao/protocolos/controlador'

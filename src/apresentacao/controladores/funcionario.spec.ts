@@ -2,8 +2,8 @@ import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ControladorDeFuncionario } from './funcionario'
 import { Validador } from '../protocolos/validador'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
-import { CadastroDeFuncionario, InserirModeloFuncionario } from '../../dominio/casos-de-uso/adicionarconta/cadastro-de-funcionario'
-import { ModeloFuncionario } from '../../dominio/modelos/cadastrofuncionario'
+import { CadastroDeFuncionario, InserirModeloFuncionario } from '../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
+import { ModeloFuncionario } from '../../dominio/modelos/funcionario'
 interface SutTipos {
   sut: ControladorDeFuncionario
   validadorDeEmailStub: Validador

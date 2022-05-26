@@ -1,4 +1,4 @@
-import { ModeloFuncionario } from '../../modelos/cadastrofuncionario'
+import { ModeloFuncionario } from '../../modelos/funcionario'
 
 export interface InserirModeloFuncionario {
   nome: string

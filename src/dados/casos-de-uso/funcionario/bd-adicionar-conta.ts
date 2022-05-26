@@ -1,5 +1,5 @@
-import { CadastroDeFuncionario, InserirModeloFuncionario } from '../../../dominio/casos-de-uso/adicionarconta/cadastro-de-funcionario'
-import { ModeloFuncionario } from '../../../dominio/modelos/cadastrofuncionario'
+import { CadastroDeFuncionario, InserirModeloFuncionario } from '../../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
+import { ModeloFuncionario } from '../../../dominio/modelos/funcionario'
 import { Encriptador } from '../../protocolos/criptografia/encriptador'
 import { RepositorioFuncionario } from '../../protocolos/bd/repositorio-funcionario'
 

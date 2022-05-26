@@ -1,0 +1,4 @@
+export * from '../../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
+export * from '../../../dominio/modelos/funcionario'
+export * from '../../protocolos/criptografia/encriptador'
+export * from '../../protocolos/bd/repositorio-funcionario'

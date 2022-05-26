@@ -3,7 +3,7 @@ import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { erroDeServidor, requisicaoImpropria, resposta } from '../auxiliares/auxiliar-http'
 import { Controlador } from '../protocolos/controlador'
 import { Validador } from '../protocolos/validador'
-import { CadastroDeFuncionario } from '../../dominio/casos-de-uso/adicionarconta/cadastro-de-funcionario'
+import { CadastroDeFuncionario } from '../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
 export class ControladorDeFuncionario implements Controlador {
   private readonly validadorDeEmail: Validador
   private readonly cadastrodeFuncionario: CadastroDeFuncionario
