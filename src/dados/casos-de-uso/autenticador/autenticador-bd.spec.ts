@@ -3,6 +3,7 @@ import { ModeloFuncionario } from '../../../dominio/modelos/cadastrofuncionario'
 import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/bd/repositorio-consulta-funcionario-por-email'
 import { AutenticadorBD } from './autenticador-bd'
 import { ComparadorHash } from '../../protocolos/criptografia/comparador-hash'
+import { GeradorDeToken } from '../../protocolos/criptografia/gerador-de-token'
 
 const makeRepositorioConsultaFuncionarioPorEmail = (): RepositorioConsultaFuncionarioPorEmail => {
   class RepositorioConsultaFuncionarioPorEmailStub implements RepositorioConsultaFuncionarioPorEmail {
@@ -30,20 +31,32 @@ const makeComparadorHash = (): ComparadorHash => {
   return new ComparadorHashStub()
 }
 
+const makeGeradorDeToken = (): GeradorDeToken => {
+  class GeradorDeTokenStub implements GeradorDeToken {
+    async gerar (id: string): Promise<string > {
+      return await new Promise(resolve => resolve('token_qualquer'))
+    }
+  }
+  return new GeradorDeTokenStub()
+}
+
 interface SubTipos {
   sut: Autenticador
   repositorioConsultaFuncionarioPorEmailStub: RepositorioConsultaFuncionarioPorEmail
   comparadorHashStub: ComparadorHash
+  geradorDeTokenStub: GeradorDeToken
 }
 
 const makeSut = (): SubTipos => {
   const repositorioConsultaFuncionarioPorEmailStub = makeRepositorioConsultaFuncionarioPorEmail()
   const comparadorHashStub = makeComparadorHash()
-  const sut = new AutenticadorBD(repositorioConsultaFuncionarioPorEmailStub, comparadorHashStub)
+  const geradorDeTokenStub = makeGeradorDeToken()
+  const sut = new AutenticadorBD(repositorioConsultaFuncionarioPorEmailStub, comparadorHashStub, geradorDeTokenStub)
   return {
     sut,
     repositorioConsultaFuncionarioPorEmailStub,
-    comparadorHashStub
+    comparadorHashStub,
+    geradorDeTokenStub
   }
 }
 
@@ -112,5 +125,16 @@ describe('Autenticação no banco de dados', () => {
     }
     const tokenDeAcesso = await sut.autenticar(autenticacao)
     expect(tokenDeAcesso).toBeNull()
+  })
+
+  test('Deve chamar o GeradorDeToken com o id correto', async () => {
+    const { sut, geradorDeTokenStub } = makeSut()
+    const gerarSpy = jest.spyOn(geradorDeTokenStub, 'gerar')
+    const autenticacao = {
+      email: 'email_qualquer@mail.com',
+      senha: 'senha_qualquer'
+    }
+    await sut.autenticar(autenticacao)
+    expect(gerarSpy).toHaveBeenCalledWith('id_qualquer')
   })
 })
