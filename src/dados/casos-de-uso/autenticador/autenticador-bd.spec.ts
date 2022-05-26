@@ -91,4 +91,15 @@ describe('Autenticação no banco de dados', () => {
     await sut.autenticar(autenticacao)
     expect(compararSpy).toHaveBeenCalledWith('senha_qualquer', 'senha_hash')
   })
+
+  test('Deve retornar um erro caso o ComparadorHash retorne um erro', async () => {
+    const { sut, comparadorHashStub } = makeSut()
+    jest.spyOn(comparadorHashStub, 'comparar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const autenticacao = {
+      email: 'email_qualquer@mail.com',
+      senha: 'senha_qualquer'
+    }
+    const promise = sut.autenticar(autenticacao)
+    await expect(promise).rejects.toThrow()
+  })
 })
