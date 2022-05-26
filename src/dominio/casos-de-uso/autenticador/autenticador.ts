@@ -4,5 +4,5 @@ export interface ModeloAutenticacao {
 }
 
 export interface Autenticador {
-  autenticar: (autenticacao: ModeloAutenticacao) => Promise<string>
+  autenticar: (autenticacao: ModeloAutenticacao) => Promise<string | null>
 }
