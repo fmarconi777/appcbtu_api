@@ -19,8 +19,7 @@ export class AutenticadorBD implements Autenticador {
     if (funcionario) { // eslint-disable-line
       const comparacao = await this.comparadorHash.comparar(autenticacao.senha, funcionario.senha)
       if (comparacao) {
-        await this.geradorDeToken.gerar(funcionario.id)
-        return await new Promise(resolve => resolve(''))
+        return await this.geradorDeToken.gerar(funcionario.id)
       }
     }
     return null
