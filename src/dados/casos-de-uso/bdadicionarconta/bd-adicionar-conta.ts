@@ -1,7 +1,7 @@
 import { CadastroDeFuncionario, InserirModeloFuncionario } from '../../../dominio/casos-de-uso/adicionarconta/cadastro-de-funcionario'
 import { ModeloFuncionario } from '../../../dominio/modelos/cadastrofuncionario'
-import { Encriptador } from '../../protocolos/encriptador'
-import { RepositorioFuncionario } from '../../protocolos/repositorio-funcionario'
+import { Encriptador } from '../../protocolos/criptografia/encriptador'
+import { RepositorioFuncionario } from '../../protocolos/bd/repositorio-funcionario'
 
 export class BdAdicionarConta implements CadastroDeFuncionario {
   private readonly encriptar: Encriptador

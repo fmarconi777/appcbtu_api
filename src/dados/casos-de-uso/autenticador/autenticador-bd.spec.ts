@@ -1,6 +1,6 @@
 import { Autenticador } from '../../../dominio/casos-de-uso/autenticador/autenticador'
 import { ModeloFuncionario } from '../../../dominio/modelos/cadastrofuncionario'
-import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/repositorio-consulta-conta-por-email'
+import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/bd/repositorio-consulta-funcionario-por-email'
 import { AutenticadorBD } from './autenticador-bd'
 
 const makeRepositorioConsultaFuncionarioPorEmail = (): RepositorioConsultaFuncionarioPorEmail => {

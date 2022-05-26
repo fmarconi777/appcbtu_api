@@ -1,6 +1,6 @@
 import { DadosEquipamento } from '../../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
 import { ModeloEquipamento } from '../../../dominio/modelos/equipamento'
-import { RepositorioEquipamento } from '../../protocolos/repositorio-equipamento'
+import { RepositorioEquipamento } from '../../protocolos/bd/repositorio-equipamento'
 import { CadastroDeEquipamentoBd } from './cadastro-de-equipamento-bd'
 
 const makeRepositorioEquimento = (): RepositorioEquipamento => {

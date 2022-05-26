@@ -1,4 +1,4 @@
-import { ModeloFuncionario } from '../../dominio/modelos/cadastrofuncionario'
+import { ModeloFuncionario } from '../../../dominio/modelos/cadastrofuncionario'
 
 export interface RepositorioConsultaFuncionarioPorEmail {
   consulta: (email: string) => Promise<ModeloFuncionario>

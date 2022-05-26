@@ -1,5 +1,5 @@
 import { Autenticador, ModeloAutenticacao } from '../../../dominio/casos-de-uso/autenticador/autenticador'
-import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/repositorio-consulta-conta-por-email'
+import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/bd/repositorio-consulta-funcionario-por-email'
 
 export class AutenticadorBD implements Autenticador {
   private readonly repositorioConsultaFuncionarioPorEmail: RepositorioConsultaFuncionarioPorEmail

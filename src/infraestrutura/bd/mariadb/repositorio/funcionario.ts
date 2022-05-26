@@ -1,4 +1,4 @@
-import { RepositorioFuncionario } from '../../../../dados/protocolos/repositorio-funcionario'
+import { RepositorioFuncionario } from '../../../../dados/protocolos/bd/repositorio-funcionario'
 import { InserirModeloFuncionario } from '../../../../dominio/casos-de-uso/adicionarconta/cadastro-de-funcionario'
 import { ModeloFuncionario } from '../../../../dominio/modelos/cadastrofuncionario'
 import { Funcionario } from '../models/modelo-funcionarios'

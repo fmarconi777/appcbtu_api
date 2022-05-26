@@ -1,4 +1,4 @@
-import { RepositorioEstacao, ModelosEstacoes } from '../../../../dados/protocolos/repositorio-estacao'
+import { RepositorioEstacao, ModelosEstacoes } from '../../../../dados/protocolos/bd/repositorio-estacao'
 import { Estacao } from '../models/modelo-estacao'
 
 export class RepositorioEstacaoMariaDB implements RepositorioEstacao {

@@ -1,4 +1,4 @@
-import { RepositorioEstacao, ModelosEstacoes } from '../../protocolos/repositorio-estacao'
+import { RepositorioEstacao, ModelosEstacoes } from '../../protocolos/bd/repositorio-estacao'
 import { ConsultaEstacaoBD } from './consulta-estacao-bd'
 
 const makeRepositorioEstacao = (): RepositorioEstacao => {

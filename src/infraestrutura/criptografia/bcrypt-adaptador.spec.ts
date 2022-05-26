@@ -10,7 +10,7 @@ jest.mock('bcrypt', () => ({
 
 const salt = process.env.SALT
 const makeSut = (): BcryptAdaptador => {
-  return new BcryptAdaptador(+(salt as string))
+  return new BcryptAdaptador()
 }
 describe('Bcrypt Adaptador', () => {
   test('Deverá chamar o bcrypt com valores corretos', async () => {

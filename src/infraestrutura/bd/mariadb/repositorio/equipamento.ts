@@ -1,4 +1,4 @@
-import { RepositorioEquipamento } from '../../../../dados/protocolos/repositorio-equipamento'
+import { RepositorioEquipamento } from '../../../../dados/protocolos/bd/repositorio-equipamento'
 import { DadosEquipamento } from '../../../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
 import { ModeloEquipamento } from '../../../../dominio/modelos/equipamento'
 import { Equipamento } from '../models/modelo-equipamento'

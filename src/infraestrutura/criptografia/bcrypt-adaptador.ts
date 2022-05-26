@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { Encriptador } from '../../dados/protocolos/encriptador'
+import { Encriptador } from '../../dados/protocolos/criptografia/encriptador'
 import 'dotenv/config'
 
 export class BcryptAdaptador implements Encriptador {
