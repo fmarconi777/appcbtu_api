@@ -2,17 +2,18 @@ import { Autenticador } from '../../../dominio/casos-de-uso/autenticador/autenti
 import { ModeloFuncionario } from '../../../dominio/modelos/cadastrofuncionario'
 import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/bd/repositorio-consulta-funcionario-por-email'
 import { AutenticadorBD } from './autenticador-bd'
+import { ComparadorHash } from '../../protocolos/criptografia/comparador-hash'
 
 const makeRepositorioConsultaFuncionarioPorEmail = (): RepositorioConsultaFuncionarioPorEmail => {
   class RepositorioConsultaFuncionarioPorEmailStub implements RepositorioConsultaFuncionarioPorEmail {
     async consulta (email: string): Promise<ModeloFuncionario> {
       const funcionarioFalso: ModeloFuncionario = {
-        id: 'qualquer_id',
-        nome: 'qualquer_nome',
-        email: 'qualquer_email',
-        senha: 'qualquer_senha',
+        id: 'id_qualquer',
+        nome: 'nome_qualquer',
+        email: 'email_qualquer',
+        senha: 'senha_hash',
         administrador: 'false',
-        areaId: 'qualquer_areaId'
+        areaId: 'areaId_qualquer'
       }
       return await new Promise(resolve => resolve(funcionarioFalso))
     }
@@ -20,17 +21,29 @@ const makeRepositorioConsultaFuncionarioPorEmail = (): RepositorioConsultaFuncio
   return new RepositorioConsultaFuncionarioPorEmailStub()
 }
 
+const makeComparadorHash = (): ComparadorHash => {
+  class ComparadorHashStub implements ComparadorHash {
+    async comparar (senha: string, hash: string): Promise<boolean> {
+      return await new Promise(resolve => resolve(true))
+    }
+  }
+  return new ComparadorHashStub()
+}
+
 interface SubTipos {
   sut: Autenticador
   repositorioConsultaFuncionarioPorEmail: RepositorioConsultaFuncionarioPorEmail
+  comparadorHashStub: ComparadorHash
 }
 
 const makeSut = (): SubTipos => {
   const repositorioConsultaFuncionarioPorEmail = makeRepositorioConsultaFuncionarioPorEmail()
-  const sut = new AutenticadorBD(repositorioConsultaFuncionarioPorEmail)
+  const comparadorHashStub = makeComparadorHash()
+  const sut = new AutenticadorBD(repositorioConsultaFuncionarioPorEmail, comparadorHashStub)
   return {
     sut,
-    repositorioConsultaFuncionarioPorEmail
+    repositorioConsultaFuncionarioPorEmail,
+    comparadorHashStub
   }
 }
 
@@ -55,5 +68,27 @@ describe('Autenticação no banco de dados', () => {
     }
     const promise = sut.autenticar(autenticacao)
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Deve retornar null caso o RepositorioConsultaFuncionarioPorEmail retorne null', async () => {
+    const { sut, repositorioConsultaFuncionarioPorEmail } = makeSut()
+    jest.spyOn(repositorioConsultaFuncionarioPorEmail, 'consulta').mockReturnValueOnce(null)
+    const autenticacao = {
+      email: 'email_qualquer@mail.com',
+      senha: 'senha_qualquer'
+    }
+    const tokenDeAcesso = await sut.autenticar(autenticacao)
+    expect(tokenDeAcesso).toBeNull()
+  })
+
+  test('Deve chamar o ComparadorHash com os parametros corretos', async () => {
+    const { sut, comparadorHashStub } = makeSut()
+    const compararSpy = jest.spyOn(comparadorHashStub, 'comparar')
+    const autenticacao = {
+      email: 'email_qualquer@mail.com',
+      senha: 'senha_qualquer'
+    }
+    await sut.autenticar(autenticacao)
+    expect(compararSpy).toHaveBeenCalledWith('senha_qualquer', 'senha_hash')
   })
 })
