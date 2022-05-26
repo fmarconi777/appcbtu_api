@@ -137,4 +137,15 @@ describe('Autenticação no banco de dados', () => {
     await sut.autenticar(autenticacao)
     expect(gerarSpy).toHaveBeenCalledWith('id_qualquer')
   })
+
+  test('Deve retornar um erro caso o GeradorDeToken retorne um erro', async () => {
+    const { sut, geradorDeTokenStub } = makeSut()
+    jest.spyOn(geradorDeTokenStub, 'gerar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const autenticacao = {
+      email: 'email_qualquer@mail.com',
+      senha: 'senha_qualquer'
+    }
+    const promise = sut.autenticar(autenticacao)
+    await expect(promise).rejects.toThrow()
+  })
 })
