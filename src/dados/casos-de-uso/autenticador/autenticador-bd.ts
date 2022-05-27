@@ -17,8 +17,8 @@ export class AutenticadorBD implements Autenticador {
   async autenticar (autenticacao: ModeloAutenticacao): Promise<string | null> {
     const funcionario = await this.repositorioConsultaFuncionarioPorEmail.consulta(autenticacao.email)
     if (funcionario) { // eslint-disable-line
-      const comparacao = await this.comparadorHash.comparar(autenticacao.senha, funcionario.senha)
-      if (comparacao) {
+      const coincide = await this.comparadorHash.comparar(autenticacao.senha, funcionario.senha)
+      if (coincide) {
         return await this.encriptador.encriptar(funcionario.id)
       }
     }

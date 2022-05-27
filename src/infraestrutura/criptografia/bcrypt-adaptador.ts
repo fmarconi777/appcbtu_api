@@ -12,7 +12,7 @@ export class BcryptAdaptador implements GeradorDeHash, ComparadorHash {
   }
 
   async comparar (valor: string, hash: string): Promise<boolean> {
-    await bcrypt.compare(valor, hash)
-    return await new Promise(resolve => resolve(true))
+    const coincide = await bcrypt.compare(valor, hash)
+    return coincide
   }
 }
