@@ -31,7 +31,7 @@ describe('Bcrypt Adaptador', () => {
     expect(hash).toBe('hash')
   })
 
-  test('Deverá retornar um erro caso bcrypt retorne um erro', async () => {
+  test('Deverá retornar um erro caso o hash do bcrypt retorne um erro', async () => {
     const sut = makeSut()
     jest.spyOn(bcrypt, 'hash').mockImplementationOnce(() => Promise.reject(new Error())) // eslint-disable-line
     const promise = sut.gerar('qualquer_valor')
@@ -56,5 +56,12 @@ describe('Bcrypt Adaptador', () => {
     jest.spyOn(bcrypt, 'compare').mockImplementationOnce(() => Promise.resolve(false)) // eslint-disable-line
     const coincide = await sut.comparar('qualquer_valor', 'hash_qualquer')
     expect(coincide).toBe(false)
+  })
+
+  test('Deverá retornar um erro caso o compare do bcrypt retorne um erro', async () => {
+    const sut = makeSut()
+    jest.spyOn(bcrypt, 'compare').mockImplementationOnce(() => Promise.reject(new Error())) // eslint-disable-line
+    const promise = sut.comparar('qualquer_valor', 'hash_qualquer')
+    await expect(promise).rejects.toThrow()
   })
 })
