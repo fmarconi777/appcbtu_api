@@ -1,7 +1,7 @@
 import { ControladorDeFuncionario } from '../../apresentacao/controladores/funcionario'
 import { ValidadorDeEmailAdaptador } from '../../utilidades/validador-de-email'
 import { BdAdicionarConta } from '../../dados/casos-de-uso/funcionario/bd-adicionar-conta'
-import { BcryptAdaptador } from '../../infraestrutura/criptografia/bcrypt-adaptador'
+import { BcryptAdaptador } from '../../infraestrutura/criptografia/bcrypt-adaptador/bcrypt-adaptador'
 import { DecoradorControladorLog } from '../decoradores/log'
 import { Controlador } from '../../apresentacao/protocolos/controlador'
 import { RepositorioLogDeErroMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/log'
