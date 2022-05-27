@@ -7,7 +7,7 @@ import { Encriptador } from '../../protocolos/criptografia/encriptador'
 
 const makeRepositorioConsultaFuncionarioPorEmail = (): RepositorioConsultaFuncionarioPorEmail => {
   class RepositorioConsultaFuncionarioPorEmailStub implements RepositorioConsultaFuncionarioPorEmail {
-    async consulta (email: string): Promise<ModeloFuncionario> {
+    async consultaPorEmail (email: string): Promise<ModeloFuncionario> {
       const funcionarioFalso: ModeloFuncionario = {
         id: 'id_qualquer',
         nome: 'nome_qualquer',
@@ -63,18 +63,18 @@ const makeSut = (): SubTipos => {
 describe('Autenticação no banco de dados', () => {
   test('Deve chamar RepositorioConsultaFuncionarioPorEmail com o email correto', async () => {
     const { sut, repositorioConsultaFuncionarioPorEmailStub } = makeSut()
-    const consultaSpy = jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consulta')
+    const consultaPorEmailSpy = jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consultaPorEmail')
     const autenticacao = {
       email: 'email_qualquer@mail.com',
       senha: 'senha_qualquer'
     }
     await sut.autenticar(autenticacao)
-    expect(consultaSpy).toHaveBeenCalledWith('email_qualquer@mail.com')
+    expect(consultaPorEmailSpy).toHaveBeenCalledWith('email_qualquer@mail.com')
   })
 
   test('Deve retornar um erro caso o RepositorioConsultaFuncionarioPorEmail retorne um erro', async () => {
     const { sut, repositorioConsultaFuncionarioPorEmailStub } = makeSut()
-    jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consulta').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consultaPorEmail').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const autenticacao = {
       email: 'email_qualquer@mail.com',
       senha: 'senha_qualquer'
@@ -85,7 +85,7 @@ describe('Autenticação no banco de dados', () => {
 
   test('Deve retornar null caso o RepositorioConsultaFuncionarioPorEmail retorne null', async () => {
     const { sut, repositorioConsultaFuncionarioPorEmailStub } = makeSut()
-    jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consulta').mockReturnValueOnce(null)
+    jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consultaPorEmail').mockReturnValueOnce(null)
     const autenticacao = {
       email: 'email_qualquer@mail.com',
       senha: 'senha_qualquer'
