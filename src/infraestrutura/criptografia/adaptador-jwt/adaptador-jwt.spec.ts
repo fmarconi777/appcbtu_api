@@ -5,6 +5,12 @@ import { Encriptador } from '../../../dados/protocolos/criptografia/encriptador'
 
 const chaveSecreta = process.env.CHAVE_SECRETA
 
+jest.mock('jsonwebtoken', () => ({
+  sign (): string {
+    return 'token_qualquer'
+  }
+}))
+
 interface SubTipos {
   sut: Encriptador
 }
@@ -22,5 +28,11 @@ describe('Adaptador do jwt', () => {
     const signSpy = jest.spyOn(jwt, 'sign')
     await sut.encriptar('id_qualquer')
     expect(signSpy).toHaveBeenCalledWith({ id: 'id_qualquer' }, chaveSecreta)
+  })
+
+  test('Deve retornar um token em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const tokenDeAcesso = await sut.encriptar('id_qualquer')
+    expect(tokenDeAcesso).toBe('token_qualquer')
   })
 })
