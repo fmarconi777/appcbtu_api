@@ -85,7 +85,7 @@ describe('Autenticação no banco de dados', () => {
 
   test('Deve retornar null caso o RepositorioConsultaFuncionarioPorEmail retorne null', async () => {
     const { sut, repositorioConsultaFuncionarioPorEmailStub } = makeSut()
-    jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consultaPorEmail').mockReturnValueOnce(null)
+    jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consultaPorEmail').mockReturnValueOnce(new Promise(resolve => resolve(null)))
     const autenticacao = {
       email: 'email_qualquer@mail.com',
       senha: 'senha_qualquer'
