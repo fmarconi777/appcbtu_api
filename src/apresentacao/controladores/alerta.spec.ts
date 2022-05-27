@@ -1,6 +1,6 @@
 import { ControladorDeAlerta } from './alerta'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
-import { CadastroAlerta, DadosAlerta } from '../../dominio/casos-de-uso/cadastro-de-alerta/cadastro-de-alerta'
+import { CadastroAlerta, DadosAlerta } from '../../dominio/casos-de-uso/alerta/cadastro-de-alerta'
 import { ModeloAlerta } from '../../dominio/modelos/alerta'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 
