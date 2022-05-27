@@ -2,7 +2,7 @@ import { erroDeServidor, requisicaoImpropria, resposta } from '../auxiliares/aux
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
-import { CadastroAlerta } from '../../dominio/casos-de-uso/cadastro-de-alerta/cadastro-de-alerta'
+import { CadastroAlerta } from '../../dominio/casos-de-uso/alerta/cadastro-de-alerta'
 
 export class ControladorDeAlerta implements Controlador {
   private readonly cadastroDeAlerta: CadastroAlerta

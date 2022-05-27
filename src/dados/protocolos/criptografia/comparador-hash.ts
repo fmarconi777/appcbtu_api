@@ -1,3 +1,3 @@
 export interface ComparadorHash {
-  comparar: (senha: string, hash: string) => Promise<boolean>
+  comparar: (valor: string, hash: string) => Promise<boolean>
 }
