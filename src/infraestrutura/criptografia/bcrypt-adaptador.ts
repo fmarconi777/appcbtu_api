@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt'
-import { Encriptador } from '../../dados/protocolos/criptografia/encriptador'
+import { GeradorDeHash } from '../../dados/protocolos/criptografia/gerador-de-hash'
 import 'dotenv/config'
 
-export class BcryptAdaptador implements Encriptador {
+export class BcryptAdaptador implements GeradorDeHash {
   private readonly salt: number = +(process.env.SALT as string)
 
-  async encriptar (value: string): Promise<string> {
+  async gerar (value: string): Promise<string> {
     const hash = await bcrypt.hash(value, this.salt)
     return hash
   }

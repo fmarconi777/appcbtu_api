@@ -1,18 +1,18 @@
 import { CadastroDeFuncionario, InserirModeloFuncionario } from '../../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
 import { ModeloFuncionario } from '../../../dominio/modelos/funcionario'
-import { Encriptador } from '../../protocolos/criptografia/encriptador'
+import { GeradorDeHash } from '../../protocolos/criptografia/gerador-de-hash'
 import { RepositorioFuncionario } from '../../protocolos/bd/repositorio-funcionario'
 
 export class BdAdicionarConta implements CadastroDeFuncionario {
-  private readonly encriptar: Encriptador
+  private readonly geradorDeHash: GeradorDeHash
   private readonly repositorioFuncionario: RepositorioFuncionario
-  constructor (encriptar: Encriptador, RepositorioFuncionario: RepositorioFuncionario) {
-    this.encriptar = encriptar
+  constructor (geradorDeHash: GeradorDeHash, RepositorioFuncionario: RepositorioFuncionario) {
+    this.geradorDeHash = geradorDeHash
     this.repositorioFuncionario = RepositorioFuncionario
   }
 
   async adicionar (contaData: InserirModeloFuncionario): Promise<ModeloFuncionario> {
-    const senhaHashed = await this.encriptar.encriptar(contaData.senha)
+    const senhaHashed = await this.geradorDeHash.gerar(contaData.senha)
     const conta = await this.repositorioFuncionario.adicionar(Object.assign({}, contaData, { senha: senhaHashed }))
     return conta
   }

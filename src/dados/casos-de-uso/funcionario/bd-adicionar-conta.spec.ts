@@ -1,15 +1,15 @@
-import { Encriptador } from '../../protocolos/criptografia/encriptador'
+import { GeradorDeHash } from '../../protocolos/criptografia/gerador-de-hash'
 import { BdAdicionarConta } from './bd-adicionar-conta'
 import { InserirModeloFuncionario, RepositorioFuncionario } from './bd-adicionar-conta-protocolos'
 import { ModeloFuncionario } from '../../../dominio/modelos/funcionario'
 
-const makeEncriptador = (): Encriptador => {
-  class EncriptadorStub implements Encriptador {
-    async encriptar (value: string): Promise<string> {
+const makeGeradorDeHash = (): GeradorDeHash => {
+  class GeradorDeHashStub implements GeradorDeHash {
+    async gerar (value: string): Promise<string> {
       return await new Promise(resolve => resolve('senha_hashed'))
     }
   }
-  return new EncriptadorStub()
+  return new GeradorDeHashStub()
 }
 
 const makeRepositorioFuncionario = (): RepositorioFuncionario => {
@@ -31,25 +31,25 @@ const makeRepositorioFuncionario = (): RepositorioFuncionario => {
 }
 interface SutTipos {
   sut: BdAdicionarConta
-  encriptadorStub: Encriptador
+  geradorDeHashStub: GeradorDeHash
   repositorioFuncionarioStub: RepositorioFuncionario
 }
 
 const makeSut = (): SutTipos => {
-  const encriptadorStub = makeEncriptador()
+  const geradorDeHashStub = makeGeradorDeHash()
   const repositorioFuncionarioStub = makeRepositorioFuncionario()
-  const sut = new BdAdicionarConta(encriptadorStub, repositorioFuncionarioStub)
+  const sut = new BdAdicionarConta(geradorDeHashStub, repositorioFuncionarioStub)
   return {
     sut,
-    encriptadorStub,
+    geradorDeHashStub,
     repositorioFuncionarioStub
   }
 }
 
 describe('CasodeUso BdAdicionarConta', () => {
-  test('Deverá chamar o Encriptador com a senha correta', async () => {
-    const { sut, encriptadorStub } = makeSut()
-    const encriptarEspionar = jest.spyOn(encriptadorStub, 'encriptar')
+  test('Deverá chamar o GeradorDeHash com a senha correta', async () => {
+    const { sut, geradorDeHashStub } = makeSut()
+    const gerarEspionar = jest.spyOn(geradorDeHashStub, 'gerar')
     const dataConta = {
       nome: 'nome_valido',
       email: 'email_valido',
@@ -58,11 +58,11 @@ describe('CasodeUso BdAdicionarConta', () => {
       areaId: 'areaid_valido'
     }
     await sut.adicionar(dataConta)
-    expect(encriptarEspionar).toHaveBeenCalledWith('senha_valido')
+    expect(gerarEspionar).toHaveBeenCalledWith('senha_valido')
   })
-  test('Deverá jogar o Encriptador se ele estiver na condiçao de throw', async () => {
-    const { sut, encriptadorStub } = makeSut()
-    jest.spyOn(encriptadorStub, 'encriptar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+  test('Deverá jogar o GeradorDeHash se ele estiver na condiçao de throw', async () => {
+    const { sut, geradorDeHashStub } = makeSut()
+    jest.spyOn(geradorDeHashStub, 'gerar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const dataConta = {
       nome: 'nome_valido',
       email: 'email_valido',
@@ -92,7 +92,7 @@ describe('CasodeUso BdAdicionarConta', () => {
       areaId: 'areaid_valido'
     })
   })
-  test('Deverá jogar o Encriptador se o AdicionarContaRepositorio estiver na condiçao de throw', async () => {
+  test('Deverá jogar o GeradorDeHash se o AdicionarContaRepositorio estiver na condiçao de throw', async () => {
     const { sut, repositorioFuncionarioStub } = makeSut()
     jest.spyOn(repositorioFuncionarioStub, 'adicionar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const dataConta = {
