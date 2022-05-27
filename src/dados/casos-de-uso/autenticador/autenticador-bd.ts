@@ -1,17 +1,17 @@
 import { Autenticador, ModeloAutenticacao } from '../../../dominio/casos-de-uso/autenticador/autenticador'
 import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/bd/repositorio-consulta-funcionario-por-email'
 import { ComparadorHash } from '../../protocolos/criptografia/comparador-hash'
-import { GeradorDeToken } from '../../protocolos/criptografia/gerador-de-token'
+import { Encriptador } from '../../protocolos/criptografia/encriptador'
 
 export class AutenticadorBD implements Autenticador {
   private readonly repositorioConsultaFuncionarioPorEmail: RepositorioConsultaFuncionarioPorEmail
   private readonly comparadorHash: ComparadorHash
-  private readonly geradorDeToken: GeradorDeToken
+  private readonly encriptador: Encriptador
 
-  constructor (repositorioConsultaFuncionarioPorEmail: RepositorioConsultaFuncionarioPorEmail, comparadorHash: ComparadorHash, geradorDeToken: GeradorDeToken) {
+  constructor (repositorioConsultaFuncionarioPorEmail: RepositorioConsultaFuncionarioPorEmail, comparadorHash: ComparadorHash, encriptador: Encriptador) {
     this.repositorioConsultaFuncionarioPorEmail = repositorioConsultaFuncionarioPorEmail
     this.comparadorHash = comparadorHash
-    this.geradorDeToken = geradorDeToken
+    this.encriptador = encriptador
   }
 
   async autenticar (autenticacao: ModeloAutenticacao): Promise<string | null> {
@@ -19,7 +19,7 @@ export class AutenticadorBD implements Autenticador {
     if (funcionario) { // eslint-disable-line
       const comparacao = await this.comparadorHash.comparar(autenticacao.senha, funcionario.senha)
       if (comparacao) {
-        return await this.geradorDeToken.gerar(funcionario.id)
+        return await this.encriptador.encriptar(funcionario.id)
       }
     }
     return null

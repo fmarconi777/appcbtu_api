@@ -3,7 +3,7 @@ import { ModeloFuncionario } from '../../../dominio/modelos/funcionario'
 import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/bd/repositorio-consulta-funcionario-por-email'
 import { AutenticadorBD } from './autenticador-bd'
 import { ComparadorHash } from '../../protocolos/criptografia/comparador-hash'
-import { GeradorDeToken } from '../../protocolos/criptografia/gerador-de-token'
+import { Encriptador } from '../../protocolos/criptografia/encriptador'
 
 const makeRepositorioConsultaFuncionarioPorEmail = (): RepositorioConsultaFuncionarioPorEmail => {
   class RepositorioConsultaFuncionarioPorEmailStub implements RepositorioConsultaFuncionarioPorEmail {
@@ -31,32 +31,32 @@ const makeComparadorHash = (): ComparadorHash => {
   return new ComparadorHashStub()
 }
 
-const makeGeradorDeToken = (): GeradorDeToken => {
-  class GeradorDeTokenStub implements GeradorDeToken {
-    async gerar (id: string): Promise<string > {
+const makeEncriptador = (): Encriptador => {
+  class EncriptadorStub implements Encriptador {
+    async encriptar (valor: string): Promise<string > {
       return await new Promise(resolve => resolve('token_qualquer'))
     }
   }
-  return new GeradorDeTokenStub()
+  return new EncriptadorStub()
 }
 
 interface SubTipos {
   sut: Autenticador
   repositorioConsultaFuncionarioPorEmailStub: RepositorioConsultaFuncionarioPorEmail
   comparadorHashStub: ComparadorHash
-  geradorDeTokenStub: GeradorDeToken
+  encriptadorStub: Encriptador
 }
 
 const makeSut = (): SubTipos => {
   const repositorioConsultaFuncionarioPorEmailStub = makeRepositorioConsultaFuncionarioPorEmail()
   const comparadorHashStub = makeComparadorHash()
-  const geradorDeTokenStub = makeGeradorDeToken()
-  const sut = new AutenticadorBD(repositorioConsultaFuncionarioPorEmailStub, comparadorHashStub, geradorDeTokenStub)
+  const encriptadorStub = makeEncriptador()
+  const sut = new AutenticadorBD(repositorioConsultaFuncionarioPorEmailStub, comparadorHashStub, encriptadorStub)
   return {
     sut,
     repositorioConsultaFuncionarioPorEmailStub,
     comparadorHashStub,
-    geradorDeTokenStub
+    encriptadorStub
   }
 }
 
@@ -127,20 +127,20 @@ describe('Autenticação no banco de dados', () => {
     expect(tokenDeAcesso).toBeNull()
   })
 
-  test('Deve chamar o GeradorDeToken com o id correto', async () => {
-    const { sut, geradorDeTokenStub } = makeSut()
-    const gerarSpy = jest.spyOn(geradorDeTokenStub, 'gerar')
+  test('Deve chamar o Encriptador com o id correto', async () => {
+    const { sut, encriptadorStub } = makeSut()
+    const encriptarSpy = jest.spyOn(encriptadorStub, 'encriptar')
     const autenticacao = {
       email: 'email_qualquer@mail.com',
       senha: 'senha_qualquer'
     }
     await sut.autenticar(autenticacao)
-    expect(gerarSpy).toHaveBeenCalledWith('id_qualquer')
+    expect(encriptarSpy).toHaveBeenCalledWith('id_qualquer')
   })
 
-  test('Deve retornar um erro caso o GeradorDeToken retorne um erro', async () => {
-    const { sut, geradorDeTokenStub } = makeSut()
-    jest.spyOn(geradorDeTokenStub, 'gerar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+  test('Deve retornar um erro caso o Encriptador retorne um erro', async () => {
+    const { sut, encriptadorStub } = makeSut()
+    jest.spyOn(encriptadorStub, 'encriptar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const autenticacao = {
       email: 'email_qualquer@mail.com',
       senha: 'senha_qualquer'
