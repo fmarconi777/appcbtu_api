@@ -3,11 +3,17 @@ import { InserirModeloFuncionario } from '../../../../dominio/casos-de-uso/funci
 import { ModeloFuncionario } from '../../../../dominio/modelos/funcionario'
 import { Funcionario } from '../models/modelo-funcionarios'
 import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
+import { RepositorioConsultaFuncionarioPorEmail } from '../../../../dados/protocolos/bd/repositorio-consulta-funcionario-por-email'
 
-export class RepositorioFuncionarioMariaDB implements RepositorioFuncionario {
+export class RepositorioFuncionarioMariaDB implements RepositorioFuncionario, RepositorioConsultaFuncionarioPorEmail {
   async adicionar (dadosFuncionario: InserirModeloFuncionario): Promise<ModeloFuncionario> {
     const funcionario = await Funcionario.create(this.transformaDados(dadosFuncionario))
     return FuncoesAuxiliares.mapeadorDeDados(funcionario)
+  }
+
+  async consultaPorEmail (email: string): Promise<ModeloFuncionario | null> {
+    const funcionario = await Funcionario.findOne({ where: { email } })
+    return funcionario ? FuncoesAuxiliares.mapeadorDeDados(funcionario) : null // eslint-disable-line
   }
 
   private transformaDados (dadosFuncionario: InserirModeloFuncionario): any {
