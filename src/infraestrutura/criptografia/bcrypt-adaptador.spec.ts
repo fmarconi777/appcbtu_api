@@ -50,4 +50,11 @@ describe('Bcrypt Adaptador', () => {
     const coincide = await sut.comparar('qualquer_valor', 'hash_qualquer')
     expect(coincide).toBe(true)
   })
+
+  test('Deverá retornar false caso o método comparar retorne false', async () => {
+    const sut = makeSut()
+    jest.spyOn(bcrypt, 'compare').mockImplementationOnce(() => Promise.resolve(false)) // eslint-disable-line
+    const coincide = await sut.comparar('qualquer_valor', 'hash_qualquer')
+    expect(coincide).toBe(false)
+  })
 })
