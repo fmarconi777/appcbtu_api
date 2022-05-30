@@ -17,7 +17,7 @@ create table if not exists Alerta(
     prioridade varchar(10) not null,
     dataInicio timestamp not null,
     dataFim timestamp not null,
-    ativo varchar(10) not null,
+    ativo boolean not null,
     estacaoId int not null,
     constraint fk_Alerta_Estacao
     foreign key (estacaoId)
