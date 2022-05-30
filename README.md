@@ -42,6 +42,10 @@ Após executar o `npm install`, crie um arquivo '.env' na raiz do projeto com as
 
 SALT = '12'
 
+# Variáveis do JWT
+
+CHAVE_SECRETA = 'chave_secreta'
+
 
 No VScode é necessário a instalação das extenções "StandardJS", para melhor integração com a dependencia
 "ts-standard", e "Jest Snippets".
