@@ -10,7 +10,7 @@ InferCreationAttributes<Alerta>
   declare prioridade: string
   declare dataInicio: string
   declare dataFim: string
-  declare ativo: string
+  declare ativo: boolean
   declare estacaoId: number
 }
 
@@ -41,7 +41,7 @@ Alerta.init(
     },
     ativo: {
       allowNull: false,
-      type: DataTypes.TEXT
+      type: DataTypes.BOOLEAN
     },
     estacaoId: {
       allowNull: false,
