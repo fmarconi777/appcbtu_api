@@ -55,5 +55,15 @@ describe('Rotas Funcionarios', () => {
         })
         .expect(200)
     })
+
+    test('Deve retornar satus 401 caso o usuário seja inválido', async () => {
+      await request(app)
+        .post('/login')
+        .send({
+          email: 'email@email.com',
+          senha: '123'
+        })
+        .expect(401)
+    })
   })
 })
