@@ -13,16 +13,18 @@ describe('Rotas Funcionarios', () => {
     console.log('conexao fechada')
   })
 
-  test('Deve retornar um funcionario em caso de sucesso', async () => {
-    await request(app)
-      .post('/funcionarios')
-      .send({
-        nome: 'Vinicius',
-        email: 'email@email.com',
-        senha: '123',
-        administrador: true,
-        areaId: '1'
-      })
-    expect(200)
+  describe('POST /funcionario', () => {
+    test('Deve retornar satus 200 em caso de sucesso', async () => {
+      await request(app)
+        .post('/funcionarios')
+        .send({
+          nome: 'Vinicius',
+          email: 'email@email.com',
+          senha: '123',
+          administrador: true,
+          areaId: '1'
+        })
+        .expect(200)
+    })
   })
 })
