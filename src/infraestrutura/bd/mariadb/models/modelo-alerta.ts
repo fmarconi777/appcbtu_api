@@ -33,11 +33,11 @@ Alerta.init(
     },
     dataInicio: {
       allowNull: false,
-      type: DataTypes.TEXT
+      type: DataTypes.DATE
     },
     dataFim: {
       allowNull: false,
-      type: DataTypes.TEXT
+      type: DataTypes.DATE
     },
     ativo: {
       allowNull: false,
