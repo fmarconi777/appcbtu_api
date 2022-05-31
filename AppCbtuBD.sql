@@ -111,3 +111,6 @@ create table if not exists Erros(
 
 insert into Area(nome)
 values ("coinf");
+
+insert into Funcionario(nome, email, senha, administrador, areaId)
+values("Vinicius", "email@email.com", "123" , true, 1)
