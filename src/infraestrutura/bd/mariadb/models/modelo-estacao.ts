@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize'
-import { bd } from '../auxiliares/auxiliar-mariadb'
+import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { ModeloEstacao } from '../../../../dominio/modelos/estacao'
 import { Equipamento } from './modelo-equipamento'
 
@@ -7,7 +7,7 @@ interface AtributosEstacao extends Optional<ModeloEstacao, 'id'> {}
 
 export interface InstanciaEstacao extends Model<ModeloEstacao, AtributosEstacao> {}
 
-export const Estacao = bd.define<InstanciaEstacao>(
+export const Estacao = AuxiliaresMariaDB.bd.define<InstanciaEstacao>(
   'Estacao',
   {
     id: {

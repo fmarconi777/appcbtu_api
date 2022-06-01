@@ -1,7 +1,7 @@
-import { bd } from '../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { AuxiliaresMariaDB } from '../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 import 'dotenv/config'
 
-bd.authenticate()
+AuxiliaresMariaDB.bd.authenticate()
   .then(async () => {
     const app = (await import('./config/app')).default
     console.log('Conexão estabelecida com sucesso.')
