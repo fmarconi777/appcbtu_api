@@ -1,14 +1,14 @@
-import { bd } from '../auxiliares/auxiliar-mariadb'
+import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { Funcionario } from '../models/modelo-funcionarios'
 import { RepositorioFuncionarioMariaDB } from './funcionario'
 
 describe('Repositorio mariaDB Funcionario', () => {
   beforeAll(async () => {
-    await bd.authenticate()
+    await AuxiliaresMariaDB.conectar()
     console.log('conexão aberta')
   })
   afterAll(async () => {
-    await bd.close()
+    await AuxiliaresMariaDB.desconectar()
     console.log('conexão fechada')
   })
 

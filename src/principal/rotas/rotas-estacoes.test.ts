@@ -1,15 +1,15 @@
 import request from 'supertest'
 import app from '../config/app'
-import { bd } from '../../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { AuxiliaresMariaDB } from '../../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 
 describe('Rotas estações', () => {
   beforeAll(async () => {
-    await bd.authenticate()
+    await AuxiliaresMariaDB.conectar()
     console.log('conexão aberta')
   })
 
   afterAll(async () => {
-    await bd.close()
+    await AuxiliaresMariaDB.desconectar()
     console.log('conexão fechada')
   })
 

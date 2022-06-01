@@ -1,15 +1,15 @@
-import { bd } from '../auxiliares/auxiliar-mariadb'
+import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { Alerta } from '../models/modelo-alerta'
 import { RepositorioAlertaMariaDB } from './alerta'
 
 describe('Repositorio mariaDB Alerta', () => {
   beforeAll(async () => {
-    await bd.authenticate()
+    await AuxiliaresMariaDB.conectar()
     console.log('conexão aberta')
   })
 
   afterAll(async () => {
-    await bd.close()
+    await AuxiliaresMariaDB.desconectar()
     console.log('conexão fechada')
   })
 
@@ -19,7 +19,7 @@ describe('Repositorio mariaDB Alerta', () => {
 
   test('Deve retornar um alerta em caso de sucesso', async () => {
     const sut = new RepositorioAlertaMariaDB()
-    const alerta = await sut.adicionando({
+    const alerta = await sut.inserir({
       descricao: 'descricao_valido',
       prioridade: 'prioridade_valido',
       dataInicio: 'datainicio_valido',

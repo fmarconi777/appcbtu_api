@@ -1,18 +1,18 @@
 import request from 'supertest'
 import app from '../config/app'
-import { bd } from '../../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { AuxiliaresMariaDB } from '../../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 import { RepositorioFuncionarioMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/funcionario'
 import { hash } from 'bcrypt'
 import { Funcionario } from '../../infraestrutura/bd/mariadb/models/modelo-funcionarios'
 
 describe('Rotas Funcionarios', () => {
   beforeAll(async () => {
-    await bd.authenticate()
+    await AuxiliaresMariaDB.conectar()
     console.log('conexao aberta')
   })
 
   afterAll(async () => {
-    await bd.close()
+    await AuxiliaresMariaDB.desconectar()
     console.log('conexao fechada')
   })
 

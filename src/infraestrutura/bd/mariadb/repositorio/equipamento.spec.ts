@@ -1,15 +1,15 @@
-import { bd } from '../auxiliares/auxiliar-mariadb'
+import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { RepositorioEquipamentoMariaDB } from './equipamento'
 import { Equipamento } from '../models/modelo-equipamento'
 
 describe('Repositorio mariaDB Equipamento', () => {
   beforeAll(async () => {
-    await bd.authenticate()
+    await AuxiliaresMariaDB.conectar()
     console.log('conexão aberta')
   })
 
   afterAll(async () => {
-    await bd.close()
+    await AuxiliaresMariaDB.desconectar()
     console.log('conexão fechada')
   })
 
