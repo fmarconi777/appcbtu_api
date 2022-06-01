@@ -5,7 +5,7 @@ import { Alerta } from '../models/modelo-alerta'
 import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
 
 export class RepositorioAlertaMariaDB implements RepositorioAlerta {
-  async adicionando (dadosAlerta: DadosAlerta): Promise<ModeloAlerta> {
+  async inserir (dadosAlerta: DadosAlerta): Promise<ModeloAlerta> {
     const alerta = await Alerta.create(this.transformaDados(dadosAlerta))
     return FuncoesAuxiliares.mapeadorDeDados(alerta)
   }
