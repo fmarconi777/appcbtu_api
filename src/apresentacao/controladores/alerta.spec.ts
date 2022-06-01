@@ -6,7 +6,7 @@ import { ErroDeServidor } from '../erros/erro-de-servidor'
 
 const makeCadastroAlerta = (): CadastroAlerta => {
   class CadastroDeAlertaStub implements CadastroAlerta {
-    async adicionando (alerta: DadosAlerta): Promise<ModeloAlerta> {
+    async inserir (alerta: DadosAlerta): Promise<ModeloAlerta> {
       const alertaFalso = {
         id: 'qualquer_id',
         descricao: alerta.descricao,
@@ -130,7 +130,7 @@ describe('Controlador de Alerta', () => {
 
   test('Deve chamar o CadastroDeAlerta com os valores corretos', async () => {
     const { sut, cadastroDeAlertaStub } = makeSut()
-    const adicionandoSpy = jest.spyOn(cadastroDeAlertaStub, 'adicionando')
+    const inserirSpy = jest.spyOn(cadastroDeAlertaStub, 'inserir')
     const requisicaoHttp = {
       corpo: {
         descricao: 'qualquer_descricao',
@@ -143,7 +143,7 @@ describe('Controlador de Alerta', () => {
       }
     }
     await sut.tratar(requisicaoHttp)
-    expect(adicionandoSpy).toHaveBeenCalledWith({
+    expect(inserirSpy).toHaveBeenCalledWith({
       descricao: 'qualquer_descricao',
       prioridade: 'qualquer_prioridade',
       dataInicio: 'iniciodata_qualquer',
@@ -156,7 +156,7 @@ describe('Controlador de Alerta', () => {
     const { sut, cadastroDeAlertaStub } = makeSut()
     const erroFalso = new Error()
     erroFalso.stack = 'stack_qualquer'
-    jest.spyOn(cadastroDeAlertaStub, 'adicionando').mockImplementationOnce(async () => {
+    jest.spyOn(cadastroDeAlertaStub, 'inserir').mockImplementationOnce(async () => {
       return await new Promise((resolve, reject) => reject(erroFalso))
     })
     const requisicaoHttp = {

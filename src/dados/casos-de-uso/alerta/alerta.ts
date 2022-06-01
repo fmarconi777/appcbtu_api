@@ -3,13 +3,13 @@ import { ModeloAlerta } from '../../../dominio/modelos/alerta'
 import { RepositorioAlerta } from '../../protocolos/bd/repositorio-alerta'
 
 export class CadastroDeAlerta implements CadastroAlerta {
-  private readonly adicionandoRepositorioAlerta: RepositorioAlerta
+  private readonly inserirRepositorioAlerta: RepositorioAlerta
 
-  constructor (adicionandoRepositorioAlerta: RepositorioAlerta) {
-    this.adicionandoRepositorioAlerta = adicionandoRepositorioAlerta
+  constructor (inserirRepositorioAlerta: RepositorioAlerta) {
+    this.inserirRepositorioAlerta = inserirRepositorioAlerta
   }
 
-  async adicionando (dadosAlerta: DadosAlerta): Promise<ModeloAlerta> {
-    return await this.adicionandoRepositorioAlerta.adicionando(dadosAlerta)
+  async inserir (dadosAlerta: DadosAlerta): Promise<ModeloAlerta> {
+    return await this.inserirRepositorioAlerta.inserir(dadosAlerta)
   }
 }

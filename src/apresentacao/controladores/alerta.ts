@@ -19,7 +19,7 @@ export class ControladorDeAlerta implements Controlador {
           return requisicaoImpropria(new ErroFaltaParametro(campo))
         }
       }
-      const alerta = await this.cadastroDeAlerta.adicionando(requisicaoHttp.corpo)
+      const alerta = await this.cadastroDeAlerta.inserir(requisicaoHttp.corpo)
       return resposta(alerta)
     } catch (erro: any) {
       return erroDeServidor(erro)

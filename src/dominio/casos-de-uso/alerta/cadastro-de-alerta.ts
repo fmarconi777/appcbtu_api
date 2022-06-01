@@ -10,5 +10,5 @@ export interface DadosAlerta {
 }
 
 export interface CadastroAlerta {
-  adicionando: (alerta: DadosAlerta) => Promise<ModeloAlerta>
+  inserir: (alerta: DadosAlerta) => Promise<ModeloAlerta>
 }

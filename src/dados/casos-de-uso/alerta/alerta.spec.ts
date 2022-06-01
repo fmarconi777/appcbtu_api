@@ -5,7 +5,7 @@ import { CadastroDeAlerta } from './alerta'
 
 const makeRepositorioAlerta = (): RepositorioAlerta => {
   class RepositorioAlertaStub implements RepositorioAlerta {
-    async adicionando (dadosAlerta: DadosAlerta): Promise<ModeloAlerta> {
+    async inserir (dadosAlerta: DadosAlerta): Promise<ModeloAlerta> {
       return await new Promise(resolve => resolve({
         id: 'id_valido',
         descricao: 'descricao_valido',
@@ -37,7 +37,7 @@ const makeStu = (): SutTypes => {
 describe('Caso de uso CadastroDeAlerta', () => {
   test('Deve chamar o RepositorioAlerta com os valores corretos', async () => {
     const { sut, repositorioAlertaStub } = makeStu()
-    const adicionandoSpy = jest.spyOn(repositorioAlertaStub, 'adicionando')
+    const inserirSpy = jest.spyOn(repositorioAlertaStub, 'inserir')
     const alertaFalso = {
       descricao: 'descricao_valido',
       prioridade: 'prioridade_valido',
@@ -46,12 +46,12 @@ describe('Caso de uso CadastroDeAlerta', () => {
       ativo: 'ativo_valido',
       estacaoId: 'estacaoid_valido'
     }
-    await sut.adicionando(alertaFalso)
-    expect(adicionandoSpy).toHaveBeenCalledWith(alertaFalso)
+    await sut.inserir(alertaFalso)
+    expect(inserirSpy).toHaveBeenCalledWith(alertaFalso)
   })
   test('Deve retornar um erro se o RepositorioAlerta retornar um erro', async () => {
     const { sut, repositorioAlertaStub } = makeStu()
-    jest.spyOn(repositorioAlertaStub, 'adicionando').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest.spyOn(repositorioAlertaStub, 'inserir').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const alertaFalso = {
       descricao: 'descricao_valido',
       prioridade: 'prioridade_valido',
@@ -60,8 +60,8 @@ describe('Caso de uso CadastroDeAlerta', () => {
       ativo: 'ativo_valido',
       estacaoId: 'estacaoid_valido'
     }
-    const adicionando = sut.adicionando(alertaFalso)
-    await expect(adicionando).rejects.toThrow()
+    const inserir = sut.inserir(alertaFalso)
+    await expect(inserir).rejects.toThrow()
   })
   test('Deve retornar um alerta em caso de sucesso', async () => {
     const { sut } = makeStu()
@@ -73,8 +73,8 @@ describe('Caso de uso CadastroDeAlerta', () => {
       ativo: 'ativo_valido',
       estacaoId: 'estacaoid_valido'
     }
-    const adicionando = await sut.adicionando(alertaFalso)
-    expect(adicionando).toEqual({
+    const inserir = await sut.inserir(alertaFalso)
+    expect(inserir).toEqual({
       id: 'id_valido',
       descricao: 'descricao_valido',
       prioridade: 'prioridade_valido',
