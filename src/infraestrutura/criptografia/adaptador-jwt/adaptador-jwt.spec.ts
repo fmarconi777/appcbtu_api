@@ -21,7 +21,7 @@ describe('Adaptador do jwt', () => {
     const sut = makeSut()
     const signSpy = jest.spyOn(jwt, 'sign')
     await sut.encriptar('id_qualquer')
-    expect(signSpy).toHaveBeenCalledWith({ id: 'id_qualquer' }, chaveSecreta)
+    expect(signSpy).toHaveBeenCalledWith({ id: 'id_qualquer' }, chaveSecreta, { expiresIn: '4h' })
   })
 
   test('Deve retornar um token em caso de sucesso', async () => {

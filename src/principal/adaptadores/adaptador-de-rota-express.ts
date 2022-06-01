@@ -6,7 +6,8 @@ export const adaptadorDeRota = (controlador: Controlador) => {
   return async (req: Request, res: Response) => {
     const requisicaoHttp: RequisicaoHttp = {
       corpo: req.body,
-      parametro: req.params.parametro
+      parametro: req.params.parametro,
+      metodo: req.method
     }
     const respostaHttp = await controlador.tratar(requisicaoHttp)
     if (respostaHttp.status === 200) {
