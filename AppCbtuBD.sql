@@ -15,8 +15,8 @@ create table if not exists Alerta(
 	id int auto_increment primary key,
     descricao varchar(255) not null,
     prioridade varchar(10) not null,
-    dataInicio timestamp not null,
-    dataFim timestamp not null,
+    dataInicio datetime not null,
+    dataFim datetime not null,
     ativo boolean not null,
     estacaoId int not null,
     constraint fk_Alerta_Estacao
