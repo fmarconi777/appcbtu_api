@@ -29,7 +29,7 @@ describe('Repositorio mariaDB Funcionario', () => {
     expect(funcionario.nome).toBe('nome_valido')
     expect(funcionario.email).toBe('email_valido')
     expect(funcionario.senha).toBe('hash_senha')
-    expect(funcionario.administrador).toBe(false)
+    expect(funcionario.administrador).toBe('false')
     expect(funcionario.areaId).toBe('1')
   })
 
@@ -46,7 +46,7 @@ describe('Repositorio mariaDB Funcionario', () => {
       nome: 'nome_valido',
       email: 'email_valido',
       senha: 'hash_senha',
-      administrador: false,
+      administrador: 'false',
       areaId: '1'
     }
     await sut.adicionar(contaFalsa)
