@@ -1,7 +1,14 @@
 import { Sequelize } from 'sequelize'
 import 'dotenv/config'
 
-export const AuxiliaresMariaDB = {
+type Auxiliares = { // eslint-disable-line
+  readonly bd: Sequelize
+  cliente: null | Sequelize
+  conectar: Function
+  desconectar: Function
+}
+
+export const AuxiliaresMariaDB: Auxiliares = {
   bd: new Sequelize(
     process.env.NOME_BANCODEDADOS as string,
     process.env.USUARIO_BANCODEDADOS as string,
@@ -13,11 +20,17 @@ export const AuxiliaresMariaDB = {
     }
   ),
 
+  cliente: null,
+
   async conectar (): Promise<void> {
-    await this.bd.authenticate()
+    this.cliente = this.bd
+    await this.cliente.authenticate()
   },
 
   async desconectar (): Promise<void> {
-    await this.bd.close()
+    if (this.cliente !== null) {
+      await this.cliente.close()
+    }
+    this.cliente = null
   }
 }
