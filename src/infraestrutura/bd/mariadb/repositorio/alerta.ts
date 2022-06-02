@@ -17,7 +17,7 @@ export class RepositorioAlertaMariaDB implements RepositorioAlerta {
       prioridade: prioridade,
       dataInicio: dataInicio,
       dataFim: dataFim,
-      ativo: ativo,
+      ativo: (ativo === 'true'),
       estacaoId: +estacaoId
     }
   }
