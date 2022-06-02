@@ -7,8 +7,8 @@ import { CadastroAlerta } from '../../dominio/casos-de-uso/alerta/cadastro-de-al
 export class ControladorDeAlerta implements Controlador {
   private readonly cadastroDeAlerta: CadastroAlerta
 
-  constructor (cadastroDeEquipamento: CadastroAlerta) {
-    this.cadastroDeAlerta = cadastroDeEquipamento
+  constructor (cadastroDeAlerta: CadastroAlerta) {
+    this.cadastroDeAlerta = cadastroDeAlerta
   }
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {

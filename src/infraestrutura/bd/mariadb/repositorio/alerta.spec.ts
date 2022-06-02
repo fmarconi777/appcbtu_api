@@ -22,16 +22,16 @@ describe('Repositorio mariaDB Alerta', () => {
     const alerta = await sut.inserir({
       descricao: 'descricao_valido',
       prioridade: 'prioridade_valido',
-      dataInicio: 'datainicio_valido',
-      dataFim: 'datafim_valido',
-      ativo: 'ativo_valido',
+      dataInicio: '00-00-00',
+      dataFim: '00-00-00',
+      ativo: 'false',
       estacaoId: '1'
     })
     expect(alerta).toBeTruthy()
     expect(alerta.id).toBeTruthy()
     expect(alerta.descricao).toBe('descricao_valido')
-    expect(alerta.dataInicio).toBe('datainicio_valido')
-    expect(alerta.dataFim).toBe('datafim_valido')
+    expect(alerta.dataInicio).toBe('00-00-00')
+    expect(alerta.dataFim).toBe('00-00-00')
     expect(alerta.ativo).toBe('ativo_valido')
     expect(alerta.estacaoId).toBe('1')
   })
