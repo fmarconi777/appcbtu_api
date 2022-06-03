@@ -3,6 +3,7 @@ import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { CadastroDeEquipamento, DadosEquipamento } from '../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
 import { ModeloEquipamento } from '../../dominio/modelos/equipamento'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
+import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 
 const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
   class CadastroDeEquipamentoStub implements CadastroDeEquipamento {
@@ -44,7 +45,8 @@ describe('Controlador de equipamentos', () => {
         numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -58,7 +60,8 @@ describe('Controlador de equipamentos', () => {
         numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -72,7 +75,8 @@ describe('Controlador de equipamentos', () => {
         tipo: 'qualquer_tipo',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -86,7 +90,8 @@ describe('Controlador de equipamentos', () => {
         tipo: 'qualquer_tipo',
         numFalha: 'numFalha_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -100,7 +105,8 @@ describe('Controlador de equipamentos', () => {
         tipo: 'qualquer_tipo',
         numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -116,7 +122,8 @@ describe('Controlador de equipamentos', () => {
         numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     await sut.tratar(requisicaoHttp)
     expect(inserirSpy).toHaveBeenCalledWith({
@@ -141,7 +148,8 @@ describe('Controlador de equipamentos', () => {
         numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(500)
@@ -156,7 +164,8 @@ describe('Controlador de equipamentos', () => {
         numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(200)
@@ -168,5 +177,21 @@ describe('Controlador de equipamentos', () => {
       estado: 'estado_qualquer',
       estacaoId: 'estacaoId_qualquer'
     })
+  })
+  test('Deve retornar codigo 400 se um método não suportado for fornecido', async () => {
+    const { sut } = makeSut()
+    const requisicaoHttp = {
+      corpo: {
+        nome: 'qualquer_nome',
+        tipo: 'qualquer_tipo',
+        numFalha: 'numFalha_qualquer',
+        estado: 'estado_qualquer',
+        estacaoId: 'estacaoId_qualquer'
+      },
+      metodo: 'metodo_invalido'
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(400)
+    expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
   })
 })
