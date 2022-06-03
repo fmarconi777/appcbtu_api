@@ -1,10 +1,12 @@
 import { RepositorioAlerta } from '../../../../dados/protocolos/bd/repositorio-alerta'
 import { DadosAlerta } from '../../../../dominio/casos-de-uso/alerta/cadastro-de-alerta'
 import { ModeloAlerta } from '../../../../dominio/modelos/alerta'
+import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { Alerta } from '../models/modelo-alerta'
 
 export class RepositorioAlertaMariaDB implements RepositorioAlerta {
   async inserir (dadosAlerta: DadosAlerta): Promise<ModeloAlerta> {
+    AuxiliaresMariaDB.verificaConexao()
     const alerta = await Alerta.create(this.transformaDados(dadosAlerta))
     const dataInicio = new Date(alerta.dataInicio).toISOString()
     const dataFim = new Date(alerta.dataFim).toISOString()
