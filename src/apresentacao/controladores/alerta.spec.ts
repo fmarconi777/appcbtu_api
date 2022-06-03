@@ -3,6 +3,7 @@ import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { CadastroAlerta, DadosAlerta } from '../../dominio/casos-de-uso/alerta/cadastro-de-alerta'
 import { ModeloAlerta } from '../../dominio/modelos/alerta'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
+import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 
 const makeCadastroAlerta = (): CadastroAlerta => {
   class CadastroDeAlertaStub implements CadastroAlerta {
@@ -46,7 +47,8 @@ describe('Controlador de Alerta', () => {
         dataFim: 'fimdata_qualquer',
         ativo: 'ativo_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -61,7 +63,8 @@ describe('Controlador de Alerta', () => {
         dataFim: 'fimdata_qualquer',
         ativo: 'ativo_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -76,7 +79,8 @@ describe('Controlador de Alerta', () => {
         dataFim: 'datafim_qualquer',
         ativo: 'ativo_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -91,7 +95,8 @@ describe('Controlador de Alerta', () => {
         dataInicio: 'iniciodata_qualquer',
         ativo: 'ativo_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -106,7 +111,8 @@ describe('Controlador de Alerta', () => {
         dataInicio: 'iniciodata_qualquer',
         dataFim: 'fimdata_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -121,7 +127,8 @@ describe('Controlador de Alerta', () => {
         dataInicio: 'iniciodata_qualquer',
         dataFim: 'fimdata_qualquer',
         ativo: 'ativo_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -139,8 +146,8 @@ describe('Controlador de Alerta', () => {
         dataFim: 'fimdata_qualquer',
         ativo: 'ativo_qualquer',
         estacaoId: 'estacaoId_qualquer'
-
-      }
+      },
+      metodo: 'POST'
     }
     await sut.tratar(requisicaoHttp)
     expect(inserirSpy).toHaveBeenCalledWith({
@@ -167,7 +174,8 @@ describe('Controlador de Alerta', () => {
         dataFim: 'fimdata_qualquer',
         ativo: 'ativo_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(500)
@@ -183,7 +191,8 @@ describe('Controlador de Alerta', () => {
         dataFim: 'fimdata_qualquer',
         ativo: 'ativo_qualquer',
         estacaoId: 'estacaoId_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(200)
@@ -196,5 +205,22 @@ describe('Controlador de Alerta', () => {
       ativo: 'ativo_qualquer',
       estacaoId: 'estacaoId_qualquer'
     })
+  })
+  test('Deve retornar codigo 400 se um método não suportado for fornecido', async () => {
+    const { sut } = makeSut()
+    const requisicaoHttp = {
+      corpo: {
+        descricao: 'qualquer_descricao',
+        prioridade: 'qualquer_prioridade',
+        dataInicio: 'iniciodata_qualquer',
+        dataFim: 'fimdata_qualquer',
+        ativo: 'ativo_qualquer',
+        estacaoId: 'estacaoId_qualquer'
+      },
+      metodo: 'metodo_invalido'
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(400)
+    expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
   })
 })

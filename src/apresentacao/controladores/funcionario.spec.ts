@@ -4,6 +4,7 @@ import { Validador } from '../protocolos/validador'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { CadastroDeFuncionario, InserirModeloFuncionario } from '../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
 import { ModeloFuncionario } from '../../dominio/modelos/funcionario'
+import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 interface SutTipos {
   sut: ControladorDeFuncionario
   validadorDeEmailStub: Validador
@@ -51,7 +52,8 @@ describe('Controlador de Cadastro', () => {
         administrador: 'administrador_valido',
         areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -67,7 +69,8 @@ describe('Controlador de Cadastro', () => {
         administrador: 'administrador_valido',
         areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -84,7 +87,8 @@ describe('Controlador de Cadastro', () => {
         administrador: 'administrador_valido',
         areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
-      }
+      },
+      metodo: 'POST'
     }
     await sut.tratar(requisicaoHttp)
     expect(validarEspionar).toHaveBeenLastCalledWith('qualquer_email@mail.com')
@@ -104,7 +108,8 @@ describe('Controlador de Cadastro', () => {
         administrador: 'administrador_valido',
         areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(500)
@@ -120,7 +125,8 @@ describe('Controlador de Cadastro', () => {
         senha: 'qualquer_senha',
         administrador: 'administrador_valido',
         confirmarSenha: 'qualquer_senha'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -135,7 +141,8 @@ describe('Controlador de Cadastro', () => {
         areaId: 'idarea_valida',
         email: 'qualquer_email@mail.com',
         confirmarSenha: 'qualquer_senha'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -150,7 +157,8 @@ describe('Controlador de Cadastro', () => {
         senha: 'qualquer_senha',
         administrador: 'administrador_valido',
         areaId: 'idarea_valida'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -166,7 +174,8 @@ describe('Controlador de Cadastro', () => {
         administrador: 'administrador_valido',
         areaId: 'idarea_valida',
         confirmarSenha: 'invalida_senha'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -182,7 +191,8 @@ describe('Controlador de Cadastro', () => {
         administrador: 'administrador_valido',
         areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(200)
@@ -206,10 +216,28 @@ describe('Controlador de Cadastro', () => {
         administrador: 'administrador_valido',
         areaId: 'idarea_valida',
         confirmarSenha: 'qualquer_senha'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('email'))
+  })
+  test('Deve retornar codigo 400 se um método não suportado for fornecido', async () => {
+    const { sut } = makeSut()
+    const requisicaoHttp = {
+      corpo: {
+        nome: 'qualquer_nome',
+        email: 'email_invalido',
+        senha: 'qualquer_senha',
+        administrador: 'administrador_valido',
+        areaId: 'idarea_valida',
+        confirmarSenha: 'qualquer_senha'
+      },
+      metodo: 'metodo_invalido'
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(400)
+    expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
   })
 })

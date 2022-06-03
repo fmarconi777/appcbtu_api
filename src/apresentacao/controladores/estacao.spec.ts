@@ -5,6 +5,7 @@ import { Validador } from '../protocolos/validador'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { erroDeServidor } from '../auxiliares/auxiliar-http'
+import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 
 const makeConsultaEstacao = (): ConsultaEstacao => {
   class ConsultaEstacaoStub implements ConsultaEstacao {
@@ -66,7 +67,7 @@ const makeSut = (): SutTypes => {
 describe('Controlador de estações', () => {
   test('Deve retornar codigo 200 e todas as estações se um parâmetro não for fornecido', async () => {
     const { sut } = makeSut()
-    const requisicaoHttp = { corpo: '' }
+    const requisicaoHttp = { corpo: '', metodo: 'GET' }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(200)
     expect(respostaHttp.corpo).toEqual([{
@@ -83,14 +84,14 @@ describe('Controlador de estações', () => {
   test('Deve chamar ConsultaEstacao com o valor correto', async () => {
     const { sut, consultaEstacaoStub } = makeSut()
     const spyConsula = jest.spyOn(consultaEstacaoStub, 'consulta')
-    const requisicaoHttp = { parametro: 'sigla_qualquer' }
+    const requisicaoHttp = { parametro: 'sigla_qualquer', metodo: 'GET' }
     await sut.tratar(requisicaoHttp)
     expect(spyConsula).toHaveBeenCalledWith('sigla_qualquer')
   })
 
   test('Deve retornar codigo 200 e uma estação se o parâmetro estiver correto', async () => {
     const { sut } = makeSut()
-    const requisicaoHttp = { parametro: 'sigla_valida' }
+    const requisicaoHttp = { parametro: 'sigla_valida', metodo: 'GET' }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(200)
     expect(respostaHttp.corpo).toEqual({
@@ -107,7 +108,7 @@ describe('Controlador de estações', () => {
   test('Deve retornar codigo 400 se o parâmetro estiver incorreto', async () => {
     const { sut, validaParametroStub } = makeSut()
     jest.spyOn(validaParametroStub, 'validar').mockReturnValueOnce(false)
-    const requisicaoHttp = { parametro: 'sigla_invalida' }
+    const requisicaoHttp = { parametro: 'sigla_invalida', metodo: 'GET' }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(404)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('sigla'))
@@ -124,13 +125,21 @@ describe('Controlador de estações', () => {
     jest.spyOn(consultaEstacaoStub, 'consulta').mockImplementationOnce(async () => {
       return await new Promise((resolve, reject) => reject(erro))
     })
-    const requisicaoHttpSemSigla = { parametro: '' }
-    const requisicaoHttpComSigla = { parametro: 'sigla_qualquer' }
+    const requisicaoHttpSemSigla = { parametro: '', metodo: 'GET' }
+    const requisicaoHttpComSigla = { parametro: 'sigla_qualquer', metodo: 'GET' }
     const respostaHttpSemSigla = await sut.tratar(requisicaoHttpSemSigla)
     const respostaHttpComSigla = await sut.tratar(requisicaoHttpComSigla)
     expect(respostaHttpSemSigla.status).toBe(500)
     expect(respostaHttpSemSigla.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
     expect(respostaHttpComSigla.status).toBe(500)
     expect(respostaHttpComSigla.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
+  })
+
+  test('Deve retornar codigo 400 se um método não suportado for fornecido', async () => {
+    const { sut } = makeSut()
+    const requisicaoHttp = { parametro: 'sigla_qualquer', metodo: 'metodo_invalido' }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(400)
+    expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
   })
 })

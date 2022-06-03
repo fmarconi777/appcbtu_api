@@ -5,6 +5,7 @@ import { Validador } from '../protocolos/validador'
 import { ControladorDeLogin } from './login'
 import { Autenticador, ModeloAutenticacao } from '../../dominio/casos-de-uso/autenticador/autenticador'
 import { ErroDeAutorizacao } from '../erros/erro-nao-autorizado'
+import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 
 const makeValidadorDeEmail = (): Validador => {
   class ValidadorDeEmailStub implements Validador {
@@ -47,7 +48,8 @@ describe('Controlador de login', () => {
     const requisicaoHttp = {
       corpo: {
         senha: 'senha_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -59,7 +61,8 @@ describe('Controlador de login', () => {
     const requisicaoHttp = {
       corpo: {
         email: 'email_qualquer@mail.com'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -73,7 +76,8 @@ describe('Controlador de login', () => {
       corpo: {
         email: 'email_qualquer@mail.com',
         senha: 'senha_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     await sut.tratar(requisicaoHttp)
     expect(validadorSpy).toHaveBeenCalledWith('email_qualquer@mail.com')
@@ -86,7 +90,8 @@ describe('Controlador de login', () => {
       corpo: {
         email: 'email_qualquer@mail.com',
         senha: 'senha_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
@@ -104,7 +109,8 @@ describe('Controlador de login', () => {
       corpo: {
         email: 'email_qualquer@mail.com',
         senha: 'senha_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(500)
@@ -118,7 +124,8 @@ describe('Controlador de login', () => {
       corpo: {
         email: 'email_qualquer@mail.com',
         senha: 'senha_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     await sut.tratar(requisicaoHttp)
     expect(autenticarSpy).toHaveBeenCalledWith({
@@ -134,7 +141,8 @@ describe('Controlador de login', () => {
       corpo: {
         email: 'email_qualquer@mail.com',
         senha: 'senha_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(401)
@@ -152,7 +160,8 @@ describe('Controlador de login', () => {
       corpo: {
         email: 'email_qualquer@mail.com',
         senha: 'senha_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(500)
@@ -165,10 +174,25 @@ describe('Controlador de login', () => {
       corpo: {
         email: 'email_qualquer@mail.com',
         senha: 'senha_qualquer'
-      }
+      },
+      metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(200)
     expect(respostaHttp.corpo).toEqual({ tokenDeAcesso: 'token_qualquer' })
+  })
+
+  test('Deve retornar codigo 400 se um método não suportado for fornecido', async () => {
+    const { sut } = makeSut()
+    const requisicaoHttp = {
+      corpo: {
+        email: 'email_qualquer@mail.com',
+        senha: 'senha_qualquer'
+      },
+      metodo: 'metodo_invalido'
+    }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(400)
+    expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
   })
 })
