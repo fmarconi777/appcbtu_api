@@ -1,9 +1,10 @@
 import { ConsultaEstacao } from '../../dominio/casos-de-uso/estacao/consulta-estacao'
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
-import { resposta, requisicaoNaoEncontrada, erroDeServidor } from '../auxiliares/auxiliar-http'
+import { resposta, requisicaoNaoEncontrada, erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
 import { Validador } from '../protocolos/validador'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
+import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 
 /*
 A classe ControladorDeEstacao ao ser instanciada recebe duas outras classes
@@ -23,20 +24,26 @@ export class ControladorDeEstacao implements Controlador {
   }
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
-    try {
-      const parametro = requisicaoHttp.parametro
-      if (!parametro) { // eslint-disable-line
-        const todasEstacoes = await this.consultaEstacao.consultaTodas()
-        return resposta(todasEstacoes)
-      }
-      const parametroValido = this.validaParametro.validar(parametro)
-      if (!parametroValido) {
-        return requisicaoNaoEncontrada(new ErroParametroInvalido('sigla'))
-      }
-      const estacao = await this.consultaEstacao.consulta(parametro)
-      return resposta(estacao)
-    } catch (erro: any) {
-      return erroDeServidor(erro)
+    const metodo = requisicaoHttp.metodo
+    switch (metodo) {
+      case 'GET':
+        try {
+          const parametro = requisicaoHttp.parametro
+          if (!parametro) { // eslint-disable-line
+            const todasEstacoes = await this.consultaEstacao.consultaTodas()
+            return resposta(todasEstacoes)
+          }
+          const parametroValido = this.validaParametro.validar(parametro)
+          if (!parametroValido) {
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('sigla'))
+          }
+          const estacao = await this.consultaEstacao.consulta(parametro)
+          return resposta(estacao)
+        } catch (erro: any) {
+          return erroDeServidor(erro)
+        }
+      default:
+        return requisicaoImpropria(new ErroMetodoInvalido())
     }
   }
 }
