@@ -112,5 +112,21 @@ create table if not exists Erros(
 insert into Area(nome)
 values ("coinf");
 
-insert into Funcionario(nome, email, senha, administrador, areaId)
-values("Vinicius", "email@email.com", "123" , true, 1)
+insert into Estacao(nome, sigla, codigo, endereco, latitude, longitude)
+values
+(
+	'Estação São Gabriel',
+	'usg',
+    'asdf32',
+	'rua das flores',
+	'41.5656',
+	'85.9696'
+),
+(
+	'Estação Minas Shopping',
+    'ums',
+    'asdf32',
+    'rua dos cravos',
+    '39.4141',
+    '86.3478'
+);
