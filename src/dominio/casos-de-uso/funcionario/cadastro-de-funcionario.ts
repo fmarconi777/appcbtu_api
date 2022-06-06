@@ -9,5 +9,5 @@ export interface InserirModeloFuncionario {
 }
 
 export interface CadastroDeFuncionario {
-  adicionar: (conta: InserirModeloFuncionario) => Promise<ModeloFuncionario>
+  adicionar: (conta: InserirModeloFuncionario) => Promise<ModeloFuncionario | null>
 }

@@ -21,6 +21,11 @@ export const requisicaoNaoAutorizada = (erro: Error): RespostaHttp => ({
   corpo: erro
 })
 
+export const requisicaoNegada = (erro: Error): RespostaHttp => ({
+  status: 403,
+  corpo: erro
+})
+
 export const requisicaoNaoEncontrada = (erro: Error): RespostaHttp => ({
   status: 404,
   corpo: erro

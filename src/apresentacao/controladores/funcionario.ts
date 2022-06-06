@@ -1,10 +1,11 @@
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
-import { erroDeServidor, requisicaoImpropria, resposta } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoImpropria, requisicaoNegada, resposta } from '../auxiliares/auxiliar-http'
 import { Controlador } from '../protocolos/controlador'
 import { Validador } from '../protocolos/validador'
 import { CadastroDeFuncionario } from '../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
+import { ErroEmailEmUso } from '../erros/erro-parametro-email-em-uso'
 
 export class ControladorDeFuncionario implements Controlador {
   private readonly validadorDeEmail: Validador
@@ -41,6 +42,9 @@ export class ControladorDeFuncionario implements Controlador {
             administrador,
             areaId
           })
+          if (!conta) { // eslint-disable-line
+            return requisicaoNegada(new ErroEmailEmUso())
+          }
           return resposta(conta)
         } catch (erro: any) {
           return erroDeServidor(erro)
