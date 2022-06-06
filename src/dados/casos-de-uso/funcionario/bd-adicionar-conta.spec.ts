@@ -119,7 +119,7 @@ describe('CasodeUso BdAdicionarConta', () => {
       id: 'id_valido',
       nome: 'nome_valido',
       email: 'email_valido',
-      senha: 'senha_hashed',
+      senha: undefined,
       administrador: 'administrador_valido',
       areaId: 'areaid_valido'
     })

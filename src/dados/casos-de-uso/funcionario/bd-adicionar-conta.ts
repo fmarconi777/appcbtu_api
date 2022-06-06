@@ -14,6 +14,6 @@ export class BdAdicionarConta implements CadastroDeFuncionario {
   async adicionar (contaData: InserirModeloFuncionario): Promise<ModeloFuncionario> {
     const senhaHashed = await this.geradorDeHash.gerar(contaData.senha)
     const conta = await this.repositorioFuncionario.adicionar(Object.assign({}, contaData, { senha: senhaHashed }))
-    return conta
+    return Object.assign({}, conta, { senha: undefined })
   }
 }

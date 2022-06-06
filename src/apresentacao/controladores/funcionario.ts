@@ -5,6 +5,7 @@ import { Controlador } from '../protocolos/controlador'
 import { Validador } from '../protocolos/validador'
 import { CadastroDeFuncionario } from '../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
+
 export class ControladorDeFuncionario implements Controlador {
   private readonly validadorDeEmail: Validador
   private readonly cadastrodeFuncionario: CadastroDeFuncionario
