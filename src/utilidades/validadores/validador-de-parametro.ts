@@ -1,5 +1,5 @@
-import { Validador } from '../apresentacao/protocolos/validador'
-import { validador } from './auxiliares/auxiliar-validador'
+import { Validador } from '../protocolos/validador'
+import { validador } from '../auxiliares/auxiliar-validador'
 
 /*
 A classe ValidadorDeParametro faz uso do módulo validador para auxiliar

@@ -3,7 +3,7 @@ import { AdapatadorJwt } from '../../infraestrutura/criptografia/adaptador-jwt/a
 import { BcryptAdaptador } from '../../infraestrutura/criptografia/bcrypt-adaptador/bcrypt-adaptador'
 import { RepositorioFuncionarioMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/funcionario'
 import { AutenticadorBD } from '../../dados/casos-de-uso/autenticador/autenticador-bd'
-import { ValidadorDeEmailAdaptador } from '../../utilidades/validador-de-email'
+import { ValidadorDeEmailAdaptador } from '../../utilidades/validadores/validador-de-email'
 import { ControladorDeLogin } from '../../apresentacao/controladores/login'
 import { RepositorioLogDeErroMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/log'
 import { DecoradorControladorLog } from '../decoradores/log'
