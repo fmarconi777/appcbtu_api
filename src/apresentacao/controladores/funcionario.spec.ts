@@ -1,6 +1,6 @@
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ControladorDeFuncionario } from './funcionario'
-import { Validador } from '../protocolos/validador'
+import { Validador } from '../../utilidades/protocolos/validador'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { CadastroDeFuncionario, InserirModeloFuncionario } from '../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
 import { ModeloFuncionario } from '../../dominio/modelos/funcionario'

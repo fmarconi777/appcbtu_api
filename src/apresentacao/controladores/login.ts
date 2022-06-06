@@ -6,7 +6,7 @@ import { ErroDeAutorizacao } from '../erros/erro-nao-autorizado'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
-import { Validador } from '../protocolos/validador'
+import { Validador } from '../../utilidades/protocolos/validador'
 
 export class ControladorDeLogin implements Controlador {
   private readonly validadorDeEmail: Validador
