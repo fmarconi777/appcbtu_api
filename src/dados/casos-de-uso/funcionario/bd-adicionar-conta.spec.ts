@@ -33,16 +33,8 @@ const makeRepositorioFuncionario = (): RepositorioFuncionario => {
 
 const makeRepositorioConsultaFuncionarioPorEmail = (): RepositorioConsultaFuncionarioPorEmail => {
   class RepositorioConsultaFuncionarioPorEmailStub implements RepositorioConsultaFuncionarioPorEmail {
-    async consultaPorEmail (email: string): Promise<ModeloFuncionario> {
-      const funcionarioFalso: ModeloFuncionario = {
-        id: 'id_qualquer',
-        nome: 'nome_qualquer',
-        email: 'email_qualquer',
-        senha: 'senha_hash',
-        administrador: 'false',
-        areaId: 'areaId_qualquer'
-      }
-      return await new Promise(resolve => resolve(funcionarioFalso))
+    async consultaPorEmail (email: string): Promise<ModeloFuncionario | null> {
+      return await new Promise(resolve => resolve(null))
     }
   }
   return new RepositorioConsultaFuncionarioPorEmailStub()
@@ -163,5 +155,26 @@ describe('CasodeUso BdAdicionarConta', () => {
     }
     await sut.adicionar(dataConta)
     expect(consultaPorEmailSpy).toHaveBeenCalledWith('email_valido@mail.com')
+  })
+
+  test('Deverá retornar null se RepositorioConsultaFuncionarioPorEmail não retornar null', async () => {
+    const { sut, repositorioConsultaFuncionarioPorEmailStub } = makeSut()
+    jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consultaPorEmail').mockReturnValueOnce(new Promise(resolve => resolve({
+      id: 'id_qualquer',
+      nome: 'nome_valido',
+      email: 'email_valido@mail.com',
+      senha: 'senha_valido',
+      administrador: 'administrador_valido',
+      areaId: 'areaid_valido'
+    })))
+    const dataConta = {
+      nome: 'nome_valido',
+      email: 'email_valido@mail.com',
+      senha: 'senha_valido',
+      administrador: 'administrador_valido',
+      areaId: 'areaid_valido'
+    }
+    const conta = await sut.adicionar(dataConta)
+    expect(conta).toBeNull()
   })
 })
