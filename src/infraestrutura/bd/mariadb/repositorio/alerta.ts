@@ -1,6 +1,4 @@
-import { RepositorioAlerta } from '../../../../dados/protocolos/bd/repositorio-alerta'
-import { DadosAlerta } from '../../../../dominio/casos-de-uso/alerta/cadastro-de-alerta'
-import { ModeloAlerta } from '../../../../dominio/modelos/alerta'
+import { RepositorioAlerta, DadosAlerta, ModeloAlerta } from '../../../../dados/protocolos/bd/repositorio-alerta'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { Alerta } from '../models/modelo-alerta'
 

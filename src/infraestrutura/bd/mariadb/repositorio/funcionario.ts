@@ -1,6 +1,4 @@
-import { RepositorioFuncionario } from '../../../../dados/protocolos/bd/repositorio-funcionario'
-import { InserirModeloFuncionario } from '../../../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
-import { ModeloFuncionario } from '../../../../dominio/modelos/funcionario'
+import { RepositorioFuncionario, InserirModeloFuncionario, ModeloFuncionario } from '../../../../dados/protocolos/bd/repositorio-funcionario'
 import { Funcionario } from '../models/modelo-funcionarios'
 import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
 import { RepositorioConsultaFuncionarioPorEmail } from '../../../../dados/protocolos/bd/repositorio-consulta-funcionario-por-email'
