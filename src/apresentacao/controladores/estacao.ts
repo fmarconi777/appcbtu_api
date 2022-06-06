@@ -2,7 +2,7 @@ import { ConsultaEstacao } from '../../dominio/casos-de-uso/estacao/consulta-est
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { resposta, requisicaoNaoEncontrada, erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
-import { Validador } from '../../utilidades/protocolos/validador'
+import { Validador } from '../protocolos/validador'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 

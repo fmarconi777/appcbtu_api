@@ -1,4 +1,4 @@
-import { Validador } from '../protocolos/validador'
+import { Validador } from '../../apresentacao/protocolos/validador'
 import { validador } from '../auxiliares/auxiliar-validador'
 
 /*

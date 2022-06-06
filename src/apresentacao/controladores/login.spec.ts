@@ -1,7 +1,7 @@
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { Validador } from '../../utilidades/protocolos/validador'
+import { Validador } from '../protocolos/validador'
 import { ControladorDeLogin } from './login'
 import { Autenticador, ModeloAutenticacao } from '../../dominio/casos-de-uso/autenticador/autenticador'
 import { ErroDeAutorizacao } from '../erros/erro-nao-autorizado'

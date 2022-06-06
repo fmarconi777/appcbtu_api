@@ -1,7 +1,7 @@
 import { ControladorDeEstacao } from './estacao'
 import { ConsultaEstacao } from '../../dominio/casos-de-uso/estacao/consulta-estacao'
 import { ModeloEstacao } from '../../dominio/modelos/estacao'
-import { Validador } from '../../utilidades/protocolos/validador'
+import { Validador } from '../protocolos/validador'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { erroDeServidor } from '../auxiliares/auxiliar-http'
