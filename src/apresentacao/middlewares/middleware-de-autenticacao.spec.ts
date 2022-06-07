@@ -3,6 +3,7 @@ import { requisicaoNegada } from '../auxiliares/auxiliar-http'
 import { ErroAcessoNegado } from '../erros/erro-acesso-negado'
 import { ConsultaFuncionarioPeloToken } from '../../dominio/casos-de-uso/middleware/consulta-funcionario-por-token'
 import { ModeloFuncionario } from '../../dominio/modelos/funcionario'
+import { RequisicaoHttp } from '../protocolos/http'
 
 const makeContaFalsa = (): ModeloFuncionario => ({
   id: 'id_valido',
@@ -13,9 +14,13 @@ const makeContaFalsa = (): ModeloFuncionario => ({
   areaId: 'area_valida'
 })
 
+const makeRequisicaoFalsa = (): RequisicaoHttp => ({
+  cabecalho: { 'x-access-token': 'token_qualquer' }
+})
+
 const makeConsultaFuncionarioPeloToken = (): ConsultaFuncionarioPeloToken => {
   class ConsultaFuncionarioPeloToken implements ConsultaFuncionarioPeloToken {
-    async consultar (tokenDeAcesso: string, nivel?: string): Promise<ModeloFuncionario> {
+    async consultar (tokenDeAcesso: string, nivel?: string): Promise<ModeloFuncionario | null> {
       return await new Promise(resolve => resolve(makeContaFalsa()))
     }
   }
@@ -46,9 +51,14 @@ describe('Middleware de autenticação', () => {
   test('Deve chamar o ConsultaFuncionarioPeloToken com o tokenDeAcesso correto', async () => {
     const { sut, consultaFuncionarioPeloToken } = makeSut()
     const consultaSpy = jest.spyOn(consultaFuncionarioPeloToken, 'consultar')
-    await sut.tratar({
-      cabecalho: { 'x-access-token': 'token_qualquer' }
-    })
+    await sut.tratar(makeRequisicaoFalsa())
     expect(consultaSpy).toHaveBeenCalledWith('token_qualquer')
+  })
+
+  test('Deve retornar status 403 se ConsultaFuncionarioPeloToken retornar null', async () => {
+    const { sut, consultaFuncionarioPeloToken } = makeSut()
+    jest.spyOn(consultaFuncionarioPeloToken, 'consultar').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const respostaHttp = await sut.tratar(makeRequisicaoFalsa())
+    expect(respostaHttp).toEqual(requisicaoNegada(new ErroAcessoNegado()))
   })
 })
