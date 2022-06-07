@@ -11,7 +11,7 @@ export class RepositorioFuncionarioMariaDB implements RepositorioFuncionario, Re
     return FuncoesAuxiliares.mapeadorDeDados(funcionario)
   }
 
-  async consultaPorEmail (email: string): Promise<ModeloFuncionario | null> {
+  async consultarPorEmail (email: string): Promise<ModeloFuncionario | null> {
     AuxiliaresMariaDB.verificaConexao()
     const funcionario = await Funcionario.findOne({ where: { email } })
     return funcionario ? FuncoesAuxiliares.mapeadorDeDados(funcionario) : null // eslint-disable-line

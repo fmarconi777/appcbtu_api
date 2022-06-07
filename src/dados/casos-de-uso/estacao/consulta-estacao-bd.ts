@@ -9,11 +9,11 @@ export class ConsultaEstacaoBD implements ConsultaEstacao {
     this.consultaRepositorioEstacao = consultaRepositorioEstacao
   }
 
-  async consultaTodas (): Promise<ModeloEstacao[]> {
-    return await this.consultaRepositorioEstacao.consulta()
+  async consultarTodas (): Promise<ModeloEstacao[]> {
+    return await this.consultaRepositorioEstacao.consultar()
   }
 
-  async consulta (parametro: string): Promise<ModeloEstacao> {
-    return await this.consultaRepositorioEstacao.consulta(parametro)
+  async consultar (parametro: string): Promise<ModeloEstacao> {
+    return await this.consultaRepositorioEstacao.consultar(parametro)
   }
 }

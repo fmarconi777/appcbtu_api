@@ -50,14 +50,14 @@ describe('Repositorio mariaDB Funcionario', () => {
       areaId: '1'
     }
     await sut.adicionar(contaFalsa)
-    const funcionario = await sut.consultaPorEmail('email_valido')
+    const funcionario = await sut.consultarPorEmail('email_valido')
     expect(funcionario).toBeTruthy()
     expect(funcionario).toMatchObject(resutadoEsperado)
   })
 
   test('Deve retornar null caso a consulta por email falhar', async () => {
     const sut = new RepositorioFuncionarioMariaDB()
-    const funcionario = await sut.consultaPorEmail('email_valido')
+    const funcionario = await sut.consultarPorEmail('email_valido')
     expect(funcionario).toBeFalsy()
   })
 })

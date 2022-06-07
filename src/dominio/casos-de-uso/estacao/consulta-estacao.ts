@@ -7,7 +7,7 @@ oque esses métodos devem receber e o que devem retornar.
 */
 
 export interface ConsultaEstacao {
-  consultaTodas: () => Promise<ModeloEstacao[]>
+  consultarTodas: () => Promise<ModeloEstacao[]>
 
-  consulta: (parametro: string) => Promise<ModeloEstacao>
+  consultar: (parametro: string) => Promise<ModeloEstacao>
 }

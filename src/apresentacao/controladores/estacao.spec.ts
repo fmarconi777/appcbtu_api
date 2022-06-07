@@ -9,7 +9,7 @@ import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 
 const makeConsultaEstacao = (): ConsultaEstacao => {
   class ConsultaEstacaoStub implements ConsultaEstacao {
-    async consultaTodas (): Promise<ModeloEstacao[]> {
+    async consultarTodas (): Promise<ModeloEstacao[]> {
       const listaFalsa = [{
         id: 'id_qualquer',
         nome: 'nome_qualquer',
@@ -22,7 +22,7 @@ const makeConsultaEstacao = (): ConsultaEstacao => {
       return await new Promise(resolve => resolve(listaFalsa))
     }
 
-    async consulta (parametro: string): Promise<ModeloEstacao> {
+    async consultar (parametro: string): Promise<ModeloEstacao> {
       const estacaoFalsa = {
         id: 'id_valida',
         nome: 'nome_valido',
@@ -83,7 +83,7 @@ describe('Controlador de estações', () => {
 
   test('Deve chamar ConsultaEstacao com o valor correto', async () => {
     const { sut, consultaEstacaoStub } = makeSut()
-    const spyConsula = jest.spyOn(consultaEstacaoStub, 'consulta')
+    const spyConsula = jest.spyOn(consultaEstacaoStub, 'consultar')
     const requisicaoHttp = { parametro: 'sigla_qualquer', metodo: 'GET' }
     await sut.tratar(requisicaoHttp)
     expect(spyConsula).toHaveBeenCalledWith('sigla_qualquer')
@@ -119,10 +119,10 @@ describe('Controlador de estações', () => {
     const erroFalso = new Error()
     erroFalso.stack = 'stack_qualquer'
     const erro = erroDeServidor(erroFalso)
-    jest.spyOn(consultaEstacaoStub, 'consultaTodas').mockImplementationOnce(async () => {
+    jest.spyOn(consultaEstacaoStub, 'consultarTodas').mockImplementationOnce(async () => {
       return await new Promise((resolve, reject) => reject(erro))
     })
-    jest.spyOn(consultaEstacaoStub, 'consulta').mockImplementationOnce(async () => {
+    jest.spyOn(consultaEstacaoStub, 'consultar').mockImplementationOnce(async () => {
       return await new Promise((resolve, reject) => reject(erro))
     })
     const requisicaoHttpSemSigla = { parametro: '', metodo: 'GET' }

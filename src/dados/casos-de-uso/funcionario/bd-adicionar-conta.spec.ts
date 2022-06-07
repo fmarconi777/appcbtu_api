@@ -33,7 +33,7 @@ const makeRepositorioFuncionario = (): RepositorioFuncionario => {
 
 const makeRepositorioConsultaFuncionarioPorEmail = (): RepositorioConsultaFuncionarioPorEmail => {
   class RepositorioConsultaFuncionarioPorEmailStub implements RepositorioConsultaFuncionarioPorEmail {
-    async consultaPorEmail (email: string): Promise<ModeloFuncionario | null> {
+    async consultarPorEmail (email: string): Promise<ModeloFuncionario | null> {
       return await new Promise(resolve => resolve(null))
     }
   }
@@ -145,7 +145,7 @@ describe('CasodeUso BdAdicionarConta', () => {
 
   test('Deve chamar RepositorioConsultaFuncionarioPorEmail com o email correto', async () => {
     const { sut, repositorioConsultaFuncionarioPorEmailStub } = makeSut()
-    const consultaPorEmailSpy = jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consultaPorEmail')
+    const consultaPorEmailSpy = jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consultarPorEmail')
     const dataConta = {
       nome: 'nome_valido',
       email: 'email_valido@mail.com',
@@ -159,7 +159,7 @@ describe('CasodeUso BdAdicionarConta', () => {
 
   test('Deverá retornar null se RepositorioConsultaFuncionarioPorEmail não retornar null', async () => {
     const { sut, repositorioConsultaFuncionarioPorEmailStub } = makeSut()
-    jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consultaPorEmail').mockReturnValueOnce(new Promise(resolve => resolve({
+    jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consultarPorEmail').mockReturnValueOnce(new Promise(resolve => resolve({
       id: 'id_qualquer',
       nome: 'nome_valido',
       email: 'email_valido@mail.com',
