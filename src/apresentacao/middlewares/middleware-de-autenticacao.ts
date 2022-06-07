@@ -12,7 +12,10 @@ export class MiddlewareDeAutenticacao implements Middleware {
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
     const tokenDeAcesso = requisicaoHttp.cabecalho?.['x-access-token']
     if (tokenDeAcesso) { //eslint-disable-line
-      await this.consultaFuncionarioPeloToken.consultar(tokenDeAcesso)
+      const funcionario = await this.consultaFuncionarioPeloToken.consultar(tokenDeAcesso)
+      if (funcionario) { //eslint-disable-line
+        return await new Promise(resolve => resolve({ status: 200, corpo: '' }))
+      }
     }
     return requisicaoNegada(new ErroAcessoNegado())
   }
