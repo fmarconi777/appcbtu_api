@@ -1,5 +1,5 @@
 import { MiddlewareDeAutenticacao } from './middleware-de-autenticacao'
-import { requisicaoNegada, resposta } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoNegada, resposta } from '../auxiliares/auxiliar-http'
 import { ErroAcessoNegado } from '../erros/erro-acesso-negado'
 import { ConsultaFuncionarioPeloToken } from '../../dominio/casos-de-uso/middleware/consulta-funcionario-por-token'
 import { ModeloFuncionario } from '../../dominio/modelos/funcionario'
@@ -66,5 +66,12 @@ describe('Middleware de autenticação', () => {
     const { sut } = makeSut()
     const respostaHttp = await sut.tratar(makeRequisicaoFalsa())
     expect(respostaHttp).toEqual(resposta({ IdFuncionario: 'id_valido' }))
+  })
+
+  test('Deve retornar status 500 se ConsultaFuncionarioPeloToken retornar um erro', async () => {
+    const { sut, consultaFuncionarioPeloToken } = makeSut()
+    jest.spyOn(consultaFuncionarioPeloToken, 'consultar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const respostaHttp = await sut.tratar(makeRequisicaoFalsa())
+    expect(respostaHttp).toEqual(erroDeServidor(new Error()))
   })
 })
