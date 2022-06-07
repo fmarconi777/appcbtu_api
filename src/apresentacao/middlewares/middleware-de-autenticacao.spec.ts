@@ -1,0 +1,54 @@
+import { MiddlewareDeAutenticacao } from './middleware-de-autenticacao'
+import { requisicaoNegada } from '../auxiliares/auxiliar-http'
+import { ErroAcessoNegado } from '../erros/erro-acesso-negado'
+import { ConsultaFuncionarioPeloToken } from '../../dominio/casos-de-uso/middleware/consulta-funcionario-por-token'
+import { ModeloFuncionario } from '../../dominio/modelos/funcionario'
+
+const makeContaFalsa = (): ModeloFuncionario => ({
+  id: 'id_valido',
+  nome: 'nome_valido',
+  email: 'email_valido',
+  senha: 'hash_senha',
+  administrador: 'false',
+  areaId: 'area_valida'
+})
+
+const makeConsultaFuncionarioPeloToken = (): ConsultaFuncionarioPeloToken => {
+  class ConsultaFuncionarioPeloToken implements ConsultaFuncionarioPeloToken {
+    async consultar (tokenDeAcesso: string, nivel?: string): Promise<ModeloFuncionario> {
+      return await new Promise(resolve => resolve(makeContaFalsa()))
+    }
+  }
+  return new ConsultaFuncionarioPeloToken()
+}
+
+interface SubTipos {
+  sut: MiddlewareDeAutenticacao
+  consultaFuncionarioPeloToken: ConsultaFuncionarioPeloToken
+}
+
+const makeSut = (): SubTipos => {
+  const consultaFuncionarioPeloToken = makeConsultaFuncionarioPeloToken()
+  const sut = new MiddlewareDeAutenticacao(consultaFuncionarioPeloToken)
+  return {
+    sut,
+    consultaFuncionarioPeloToken
+  }
+}
+
+describe('Middleware de autenticação', () => {
+  test('Deve retornar status 403 se não existir o x-access-token no cabeçalho', async () => {
+    const { sut } = makeSut()
+    const respostaHttp = await sut.tratar({})
+    expect(respostaHttp).toEqual(requisicaoNegada(new ErroAcessoNegado()))
+  })
+
+  test('Deve chamar o ConsultaFuncionarioPeloToken com o tokenDeAcesso correto', async () => {
+    const { sut, consultaFuncionarioPeloToken } = makeSut()
+    const consultaSpy = jest.spyOn(consultaFuncionarioPeloToken, 'consultar')
+    await sut.tratar({
+      cabecalho: { 'x-access-token': 'token_qualquer' }
+    })
+    expect(consultaSpy).toHaveBeenCalledWith('token_qualquer')
+  })
+})
