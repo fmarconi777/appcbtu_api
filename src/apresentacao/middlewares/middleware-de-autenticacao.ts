@@ -6,14 +6,15 @@ import { ConsultaFuncionarioPeloToken } from '../../dominio/casos-de-uso/middlew
 
 export class MiddlewareDeAutenticacao implements Middleware {
   constructor (
-    private readonly consultaFuncionarioPeloToken: ConsultaFuncionarioPeloToken
+    private readonly consultaFuncionarioPeloToken: ConsultaFuncionarioPeloToken,
+    private readonly nivel?: string
   ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
     try {
       const tokenDeAcesso = requisicaoHttp.cabecalho?.['x-access-token']
       if (tokenDeAcesso) { //eslint-disable-line
-        const funcionario = await this.consultaFuncionarioPeloToken.consultar(tokenDeAcesso)
+        const funcionario = await this.consultaFuncionarioPeloToken.consultar(tokenDeAcesso, this.nivel)
         if (funcionario) { //eslint-disable-line
           return resposta({ IdFuncionario: funcionario.id })
         }
