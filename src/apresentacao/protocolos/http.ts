@@ -13,4 +13,5 @@ export interface RequisicaoHttp {
   corpo?: any
   parametro?: any
   metodo?: any
+  cabecalho?: any
 }
