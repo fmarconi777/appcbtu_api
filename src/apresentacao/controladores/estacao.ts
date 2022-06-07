@@ -30,14 +30,14 @@ export class ControladorDeEstacao implements Controlador {
         try {
           const parametro = requisicaoHttp.parametro
           if (!parametro) { // eslint-disable-line
-            const todasEstacoes = await this.consultaEstacao.consultaTodas()
+            const todasEstacoes = await this.consultaEstacao.consultarTodas()
             return resposta(todasEstacoes)
           }
           const parametroValido = this.validaParametro.validar(parametro)
           if (!parametroValido) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('sigla'))
           }
-          const estacao = await this.consultaEstacao.consulta(parametro)
+          const estacao = await this.consultaEstacao.consultar(parametro)
           return resposta(estacao)
         } catch (erro: any) {
           return erroDeServidor(erro)

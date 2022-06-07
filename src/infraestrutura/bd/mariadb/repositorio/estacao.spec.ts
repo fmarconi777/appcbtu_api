@@ -26,7 +26,7 @@ describe('Repositorio mariaDB Estacao', () => {
       latitude: '41.5656',
       longitude: '85.9696'
     }
-    const estacao = await sut.consulta('usg')
+    const estacao = await sut.consultar('usg')
     expect(estacao).toBeTruthy()
     expect(estacao.id).toBeTruthy()
     expect(estacao).toMatchObject(resutadoEsperado)
@@ -51,7 +51,7 @@ describe('Repositorio mariaDB Estacao', () => {
         longitude: '86.3478'
       }
     ]
-    const estacao = await sut.consulta()
+    const estacao = await sut.consultar()
     expect(estacao).toBeTruthy()
     expect(estacao[0].id).toBeTruthy()
     expect(estacao[1].id).toBeTruthy()

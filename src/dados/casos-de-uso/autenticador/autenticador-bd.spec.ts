@@ -63,13 +63,13 @@ const makeSut = (): SubTipos => {
 describe('Autenticação no banco de dados', () => {
   test('Deve chamar RepositorioConsultaFuncionarioPorEmail com o email correto', async () => {
     const { sut, repositorioConsultaFuncionarioPorEmailStub } = makeSut()
-    const consultaPorEmailSpy = jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consultarPorEmail')
+    const consultarPorEmailSpy = jest.spyOn(repositorioConsultaFuncionarioPorEmailStub, 'consultarPorEmail')
     const autenticacao = {
       email: 'email_qualquer@mail.com',
       senha: 'senha_qualquer'
     }
     await sut.autenticar(autenticacao)
-    expect(consultaPorEmailSpy).toHaveBeenCalledWith('email_qualquer@mail.com')
+    expect(consultarPorEmailSpy).toHaveBeenCalledWith('email_qualquer@mail.com')
   })
 
   test('Deve retornar um erro caso o RepositorioConsultaFuncionarioPorEmail retorne um erro', async () => {

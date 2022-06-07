@@ -16,7 +16,7 @@ export class BdAdicionarConta implements CadastroDeFuncionario {
   }
 
   async adicionar (contaData: InserirModeloFuncionario): Promise<ModeloFuncionario | null> {
-    const conta = await this.repositorioConsultaFuncionarioPorEmail.consultaPorEmail(contaData.email)
+    const conta = await this.repositorioConsultaFuncionarioPorEmail.consultarPorEmail(contaData.email)
     if (!conta) { // eslint-disable-line
       const senhaHashed = await this.geradorDeHash.gerar(contaData.senha)
       const novaConta = await this.repositorioFuncionario.adicionar(Object.assign({}, contaData, { senha: senhaHashed }))
