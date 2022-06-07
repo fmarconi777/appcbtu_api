@@ -32,9 +32,9 @@ interface SubTipos {
   consultaFuncionarioPeloToken: ConsultaFuncionarioPeloToken
 }
 
-const makeSut = (): SubTipos => {
+const makeSut = (nivel?: string): SubTipos => {
   const consultaFuncionarioPeloToken = makeConsultaFuncionarioPeloToken()
-  const sut = new MiddlewareDeAutenticacao(consultaFuncionarioPeloToken)
+  const sut = new MiddlewareDeAutenticacao(consultaFuncionarioPeloToken, nivel)
   return {
     sut,
     consultaFuncionarioPeloToken
@@ -49,10 +49,11 @@ describe('Middleware de autenticação', () => {
   })
 
   test('Deve chamar o ConsultaFuncionarioPeloToken com o tokenDeAcesso correto', async () => {
-    const { sut, consultaFuncionarioPeloToken } = makeSut()
+    const nivel = 'nivel_qualquer'
+    const { sut, consultaFuncionarioPeloToken } = makeSut(nivel)
     const consultaSpy = jest.spyOn(consultaFuncionarioPeloToken, 'consultar')
     await sut.tratar(makeRequisicaoFalsa())
-    expect(consultaSpy).toHaveBeenCalledWith('token_qualquer')
+    expect(consultaSpy).toHaveBeenCalledWith('token_qualquer', nivel)
   })
 
   test('Deve retornar status 403 se ConsultaFuncionarioPeloToken retornar null', async () => {
