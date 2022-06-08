@@ -75,4 +75,10 @@ describe('ConsultaFuncionarioPeloTokenBd', () => {
     const funcionario = await sut.consultar('token_qualquer', 'nivel_qualquer')
     expect(funcionario).toBeNull()
   })
+
+  test('Deve retornar funcionario em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const funcionario = await sut.consultar('token_qualquer', 'nivel_qualquer')
+    expect(funcionario).toEqual(makeContaFalsa())
+  })
 })
