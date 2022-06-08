@@ -1,21 +1,19 @@
 import { ConsultaFuncionarioPeloToken } from '../../../dominio/casos-de-uso/middleware/consulta-funcionario-por-token'
 import { ModeloFuncionario } from '../../../dominio/modelos/funcionario'
+import { RepositorioConsultaFuncionarioPorId } from '../../protocolos/bd/repositorio-consulta-funcionario-por-id'
 import { Decriptador } from '../../protocolos/criptografia/decriptador'
 
 export class ConsultaFuncionarioPeloTokenBd implements ConsultaFuncionarioPeloToken {
-  constructor (private readonly decriptador: Decriptador) {}
+  constructor (
+    private readonly decriptador: Decriptador,
+    private readonly repositorioConsultaFuncionarioPorId: RepositorioConsultaFuncionarioPorId
+  ) {}
 
   async consultar (tokenDeAcesso: string, nivel?: string | undefined): Promise<ModeloFuncionario | null> {
     const id = await this.decriptador.decriptar(tokenDeAcesso)
     if (id) { //eslint-disable-line
-      return await new Promise(resolve => resolve({
-        id: 'id_qualquer',
-        nome: 'nome_valido',
-        email: 'email_valido@mail.com',
-        senha: 'senha_valido',
-        administrador: 'administrador_valido',
-        areaId: 'areaid_valido'
-      }))
+      const funcionario = await this.repositorioConsultaFuncionarioPorId.consultarPorId(id, nivel)
+      return funcionario
     }
     return null
   }
