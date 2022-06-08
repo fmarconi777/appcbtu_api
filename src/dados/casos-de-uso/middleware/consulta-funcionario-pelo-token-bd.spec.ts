@@ -3,7 +3,7 @@ import { Decriptador } from '../../protocolos/criptografia/decriptador'
 
 const makeDecriptador = (): Decriptador => {
   class Decriptador implements Decriptador {
-    async decriptar (valor: string): Promise<string> {
+    async decriptar (valor: string): Promise<string | null> {
       return await new Promise(resolve => resolve('valor_qualquer'))
     }
   }
@@ -28,7 +28,14 @@ describe('ConsultaFuncionarioPeloTokenBd', () => {
   test('Deve chamar o Decriptador com os valores corretos', async () => {
     const { sut, decriptador } = makeSut()
     const decriptarSpy = jest.spyOn(decriptador, 'decriptar')
-    await sut.consultar('token_qualquer')
+    await sut.consultar('token_qualquer', 'nivel_qualquer')
     expect(decriptarSpy).toHaveBeenCalledWith('token_qualquer')
+  })
+
+  test('Deve retornar null se o Decriptador retornar null', async () => {
+    const { sut, decriptador } = makeSut()
+    jest.spyOn(decriptador, 'decriptar').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const funcionario = await sut.consultar('token_qualquer', 'nivel_qualquer')
+    expect(funcionario).toBeNull()
   })
 })
