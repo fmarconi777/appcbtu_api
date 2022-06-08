@@ -1,3 +1,3 @@
 export interface Encriptador {
-  encriptar: (valor: string) => Promise<string >
+  encriptar: (token: string) => Promise<string >
 }

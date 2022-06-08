@@ -11,8 +11,8 @@ export class AdapatadorJwt implements Encriptador, Decriptador {
     return tokenDeAcesso
   }
 
-  async decriptar (valor: string): Promise<string | null> {
-    jwt.verify(valor, (this.chaveSecreta as string))
-    return null
+  async decriptar (token: string): Promise<string | null> {
+    const valor: any = jwt.verify(token, (this.chaveSecreta as string))
+    return valor
   }
 }

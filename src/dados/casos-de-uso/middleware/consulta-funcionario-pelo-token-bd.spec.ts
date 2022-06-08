@@ -5,7 +5,7 @@ import { ModeloFuncionario } from '../funcionario/bd-adicionar-conta-protocolos'
 
 const makeDecriptador = (): Decriptador => {
   class DecriptadorStub implements Decriptador {
-    async decriptar (valor: string): Promise<string | null> {
+    async decriptar (token: string): Promise<string | null> {
       return await new Promise(resolve => resolve('id_qualquer'))
     }
   }
