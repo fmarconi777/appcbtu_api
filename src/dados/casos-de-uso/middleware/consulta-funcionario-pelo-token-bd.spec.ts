@@ -81,4 +81,18 @@ describe('ConsultaFuncionarioPeloTokenBd', () => {
     const funcionario = await sut.consultar('token_qualquer', 'nivel_qualquer')
     expect(funcionario).toEqual(makeContaFalsa())
   })
+
+  test('Deve retornar um erro se o Decriptador retornar um erro', async () => {
+    const { sut, decriptadorStub } = makeSut()
+    jest.spyOn(decriptadorStub, 'decriptar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const promise = sut.consultar('token_qualquer', 'nivel_qualquer')
+    await expect(promise).rejects.toThrow()
+  })
+
+  test('Deve retornar um erro se o RepositorioConsultaFuncionarioPorId retornar um erro', async () => {
+    const { sut, repositorioConsultaFuncionarioPorIdStub } = makeSut()
+    jest.spyOn(repositorioConsultaFuncionarioPorIdStub, 'consultarPorId').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const promise = sut.consultar('token_qualquer', 'nivel_qualquer')
+    await expect(promise).rejects.toThrow()
+  })
 })
