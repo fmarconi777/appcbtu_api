@@ -55,5 +55,12 @@ describe('Adaptador do jwt', () => {
       const tokenDeAcesso = await sut.decriptar('token_qualquer')
       expect(tokenDeAcesso).toBe('valor_qualquer')
     })
+
+    test('Deve retornar um erro caso o verify retorne um erro', async () => {
+      const sut = makeSut()
+      jest.spyOn(jwt, 'verify').mockImplementationOnce(() => Promise.reject(new Error())) // eslint-disable-line
+      const tokenDeAcesso = sut.decriptar('token_qualquer')
+      await expect(tokenDeAcesso).rejects.toThrow()
+    })
   })
 })
