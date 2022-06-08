@@ -1,41 +1,71 @@
 import { ConsultaFuncionarioPeloTokenBd } from './consulta-funcionario-pelo-token-bd'
 import { Decriptador } from '../../protocolos/criptografia/decriptador'
+import { RepositorioConsultaFuncionarioPorId } from '../../protocolos/bd/repositorio-consulta-funcionario-por-id'
+import { ModeloFuncionario } from '../funcionario/bd-adicionar-conta-protocolos'
 
 const makeDecriptador = (): Decriptador => {
-  class Decriptador implements Decriptador {
+  class DecriptadorStub implements Decriptador {
     async decriptar (valor: string): Promise<string | null> {
-      return await new Promise(resolve => resolve('valor_qualquer'))
+      return await new Promise(resolve => resolve('id_qualquer'))
     }
   }
-  return new Decriptador()
+  return new DecriptadorStub()
+}
+
+const makeContaFalsa = (): ModeloFuncionario => ({
+  id: 'id_valido',
+  nome: 'nome_valido',
+  email: 'email_valido',
+  senha: 'hash_senha',
+  administrador: 'false',
+  areaId: 'area_valida'
+})
+
+const makeRepositorioConsultaFuncionarioPorId = (): RepositorioConsultaFuncionarioPorId => {
+  class RepositorioConsultaFuncionarioPorIdStub implements RepositorioConsultaFuncionarioPorId {
+    async consultarPorId (id: string, nivel?: string): Promise<ModeloFuncionario | null> {
+      return await new Promise(resolve => resolve(makeContaFalsa()))
+    }
+  }
+  return new RepositorioConsultaFuncionarioPorIdStub()
 }
 
 interface SubTipos {
   sut: ConsultaFuncionarioPeloTokenBd
-  decriptador: Decriptador
+  decriptadorStub: Decriptador
+  repositorioConsultaFuncionarioPorIdStub: RepositorioConsultaFuncionarioPorId
 }
 
 const makeSut = (): SubTipos => {
-  const decriptador = makeDecriptador()
-  const sut = new ConsultaFuncionarioPeloTokenBd(decriptador)
+  const repositorioConsultaFuncionarioPorIdStub = makeRepositorioConsultaFuncionarioPorId()
+  const decriptadorStub = makeDecriptador()
+  const sut = new ConsultaFuncionarioPeloTokenBd(decriptadorStub, repositorioConsultaFuncionarioPorIdStub)
   return {
     sut,
-    decriptador
+    decriptadorStub,
+    repositorioConsultaFuncionarioPorIdStub
   }
 }
 
 describe('ConsultaFuncionarioPeloTokenBd', () => {
   test('Deve chamar o Decriptador com os valores corretos', async () => {
-    const { sut, decriptador } = makeSut()
-    const decriptarSpy = jest.spyOn(decriptador, 'decriptar')
+    const { sut, decriptadorStub } = makeSut()
+    const decriptarSpy = jest.spyOn(decriptadorStub, 'decriptar')
     await sut.consultar('token_qualquer', 'nivel_qualquer')
     expect(decriptarSpy).toHaveBeenCalledWith('token_qualquer')
   })
 
   test('Deve retornar null se o Decriptador retornar null', async () => {
-    const { sut, decriptador } = makeSut()
-    jest.spyOn(decriptador, 'decriptar').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const { sut, decriptadorStub } = makeSut()
+    jest.spyOn(decriptadorStub, 'decriptar').mockReturnValueOnce(new Promise(resolve => resolve(null)))
     const funcionario = await sut.consultar('token_qualquer', 'nivel_qualquer')
     expect(funcionario).toBeNull()
+  })
+
+  test('Deve chamar o RepositorioConsultaFuncionarioPorId com os valores corretos', async () => {
+    const { sut, repositorioConsultaFuncionarioPorIdStub } = makeSut()
+    const consultarPorIdSpy = jest.spyOn(repositorioConsultaFuncionarioPorIdStub, 'consultarPorId')
+    await sut.consultar('id_qualquer', 'nivel_qualquer')
+    expect(consultarPorIdSpy).toHaveBeenCalledWith('id_qualquer', 'nivel_qualquer')
   })
 })
