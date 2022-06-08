@@ -1,17 +1,20 @@
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
 import { AdapatadorJwt } from './adaptador-jwt'
-import { Encriptador } from '../../../dados/protocolos/criptografia/encriptador'
 
 const chaveSecreta = process.env.CHAVE_SECRETA
 
 jest.mock('jsonwebtoken', () => ({
   sign (): string {
     return 'token_qualquer'
+  },
+
+  verify (): string {
+    return 'valor_qualquer'
   }
 }))
 
-const makeSut = (): Encriptador => {
+const makeSut = (): AdapatadorJwt => {
   const sut = new AdapatadorJwt()
   return sut
 }
@@ -36,6 +39,15 @@ describe('Adaptador do jwt', () => {
       jest.spyOn(jwt, 'sign').mockImplementationOnce(() => Promise.reject(new Error())) // eslint-disable-line
       const tokenDeAcesso = sut.encriptar('id_qualquer')
       await expect(tokenDeAcesso).rejects.toThrow()
+    })
+  })
+
+  describe('Metodo decriptar', () => {
+    test('Deve chamar o verify do jwt com o valores corretos', async () => {
+      const sut = makeSut()
+      const verifySpy = jest.spyOn(jwt, 'verify')
+      await sut.decriptar('token_qualquer')
+      expect(verifySpy).toHaveBeenCalledWith('token_qualquer', chaveSecreta)
     })
   })
 })
