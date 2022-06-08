@@ -56,6 +56,7 @@ describe('Repositorio mariaDB Funcionario', () => {
       await sut.adicionar(contaFalsa)
       const funcionario = await sut.consultarPorEmail('email_valido')
       expect(funcionario).toBeTruthy()
+      expect(funcionario?.id).toBeTruthy()
       expect(funcionario).toMatchObject(resutadoEsperado)
     })
 
@@ -63,6 +64,31 @@ describe('Repositorio mariaDB Funcionario', () => {
       const sut = new RepositorioFuncionarioMariaDB()
       const funcionario = await sut.consultarPorEmail('email_valido')
       expect(funcionario).toBeFalsy()
+    })
+  })
+
+  describe('Metodo consultarPorId', () => {
+    test('Deve retornar um funcionario em caso de sucesso ao consultar por id', async () => {
+      const sut = new RepositorioFuncionarioMariaDB()
+      const contaFalsa = {
+        nome: 'nome_valido',
+        email: 'email_valido',
+        senha: 'hash_senha',
+        administrador: 'false',
+        areaId: '1'
+      }
+      const resutadoEsperado = {
+        nome: 'nome_valido',
+        email: 'email_valido',
+        senha: 'hash_senha',
+        administrador: 'false',
+        areaId: '1'
+      }
+      await sut.adicionar(contaFalsa)
+      const funcionario = await sut.consultarPorId('1')
+      expect(funcionario).toBeTruthy()
+      expect(funcionario?.id).toBeTruthy()
+      expect(funcionario).toMatchObject(resutadoEsperado)
     })
   })
 })
