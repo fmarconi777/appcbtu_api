@@ -13,7 +13,9 @@ export class ConsultaFuncionarioPeloTokenBd implements ConsultaFuncionarioPeloTo
     const id = await this.decriptador.decriptar(tokenDeAcesso)
     if (id) { //eslint-disable-line
       const funcionario = await this.repositorioConsultaFuncionarioPorId.consultarPorId(id, nivel)
-      return funcionario
+      if (funcionario) { //eslint-disable-line
+        return funcionario
+      }
     }
     return null
   }
