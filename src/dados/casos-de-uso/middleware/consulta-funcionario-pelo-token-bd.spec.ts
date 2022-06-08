@@ -68,4 +68,11 @@ describe('ConsultaFuncionarioPeloTokenBd', () => {
     await sut.consultar('id_qualquer', 'nivel_qualquer')
     expect(consultarPorIdSpy).toHaveBeenCalledWith('id_qualquer', 'nivel_qualquer')
   })
+
+  test('Deve retornar null se o RepositorioConsultaFuncionarioPorId retornar null', async () => {
+    const { sut, repositorioConsultaFuncionarioPorIdStub } = makeSut()
+    jest.spyOn(repositorioConsultaFuncionarioPorIdStub, 'consultarPorId').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const funcionario = await sut.consultar('token_qualquer', 'nivel_qualquer')
+    expect(funcionario).toBeNull()
+  })
 })
