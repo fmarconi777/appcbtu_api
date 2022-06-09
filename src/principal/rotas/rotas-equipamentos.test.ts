@@ -18,7 +18,7 @@ describe('Rotas equipamentos', () => {
     await Equipamento.destroy({ truncate: true, cascade: false })
   })
 
-  test('Deve retornar um equipamento em caso de sucesso', async () => {
+  test('Deve retornar um status 403 ao adicionar um equipamento sem token de acesso', async () => {
     await request(app)
       .post('/equipamento')
       .send({
@@ -28,6 +28,6 @@ describe('Rotas equipamentos', () => {
         estado: '1',
         estacaoId: '1'
       })
-      .expect(200)
+      .expect(403)
   })
 })
