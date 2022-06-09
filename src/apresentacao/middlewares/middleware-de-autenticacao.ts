@@ -16,7 +16,7 @@ export class MiddlewareDeAutenticacao implements Middleware {
       if (tokenDeAcesso) { //eslint-disable-line
         const funcionario = await this.consultaFuncionarioPeloToken.consultar(tokenDeAcesso, this.nivel)
         if (funcionario) { //eslint-disable-line
-          return resposta({ IdFuncionario: funcionario.id })
+          return resposta({ idFuncionario: funcionario.id })
         }
       }
       return requisicaoNegada(new ErroAcessoNegado())

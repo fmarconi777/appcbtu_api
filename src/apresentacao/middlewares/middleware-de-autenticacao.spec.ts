@@ -66,7 +66,7 @@ describe('Middleware de autenticação', () => {
   test('Deve retornar status 200 se ConsultaFuncionarioPeloToken retornar uma conta', async () => {
     const { sut } = makeSut()
     const respostaHttp = await sut.tratar(makeRequisicaoFalsa())
-    expect(respostaHttp).toEqual(resposta({ IdFuncionario: 'id_valido' }))
+    expect(respostaHttp).toEqual(resposta({ idFuncionario: 'id_valido' }))
   })
 
   test('Deve retornar status 500 se ConsultaFuncionarioPeloToken retornar um erro', async () => {
