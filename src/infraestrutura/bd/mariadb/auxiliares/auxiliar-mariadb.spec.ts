@@ -8,10 +8,11 @@ describe('Auxiliares MariaDB', () => {
   afterAll(async () => {
     await sut.desconectar()
   })
+
   test('Deve reconectar ao mariaDB se estiver desconectado', async () => {
-    let cliente = sut.cliente
-    expect(cliente).toBeTruthy()
     await sut.desconectar()
+    let cliente = sut.cliente
+    expect(cliente).toBeNull()
     await sut.verificaConexao()
     cliente = sut.cliente
     expect(cliente).toBeTruthy()
