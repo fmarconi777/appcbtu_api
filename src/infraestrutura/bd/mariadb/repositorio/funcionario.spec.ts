@@ -137,16 +137,22 @@ describe('Repositorio mariaDB Funcionario', () => {
       expect(funcionario).toMatchObject(resutadoEsperado)
     })
 
-    test('Deve retornar null caso a consulta por id e/ou areaId falhar', async () => {
+    test('Deve retornar null caso a consulta por id falhar', async () => {
       const sut = new RepositorioFuncionarioMariaDB()
       const funcionario = await sut.consultarPorId('id_qualquer')
-      expect(funcionario).toBeFalsy()
+      expect(funcionario).toBeNull()
+    })
+
+    test('Deve retornar null caso a consulta por id e areaId falhar', async () => {
+      const sut = new RepositorioFuncionarioMariaDB()
+      const funcionario = await sut.consultarPorId('id_qualquer', '1')
+      expect(funcionario).toBeNull()
     })
 
     test('Deve retornar null caso a consulta por id e admin falhar', async () => {
       const sut = new RepositorioFuncionarioMariaDB()
       const funcionario = await sut.consultarPorId('id_qualquer', 'admin')
-      expect(funcionario).toBeFalsy()
+      expect(funcionario).toBeNull()
     })
   })
 })
