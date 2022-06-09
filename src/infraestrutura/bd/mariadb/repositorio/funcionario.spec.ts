@@ -137,6 +137,20 @@ describe('Repositorio mariaDB Funcionario', () => {
       expect(funcionario).toMatchObject(resutadoEsperado)
     })
 
+    test('Deve retornar null, caso funcionario não seja administrador, ao consultar por id e nivel admin', async () => {
+      const sut = new RepositorioFuncionarioMariaDB()
+      const contaFalsa = {
+        nome: 'nome_valido',
+        email: 'email_valido',
+        senha: 'hash_senha',
+        administrador: 'false',
+        areaId: '1'
+      }
+      await sut.adicionar(contaFalsa)
+      const funcionario = await sut.consultarPorId('1', 'admin')
+      expect(funcionario).toBeNull()
+    })
+
     test('Deve retornar null caso a consulta por id falhar', async () => {
       const sut = new RepositorioFuncionarioMariaDB()
       const funcionario = await sut.consultarPorId('id_qualquer')
