@@ -24,7 +24,7 @@ export class RepositorioFuncionarioMariaDB implements RepositorioFuncionario, Re
       const funcionario = await Funcionario.findOne({ where: { id, administrador: true } })
       return funcionario ? FuncoesAuxiliares.mapeadorDeDados(funcionario) : null // eslint-disable-line
     }
-    const funcionario = nivel === undefined ? await Funcionario.findOne({ where: { id } }) : await Funcionario.findOne({ where: { id, areaId: nivel } }) // eslint-disable-line
+    const funcionario = nivel === undefined ? await Funcionario.findOne({ where: { id } }) : await Funcionario.findOne({ where: { id, areaId: nivel } })
     return funcionario ? FuncoesAuxiliares.mapeadorDeDados(funcionario) : null // eslint-disable-line
   }
 
