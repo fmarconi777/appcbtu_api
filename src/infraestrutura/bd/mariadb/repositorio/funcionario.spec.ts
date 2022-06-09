@@ -116,7 +116,7 @@ describe('Repositorio mariaDB Funcionario', () => {
 
     test('Deve retornar um funcionario em caso de sucesso ao consultar por id e nivel areaId', async () => {
       const sut = new RepositorioFuncionarioMariaDB()
-      const contaFalsa = {
+      const contaFalsa1 = {
         nome: 'nome_valido',
         email: 'email_valido',
         senha: 'hash_senha',
@@ -130,11 +130,17 @@ describe('Repositorio mariaDB Funcionario', () => {
         administrador: 'false',
         areaId: '1'
       }
-      await sut.adicionar(contaFalsa)
+      await sut.adicionar(contaFalsa1)
       const funcionario = await sut.consultarPorId('1', '1')
       expect(funcionario).toBeTruthy()
       expect(funcionario?.id).toBeTruthy()
       expect(funcionario).toMatchObject(resutadoEsperado)
+    })
+
+    test('Deve retornar null caso a consulta por email falhar', async () => {
+      const sut = new RepositorioFuncionarioMariaDB()
+      const funcionario = await sut.consultarPorId('id_qualquer')
+      expect(funcionario).toBeFalsy()
     })
   })
 })
