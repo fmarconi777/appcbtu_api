@@ -10,9 +10,9 @@ export class ConsultaFuncionarioPeloTokenBd implements ConsultaFuncionarioPeloTo
   ) {}
 
   async consultar (tokenDeAcesso: string, nivel?: string | undefined): Promise<ModeloFuncionario | null> {
-    const id = await this.decriptador.decriptar(tokenDeAcesso)
-    if (id) { //eslint-disable-line
-      const funcionario = await this.repositorioConsultaFuncionarioPorId.consultarPorId(id, nivel)
+    const payload: any = await this.decriptador.decriptar(tokenDeAcesso)
+    if (payload) { //eslint-disable-line
+      const funcionario = await this.repositorioConsultaFuncionarioPorId.consultarPorId(payload.id, nivel)
       if (funcionario) { //eslint-disable-line
         return funcionario
       }
