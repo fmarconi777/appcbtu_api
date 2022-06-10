@@ -14,7 +14,6 @@ export class MiddlewareDeAutenticacao implements Middleware {
     try {
       const tokenDeAcesso = requisicaoHttp.cabecalho
       if (tokenDeAcesso && tokenDeAcesso !== 'undefined') { //eslint-disable-line
-        console.log(tokenDeAcesso)
         const funcionario = await this.consultaFuncionarioPeloToken.consultar(tokenDeAcesso, this.nivel)
         if (funcionario) { //eslint-disable-line
           return resposta({ idFuncionario: funcionario.id })
