@@ -5,8 +5,8 @@ import { ModeloFuncionario } from '../funcionario/bd-adicionar-conta-protocolos'
 
 const makeDecriptador = (): Decriptador => {
   class DecriptadorStub implements Decriptador {
-    async decriptar (token: string): Promise<string | null> {
-      return await new Promise(resolve => resolve('id_qualquer'))
+    async decriptar (token: string): Promise<any | null> {
+      return await new Promise(resolve => resolve({ id: 'id_qualquer' }))
     }
   }
   return new DecriptadorStub()
@@ -65,7 +65,7 @@ describe('ConsultaFuncionarioPeloTokenBd', () => {
   test('Deve chamar o RepositorioConsultaFuncionarioPorId com os valores corretos', async () => {
     const { sut, repositorioConsultaFuncionarioPorIdStub } = makeSut()
     const consultarPorIdSpy = jest.spyOn(repositorioConsultaFuncionarioPorIdStub, 'consultarPorId')
-    await sut.consultar('id_qualquer', 'nivel_qualquer')
+    await sut.consultar('token_qualquer', 'nivel_qualquer')
     expect(consultarPorIdSpy).toHaveBeenCalledWith('id_qualquer', 'nivel_qualquer')
   })
 

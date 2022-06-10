@@ -1,3 +1,3 @@
 export interface Decriptador {
-  decriptar: (valor: string) => Promise<string | null>
+  decriptar: (valor: string) => Promise<any | null>
 }
