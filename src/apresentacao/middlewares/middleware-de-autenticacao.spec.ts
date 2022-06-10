@@ -15,7 +15,7 @@ const makeContaFalsa = (): ModeloFuncionario => ({
 })
 
 const makeRequisicaoFalsa = (): RequisicaoHttp => ({
-  cabecalho: { 'x-access-token': 'token_qualquer' }
+  cabecalho: 'token_qualquer'
 })
 
 const makeConsultaFuncionarioPeloToken = (): ConsultaFuncionarioPeloToken => {
@@ -42,7 +42,7 @@ const makeSut = (nivel?: string): SubTipos => {
 }
 
 describe('Middleware de autenticação', () => {
-  test('Deve retornar status 403 se não existir o x-access-token no cabeçalho', async () => {
+  test('Deve retornar status 403 se não existir o token no cabeçalho', async () => {
     const { sut } = makeSut()
     const respostaHttp = await sut.tratar({})
     expect(respostaHttp).toEqual(requisicaoNegada(new ErroAcessoNegado()))
