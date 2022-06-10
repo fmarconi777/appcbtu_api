@@ -4,8 +4,10 @@ import { Middleware } from '../../apresentacao/protocolos/middleware'
 
 export const adaptadorDeMiddleware = (middleware: Middleware) => {
   return async (req: Request, res: Response, next: NextFunction) => {
+    const autorizacao: any = req.headers.authorization
+    const [, tokenDeAcesso] = autorizacao?.split(' ')
     const requisicaoHttp: RequisicaoHttp = {
-      cabecalho: req.headers
+      cabecalho: tokenDeAcesso
     }
     const respostaHttp = await middleware.tratar(requisicaoHttp)
     if (respostaHttp.status === 200) {
