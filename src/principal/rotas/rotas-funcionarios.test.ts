@@ -2,8 +2,10 @@ import request from 'supertest'
 import app from '../config/app'
 import { AuxiliaresMariaDB } from '../../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 import { RepositorioFuncionarioMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/funcionario'
-import { hash } from 'bcrypt'
 import { Funcionario } from '../../infraestrutura/bd/mariadb/models/modelo-funcionarios'
+import { hash } from 'bcrypt'
+import { sign } from 'jsonwebtoken'
+import 'dotenv/config'
 
 describe('Rotas Funcionarios', () => {
   beforeAll(async () => {
@@ -39,6 +41,31 @@ describe('Rotas Funcionarios', () => {
       await request(app)
         .post('/funcionario')
         .set('authorization', 'Bearer ')
+        .send({
+          nome: 'Vinicius',
+          email: 'email@email.com',
+          senha: '123',
+          confirmarSenha: '123',
+          administrador: 'true',
+          areaId: '1'
+        })
+        .expect(403)
+    })
+
+    test('Deve retornar status 200 ao tentar cadastrar funcionario com um token válido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app)
+        .post('/funcionario')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
         .send({
           nome: 'Vinicius',
           email: 'email@email.com',
