@@ -34,6 +34,21 @@ describe('Rotas Funcionarios', () => {
         })
         .expect(403)
     })
+
+    test('Deve retornar status 403 ao tentar cadastrar funcionario com authorization sem token de acesso', async () => {
+      await request(app)
+        .post('/funcionario')
+        .set('authorization', 'Bearer ')
+        .send({
+          nome: 'Vinicius',
+          email: 'email@email.com',
+          senha: '123',
+          confirmarSenha: '123',
+          administrador: 'true',
+          areaId: '1'
+        })
+        .expect(403)
+    })
   })
 
   describe('POST /login', () => {
