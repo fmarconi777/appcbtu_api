@@ -21,7 +21,7 @@ describe('Rotas Funcionarios', () => {
   })
 
   describe('POST /funcionario', () => {
-    test('Deve retornar satus 200 em caso de sucesso', async () => {
+    test('Deve retornar status 403 ao tentar cadastrar funcionario sem autenticação', async () => {
       await request(app)
         .post('/funcionario')
         .send({
@@ -32,7 +32,7 @@ describe('Rotas Funcionarios', () => {
           administrador: 'true',
           areaId: '1'
         })
-        .expect(200)
+        .expect(403)
     })
   })
 
