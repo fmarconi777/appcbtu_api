@@ -1,8 +1,10 @@
 import express from 'express'
 import configuraMiddlewares from './middlewares'
 import configuraRotas from './rotas'
+import admin from './conta-administrador'
 
 const app = express()
 configuraMiddlewares(app)
-configuraRotas(app)
+configuraRotas(app);
+(async () => (await admin()))().catch(erro => (console.error(erro)))
 export default app
