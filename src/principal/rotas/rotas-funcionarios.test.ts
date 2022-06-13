@@ -52,11 +52,37 @@ describe('Rotas Funcionarios', () => {
         .expect(403)
     })
 
+    test('Deve retornar status 403 ao tentar cadastrar funcionario com um token inválido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'alguem@email.com',
+        senha,
+        administrador: false,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      console.log('token de acesso', tokenDeAcesso)
+      await request(app)
+        .post('/funcionario')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .send({
+          nome: 'Vinicius',
+          email: 'vinicius@email.com',
+          senha: '123',
+          confirmarSenha: '123',
+          administrador: 'true',
+          areaId: '1'
+        })
+        .expect(403)
+    })
+
     test('Deve retornar status 200 ao tentar cadastrar funcionario com um token válido', async () => {
       const senha = await hash('123', 12)
       const resposta = await Funcionario.create({
         nome: 'alguém',
-        email: 'email@email.com',
+        email: 'alguem@email.com',
         senha,
         administrador: true,
         areaId: 3
@@ -68,13 +94,13 @@ describe('Rotas Funcionarios', () => {
         .set('authorization', `Bearer ${tokenDeAcesso}`)
         .send({
           nome: 'Vinicius',
-          email: 'email@email.com',
+          email: 'vinicius@email.com',
           senha: '123',
           confirmarSenha: '123',
           administrador: 'true',
           areaId: '1'
         })
-        .expect(403)
+        .expect(200)
     })
   })
 
