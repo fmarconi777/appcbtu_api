@@ -1,5 +1,7 @@
 import { Validador } from '../protocolos/validador'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
+import { ErroDeServidor } from '../erros/erro-de-servidor'
+import { erroDeServidor } from '../auxiliares/auxiliar-http'
 import { ControladorDeArea } from './area'
 import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 import { ModeloArea } from '../../dominio/modelos/area'
@@ -89,5 +91,26 @@ describe('Controlador de estações', () => {
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(404)
     expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('área'))
+  })
+
+  test('Deve retornar codigo 500 se o ConsultaArea retornar um erro', async () => {
+    const { sut, consultaAreaStub } = makeSut()
+    const erroFalso = new Error()
+    erroFalso.stack = 'stack_qualquer'
+    const erro = erroDeServidor(erroFalso)
+    jest.spyOn(consultaAreaStub, 'consultarTodas').mockImplementationOnce(async () => {
+      return await new Promise((resolve, reject) => reject(erro))
+    })
+    jest.spyOn(consultaAreaStub, 'consultar').mockImplementationOnce(async () => {
+      return await new Promise((resolve, reject) => reject(erro))
+    })
+    const requisicaoHttpSemArea = { parametro: '', metodo: 'GET' }
+    const requisicaoHttpComArea = { parametro: 'area_qualquer', metodo: 'GET' }
+    const respostaHttpSemArea = await sut.tratar(requisicaoHttpSemArea)
+    const respostaHttpComArea = await sut.tratar(requisicaoHttpComArea)
+    expect(respostaHttpSemArea.status).toBe(500)
+    expect(respostaHttpSemArea.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
+    expect(respostaHttpComArea.status).toBe(500)
+    expect(respostaHttpComArea.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
   })
 })
