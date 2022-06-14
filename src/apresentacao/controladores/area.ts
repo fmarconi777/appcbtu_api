@@ -22,7 +22,7 @@ export class ControladorDeArea implements Controlador {
             const todasAreas = await this.consultaArea.consultarTodas()
             return resposta(todasAreas)
           }
-          const areaValida = this.validaArea.validar(parametro)
+          const areaValida = this.validaArea.validar(parametro.toUpperCase())
           if (!areaValida) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
           }
