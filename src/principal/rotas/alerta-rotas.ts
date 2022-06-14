@@ -1,8 +1,11 @@
 import { Router } from 'express'
+import { adaptadorDeMiddleware } from '../adaptadores/adaptador-de-middleware-express'
+import { criaMiddlewareDeAutenticacao } from '../fabrica/middleware-de-autenticacao'
 import { adaptadorDeRota } from '../adaptadores/adaptador-de-rota-express'
 import { criaControladorDeAlerta } from '../fabrica/alerta'
 
 export default (router: Router): Router => {
-  router.post('/alerta', adaptadorDeRota(criaControladorDeAlerta())) // eslint-disable-line
+  const autentificacaoArea = adaptadorDeMiddleware(criaMiddlewareDeAutenticacao('3'))
+  router.post('/alerta',autentificacaoArea, adaptadorDeRota(criaControladorDeAlerta())) // eslint-disable-line
   return router
 }
