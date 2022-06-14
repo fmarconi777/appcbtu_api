@@ -20,7 +20,7 @@ const makeConsultaArea = (): ConsultaArea => {
     async consultar (parametro: string): Promise<ModeloArea> {
       const areaFalsa = {
         id: 'id_valida',
-        nome: 'nome_valido'
+        nome: parametro
       }
       return await new Promise(resolve => resolve(areaFalsa))
     }
@@ -81,8 +81,16 @@ describe('Controlador de estações', () => {
     expect(respostaHttp.status).toBe(200)
     expect(respostaHttp.corpo).toEqual({
       id: 'id_valida',
-      nome: 'nome_valido'
+      nome: 'area_valida'
     })
+  })
+
+  test('Deve chamar ValidaArea com o valor correto', async () => {
+    const { sut, validaAreaStub } = makeSut()
+    const spyConsula = jest.spyOn(validaAreaStub, 'validar')
+    const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'GET' }
+    await sut.tratar(requisicaoHttp)
+    expect(spyConsula).toHaveBeenCalledWith('AREA_QUALQUER')
   })
 
   test('Deve retornar codigo 400 se o parâmetro estiver incorreto', async () => {
