@@ -24,7 +24,7 @@ export class ControladorDeArea implements Controlador {
           }
           const areaValida = this.validaArea.validar(parametro)
           if (!areaValida) {
-            return requisicaoNaoEncontrada(new ErroParametroInvalido('sigla'))
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
           }
           const area = await this.consultaArea.consultar(parametro)
           return resposta(area)
