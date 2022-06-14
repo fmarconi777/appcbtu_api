@@ -1,4 +1,5 @@
 import { Validador } from '../protocolos/validador'
+import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ControladorDeArea } from './area'
 import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 import { ModeloArea } from '../../dominio/modelos/area'
@@ -24,29 +25,29 @@ const makeConsultaArea = (): ConsultaArea => {
   return new ConsultaAreaStub()
 }
 
-const makeValidaParametro = (): Validador => {
-  class ValidaParametroStub implements Validador {
+const makeValidaArea = (): Validador => {
+  class ValidaAreaStub implements Validador {
     validar (parametro: string): boolean {
       return true
     }
   }
-  return new ValidaParametroStub()
+  return new ValidaAreaStub()
 }
 
 interface SutTypes {
   sut: ControladorDeArea
   consultaAreaStub: ConsultaArea
-  validaParametroStub: Validador
+  validaAreaStub: Validador
 }
 
 const makeSut = (): SutTypes => {
   const consultaAreaStub = makeConsultaArea()
-  const validaParametroStub = makeValidaParametro()
-  const sut = new ControladorDeArea(consultaAreaStub, validaParametroStub)
+  const validaAreaStub = makeValidaArea()
+  const sut = new ControladorDeArea(consultaAreaStub, validaAreaStub)
   return {
     sut,
     consultaAreaStub,
-    validaParametroStub
+    validaAreaStub
   }
 }
 
@@ -79,5 +80,14 @@ describe('Controlador de estações', () => {
       id: 'id_valida',
       nome: 'nome_valido'
     })
+  })
+
+  test('Deve retornar codigo 400 se o parâmetro estiver incorreto', async () => {
+    const { sut, validaAreaStub } = makeSut()
+    jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(false)
+    const requisicaoHttp = { parametro: 'area_invalida', metodo: 'GET' }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(404)
+    expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('área'))
   })
 })
