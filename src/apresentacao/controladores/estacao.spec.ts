@@ -105,6 +105,14 @@ describe('Controlador de estações', () => {
     })
   })
 
+  test('Deve chamar ValidaParametro com o valor correto', async () => {
+    const { sut, validaParametroStub } = makeSut()
+    const spyConsula = jest.spyOn(validaParametroStub, 'validar')
+    const requisicaoHttp = { parametro: 'sigla_qualquer', metodo: 'GET' }
+    await sut.tratar(requisicaoHttp)
+    expect(spyConsula).toHaveBeenCalledWith('sigla_qualquer')
+  })
+
   test('Deve retornar codigo 400 se o parâmetro estiver incorreto', async () => {
     const { sut, validaParametroStub } = makeSut()
     jest.spyOn(validaParametroStub, 'validar').mockReturnValueOnce(false)
