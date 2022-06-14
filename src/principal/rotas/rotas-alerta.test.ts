@@ -18,7 +18,7 @@ describe('Rotas Alerta', () => {
     await Alerta.destroy({ truncate: true, cascade: false })
   })
 
-  test('Deve retornar um alerta em caso de sucesso', async () => {
+  test('Deve retornar status 403 ao adicionar um alerta sem autenticação', async () => {
     await request(app)
       .post('/alerta')
       .send({
@@ -29,6 +29,6 @@ describe('Rotas Alerta', () => {
         ativo: 'true',
         estacaoId: '1'
       })
-      .expect(200)
+      .expect(403)
   })
 })
