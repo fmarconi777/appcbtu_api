@@ -5,6 +5,6 @@ import admin from './conta-administrador'
 
 const app = express()
 configuraMiddlewares(app)
-configuraRotas(app);
-(async () => (await admin()))().catch(erro => (console.error(erro)))
+configuraRotas(app)
+admin()
 export default app
