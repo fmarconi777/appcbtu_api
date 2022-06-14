@@ -2,6 +2,7 @@ import { Validador } from '../protocolos/validador'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { erroDeServidor } from '../auxiliares/auxiliar-http'
+import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ControladorDeArea } from './area'
 import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 import { ModeloArea } from '../../dominio/modelos/area'
@@ -112,5 +113,13 @@ describe('Controlador de estações', () => {
     expect(respostaHttpSemArea.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
     expect(respostaHttpComArea.status).toBe(500)
     expect(respostaHttpComArea.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
+  })
+
+  test('Deve retornar status 400 se um método não suportado for fornecido', async () => {
+    const { sut } = makeSut()
+    const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'metodo_invalido' }
+    const respostaHttp = await sut.tratar(requisicaoHttp)
+    expect(respostaHttp.status).toBe(400)
+    expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
   })
 })
