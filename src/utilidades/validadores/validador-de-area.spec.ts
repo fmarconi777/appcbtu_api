@@ -20,4 +20,10 @@ describe('Validador de parametro', () => {
     sut.validar('area_qualquer')
     expect(eAreaSpy).toHaveBeenCalledWith('area_qualquer')
   })
+
+  test('Deve retornar true se o validador retornar true', () => {
+    const sut = makeSut()
+    const eValido = sut.validar('COINF')
+    expect(eValido).toBe(true)
+  })
 })
