@@ -20,11 +20,7 @@ describe('Repositorio mariaDB Estacao', () => {
     const sut = makeSut()
     const resutadoEsperado = {
       nome: 'Estação São Gabriel',
-      sigla: 'usg',
-      codigo: 'asdf32',
-      endereco: 'rua das flores',
-      latitude: '41.5656',
-      longitude: '85.9696'
+      sigla: 'usg'
     }
     const estacao = await sut.consultar('usg')
     expect(estacao).toBeTruthy()
@@ -33,28 +29,9 @@ describe('Repositorio mariaDB Estacao', () => {
   })
   test('Deve retornar todas as estações caso um parametro não for passado', async () => {
     const sut = makeSut()
-    const resutadoEsperado = [
-      {
-        nome: 'Estação São Gabriel',
-        sigla: 'usg',
-        codigo: 'asdf32',
-        endereco: 'rua das flores',
-        latitude: '41.5656',
-        longitude: '85.9696'
-      },
-      {
-        nome: 'Estação Minas Shopping',
-        sigla: 'ums',
-        codigo: 'asdf32',
-        endereco: 'rua dos cravos',
-        latitude: '39.4141',
-        longitude: '86.3478'
-      }
-    ]
-    const estacao = await sut.consultar()
-    expect(estacao).toBeTruthy()
-    expect(estacao[0].id).toBeTruthy()
-    expect(estacao[1].id).toBeTruthy()
-    expect(estacao).toMatchObject(resutadoEsperado)
+    const resposta = await sut.consultar()
+    expect(resposta).toBeTruthy()
+    expect(Array.isArray(resposta)).toBeTruthy()
+    expect(resposta.length).toBeGreaterThan(0)
   })
 })
