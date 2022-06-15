@@ -27,4 +27,12 @@ describe('RepositorioAreaMariaDB', () => {
     expect(resposta.id).toBeTruthy()
     expect(resposta).toMatchObject(resultadoEsperado)
   })
+
+  test('Deve retornar todas as áreas se um parametro não for fornecido', async () => {
+    const sut = makeSut()
+    const resposta = await sut.consultar()
+    expect(resposta).toBeTruthy()
+    expect(Array.isArray(resposta)).toBeTruthy()
+    expect(resposta.length).toBeGreaterThan(0)
+  })
 })
