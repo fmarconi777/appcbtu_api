@@ -39,4 +39,19 @@ describe('ConsultaAreaBD', () => {
     await sut.consultar(area)
     expect(consultarSpy).toHaveBeenCalledWith('AREA_QUALQUER')
   })
+
+  test('Método consultar deve retornar um erro caso o RepositorioArea retorne um erro', async () => {
+    const { sut, repositorioAreaStub } = makeSut()
+    jest.spyOn(repositorioAreaStub, 'consultar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const area = 'AREA_QUALQUER'
+    const respostaConsultar = sut.consultar(area)
+    await expect(respostaConsultar).rejects.toThrow()
+  })
+
+  test('Método consultarTodas deve retornar um erro caso o RepositorioArea retorne um erro', async () => {
+    const { sut, repositorioAreaStub } = makeSut()
+    jest.spyOn(repositorioAreaStub, 'consultar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const respostaConsultar = sut.consultarTodas()
+    await expect(respostaConsultar).rejects.toThrow()
+  })
 })
