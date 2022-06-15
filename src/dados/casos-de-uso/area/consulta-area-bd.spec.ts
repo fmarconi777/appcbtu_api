@@ -1,17 +1,19 @@
 import { ConsultaAreaBD } from './consulta-area-bd'
 import { RepositorioArea, ModelosAreas } from '../../protocolos/bd/repositorio-area'
+import { ModeloArea } from '../../../dominio/modelos/area'
+
+const makeAreaFalsa = (): ModeloArea => ({
+  id: 'id_qualquer',
+  nome: 'AREA_QUALQUER'
+})
 
 const makeRepositorioArea = (): RepositorioArea => {
   class RepositorioAreaStub implements RepositorioArea {
     async consultar (area?: string): Promise<ModelosAreas> {
-      const areaFalsa = {
-        id: 'id_qualquer',
-        nome: 'AREA_QUALQUER'
-      }
       if (area) { //eslint-disable-line
-        return await new Promise(resolve => resolve(areaFalsa))
+        return await new Promise(resolve => resolve(makeAreaFalsa()))
       }
-      return await new Promise(resolve => resolve([areaFalsa]))
+      return await new Promise(resolve => resolve([makeAreaFalsa()]))
     }
   }
   return new RepositorioAreaStub()
@@ -53,5 +55,11 @@ describe('ConsultaAreaBD', () => {
     jest.spyOn(repositorioAreaStub, 'consultar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const respostaConsultar = sut.consultarTodas()
     await expect(respostaConsultar).rejects.toThrow()
+  })
+
+  test('Deve retornar um array com todas as areas caso um parâmetro não seja fornecido', async () => {
+    const { sut } = makeSut()
+    const resposta = await sut.consultarTodas()
+    expect(resposta).toEqual([makeAreaFalsa()])
   })
 })
