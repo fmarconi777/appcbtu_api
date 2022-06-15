@@ -20,5 +20,13 @@ describe('Rotas Area', () => {
         .send()
         .expect(403)
     })
+
+    test('Deve retornar status 403 ao consultar uma area com authorization sem token de acesso', async () => {
+      await request(app)
+        .get('/area')
+        .set('authorization', 'Bearer ')
+        .send()
+        .expect(403)
+    })
   })
 })
