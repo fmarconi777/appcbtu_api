@@ -62,4 +62,11 @@ describe('ConsultaAreaBD', () => {
     const resposta = await sut.consultarTodas()
     expect(resposta).toEqual([makeAreaFalsa()])
   })
+
+  test('Deve retornar uma area caso um parâmetro seja fornecido', async () => {
+    const { sut } = makeSut()
+    const area = 'AREA_QUALQUER'
+    const resposta = await sut.consultar(area)
+    expect(resposta).toEqual(makeAreaFalsa())
+  })
 })
