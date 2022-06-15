@@ -2,6 +2,7 @@ import { DataTypes, Model, Optional } from 'sequelize'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { ModeloEstacao } from '../../../../dominio/modelos/estacao'
 import { Equipamento } from './modelo-equipamento'
+import { Alerta } from './modelo-alerta'
 
 interface AtributosEstacao extends Optional<ModeloEstacao, 'id'> {}
 
@@ -55,6 +56,17 @@ Estacao.hasMany(Equipamento, {
 })
 
 Equipamento.belongsTo(Estacao, {
+  foreignKey: 'estacaoId',
+  as: 'estacao'
+})
+
+Estacao.hasMany(Alerta, {
+  sourceKey: 'id',
+  foreignKey: 'estacaoId',
+  as: 'alerta'
+})
+
+Alerta.belongsTo(Estacao, {
   foreignKey: 'estacaoId',
   as: 'estacao'
 })
