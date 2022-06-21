@@ -6,11 +6,13 @@ import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { Validador } from '../protocolos/validador'
 import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
+import { CadastroArea } from '../../dominio/casos-de-uso/area/cadastro-de-area'
 
 export class ControladorDeArea implements Controlador {
   constructor (
     private readonly consultaArea: ConsultaArea,
-    private readonly validaArea: Validador
+    private readonly validaArea: Validador,
+    private readonly cadastroDeArea: CadastroArea
   ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
@@ -37,6 +39,7 @@ export class ControladorDeArea implements Controlador {
           if (!requisicaoHttp.corpo.nome || requisicaoHttp.corpo.nome === 'undefined') { // eslint-disable-line
             return requisicaoImpropria(new ErroFaltaParametro('nome'))
           }
+          await this.cadastroDeArea.inserir(requisicaoHttp.corpo.nome)
           return await new Promise(resolve => resolve({ status: 200, corpo: null }))
         } catch (erro: any) {
           return erroDeServidor(erro)
