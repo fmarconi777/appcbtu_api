@@ -1,7 +1,9 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model, Op } from 'sequelize'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 
 const sequelize = AuxiliaresMariaDB.bd
+
+export { Op }
 
 export class Funcionario extends Model<
 InferAttributes<Funcionario>,

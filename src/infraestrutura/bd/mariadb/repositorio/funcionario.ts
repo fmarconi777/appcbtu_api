@@ -1,5 +1,5 @@
 import { RepositorioFuncionario, InserirModeloFuncionario, ModeloFuncionario } from '../../../../dados/protocolos/bd/repositorio-funcionario'
-import { Funcionario } from '../models/modelo-funcionarios'
+import { Funcionario, Op } from '../models/modelo-funcionarios'
 import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
 import { RepositorioConsultaFuncionarioPorEmail } from '../../../../dados/protocolos/bd/repositorio-consulta-funcionario-por-email'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
@@ -24,7 +24,7 @@ export class RepositorioFuncionarioMariaDB implements RepositorioFuncionario, Re
       const funcionario = await Funcionario.findOne({ where: { id, administrador: true } })
       return funcionario ? FuncoesAuxiliares.mapeadorDeDados(funcionario) : null // eslint-disable-line
     }
-    const funcionario = nivel === undefined ? await Funcionario.findOne({ where: { id } }) : await Funcionario.findOne({ where: { id, areaId: nivel } })
+    const funcionario = nivel === undefined ? await Funcionario.findOne({ where: { id } }) : await Funcionario.findOne({ where: { id, [Op.or]: { areaId: nivel, administrador: true } } })
     return funcionario ? FuncoesAuxiliares.mapeadorDeDados(funcionario) : null // eslint-disable-line
   }
 
