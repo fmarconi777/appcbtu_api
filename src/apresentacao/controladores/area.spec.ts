@@ -188,5 +188,21 @@ describe('Controlador de estações', () => {
       const resposta = await sut.tratar(requisicaoHttp)
       expect(resposta).toEqual(erroDeServidor(new Error()))
     })
+
+    test('Deve retornar status 200 se dadso válidos forem fornecidos', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'area_qualquer'
+        },
+        metodo: 'POST'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta.status).toEqual(200)
+      expect(resposta.corpo).toEqual({
+        id: 'id_qualquer',
+        nome: 'area_qualquer'
+      })
+    })
   })
 })
