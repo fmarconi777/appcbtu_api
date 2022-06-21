@@ -175,5 +175,18 @@ describe('Controlador de estações', () => {
       await sut.tratar(requisicaoHttp)
       expect(inserirSpy).toHaveBeenCalledWith('area_qualquer')
     })
+
+    test('Deve retornar status 500 se o cadastroDeArea retornar um erro', async () => {
+      const { sut, cadastroDeAreaStub } = makeSut()
+      jest.spyOn(cadastroDeAreaStub, 'inserir').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'area_qualquer'
+        },
+        metodo: 'POST'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(erroDeServidor(new Error()))
+    })
   })
 })
