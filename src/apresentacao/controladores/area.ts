@@ -39,8 +39,8 @@ export class ControladorDeArea implements Controlador {
           if (!requisicaoHttp.corpo.nome || requisicaoHttp.corpo.nome === 'undefined') { // eslint-disable-line
             return requisicaoImpropria(new ErroFaltaParametro('nome'))
           }
-          await this.cadastroDeArea.inserir(requisicaoHttp.corpo.nome)
-          return await new Promise(resolve => resolve({ status: 200, corpo: null }))
+          const area = await this.cadastroDeArea.inserir(requisicaoHttp.corpo.nome)
+          return resposta(area)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
