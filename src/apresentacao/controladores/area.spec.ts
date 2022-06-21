@@ -7,6 +7,7 @@ import { ControladorDeArea } from './area'
 import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 import { ModeloArea } from '../../dominio/modelos/area'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
+import { CadastroArea } from '../../dominio/casos-de-uso/area/cadastro-de-area'
 
 describe('Controlador de estações', () => {
   const makeConsultaArea = (): ConsultaArea => {
@@ -39,20 +40,35 @@ describe('Controlador de estações', () => {
     return new ValidaAreaStub()
   }
 
+  const makeCadastroDeArea = (): CadastroArea => {
+    class CadastroDeAreaStub implements CadastroArea {
+      async inserir (nome: string): Promise<ModeloArea> {
+        return await new Promise(resolve => resolve({
+          id: 'id_qualquer',
+          nome
+        }))
+      }
+    }
+    return new CadastroDeAreaStub()
+  }
+
   interface SutTypes {
     sut: ControladorDeArea
     consultaAreaStub: ConsultaArea
     validaAreaStub: Validador
+    cadastroDeAreaStub: CadastroArea
   }
 
   const makeSut = (): SutTypes => {
+    const cadastroDeAreaStub = makeCadastroDeArea()
     const consultaAreaStub = makeConsultaArea()
     const validaAreaStub = makeValidaArea()
-    const sut = new ControladorDeArea(consultaAreaStub, validaAreaStub)
+    const sut = new ControladorDeArea(consultaAreaStub, validaAreaStub, cadastroDeAreaStub)
     return {
       sut,
       consultaAreaStub,
-      validaAreaStub
+      validaAreaStub,
+      cadastroDeAreaStub
     }
   }
 
@@ -145,6 +161,19 @@ describe('Controlador de estações', () => {
       }
       const resposta = await sut.tratar(requisicaoHttp)
       expect(resposta).toEqual(requisicaoImpropria(new ErroFaltaParametro('nome')))
+    })
+
+    test('Deve chamar o cadastroDeArea com o valor correto', async () => {
+      const { sut, cadastroDeAreaStub } = makeSut()
+      const inserirSpy = jest.spyOn(cadastroDeAreaStub, 'inserir')
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'area_qualquer'
+        },
+        metodo: 'POST'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(inserirSpy).toHaveBeenCalledWith('area_qualquer')
     })
   })
 })
