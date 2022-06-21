@@ -5,6 +5,7 @@ import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { Validador } from '../protocolos/validador'
 import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
+import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 
 export class ControladorDeArea implements Controlador {
   constructor (
@@ -28,6 +29,15 @@ export class ControladorDeArea implements Controlador {
           }
           const area = await this.consultaArea.consultar(parametro)
           return resposta(area)
+        } catch (erro: any) {
+          return erroDeServidor(erro)
+        }
+      case 'POST':
+        try {
+          if (!requisicaoHttp.corpo.nome || requisicaoHttp.corpo.nome === 'undefined') { // eslint-disable-line
+            return requisicaoImpropria(new ErroFaltaParametro('nome'))
+          }
+          return await new Promise(resolve => resolve({ status: 200, corpo: null }))
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
