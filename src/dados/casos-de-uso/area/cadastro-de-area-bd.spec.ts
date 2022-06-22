@@ -33,4 +33,12 @@ describe('CadastroDeAreaBD', () => {
     await sut.inserir(area)
     expect(consultaPorNomeSpy).toHaveBeenCalledWith('AREA_QUALQUER')
   })
+
+  test('Deve retornar mensagem "área já cadstrada" caso a área já exista no banco de dados', async () => {
+    const { sut, consultaAreaPorNomeStub } = makeSut()
+    jest.spyOn(consultaAreaPorNomeStub, 'consultaPorNome').mockReturnValueOnce(new Promise(resolve => resolve({ id: 'id_qualquer', nome: 'AREA_QUALQUER' })))
+    const area = 'AREA_QUALQUER'
+    const resposta = await sut.inserir(area)
+    expect(resposta).toEqual('área já cadastrada')
+  })
 })
