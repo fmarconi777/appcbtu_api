@@ -7,8 +7,11 @@ export class CadastroDeAreaBD implements CadastroArea {
     private readonly consultaAreaPorNome: ConsultaAreaPorNome
   ) {}
 
-  async inserir (nome: string): Promise<ModeloArea> {
-    await this.consultaAreaPorNome.consultaPorNome(nome)
+  async inserir (nome: string): Promise<ModeloArea | string> {
+    const area = await this.consultaAreaPorNome.consultaPorNome(nome)
+    if (area) { //eslint-disable-line
+      return 'área já cadastrada'
+    }
     return await new Promise(resolve => resolve({ id: '', nome: '' }))
   }
 }
