@@ -8,7 +8,7 @@ export class CadastroDeAreaBD implements CadastroArea {
   ) {}
 
   async inserir (nome: string): Promise<ModeloArea | string> {
-    const area = await this.consultaAreaPorNome.consultaPorNome(nome)
+    const area = await this.consultaAreaPorNome.consultarPorNome(nome)
     if (area) { //eslint-disable-line
       return 'área já cadastrada'
     }
