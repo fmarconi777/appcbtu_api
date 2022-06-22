@@ -1,6 +1,6 @@
 import { ConsultaFuncionarioPeloToken } from '../../../dominio/casos-de-uso/middleware/consulta-funcionario-por-token'
 import { ModeloFuncionario } from '../../../dominio/modelos/funcionario'
-import { RepositorioConsultaFuncionarioPorId } from '../../protocolos/bd/repositorio-consulta-funcionario-por-id'
+import { RepositorioConsultaFuncionarioPorId } from '../../protocolos/bd/funcionario/repositorio-consulta-funcionario-por-id'
 import { Decriptador } from '../../protocolos/criptografia/decriptador'
 
 export class ConsultaFuncionarioPeloTokenBd implements ConsultaFuncionarioPeloToken {
