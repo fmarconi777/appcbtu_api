@@ -1,4 +1,4 @@
-import { RepositorioArea, ModelosAreas } from '../../../../dados/protocolos/bd/repositorio-area'
+import { RepositorioArea, ModelosAreas } from '../../../../dados/protocolos/bd/area/repositorio-area'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { Area } from '../models/modelo-area'
 

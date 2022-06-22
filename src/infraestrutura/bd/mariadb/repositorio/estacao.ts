@@ -1,4 +1,4 @@
-import { RepositorioEstacao, ModelosEstacoes } from '../../../../dados/protocolos/bd/repositorio-estacao'
+import { RepositorioEstacao, ModelosEstacoes } from '../../../../dados/protocolos/bd/estacao/repositorio-estacao'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { Estacao } from '../models/modelo-estacao'
 

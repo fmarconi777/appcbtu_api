@@ -1,4 +1,4 @@
-import { RepositorioEquipamento, DadosEquipamento, ModeloEquipamento } from '../../../../dados/protocolos/bd/repositorio-equipamento'
+import { RepositorioEquipamento, DadosEquipamento, ModeloEquipamento } from '../../../../dados/protocolos/bd/equipamento/repositorio-equipamento'
 import { Equipamento } from '../models/modelo-equipamento'
 import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'

@@ -1,4 +1,4 @@
-import { RepositorioAlerta, DadosAlerta, ModeloAlerta } from '../../../../dados/protocolos/bd/repositorio-alerta'
+import { RepositorioAlerta, DadosAlerta, ModeloAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-alerta'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { Alerta } from '../models/modelo-alerta'
 
