@@ -173,7 +173,7 @@ describe('Controlador de estações', () => {
         metodo: 'POST'
       }
       await sut.tratar(requisicaoHttp)
-      expect(inserirSpy).toHaveBeenCalledWith('area_qualquer')
+      expect(inserirSpy).toHaveBeenCalledWith('AREA_QUALQUER')
     })
 
     test('Deve retornar status 500 se o cadastroDeArea retornar um erro', async () => {
@@ -201,7 +201,7 @@ describe('Controlador de estações', () => {
       expect(resposta.status).toEqual(200)
       expect(resposta.corpo).toEqual({
         id: 'id_qualquer',
-        nome: 'area_qualquer'
+        nome: 'AREA_QUALQUER'
       })
     })
   })
