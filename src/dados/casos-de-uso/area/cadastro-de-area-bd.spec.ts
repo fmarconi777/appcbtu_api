@@ -83,4 +83,11 @@ describe('CadastroDeAreaBD', () => {
     const resposta = sut.inserir(area)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar uma área em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const area = 'AREA_QUALQUER'
+    const resposta = await sut.inserir(area)
+    expect(resposta).toEqual(makeAreaFalsa())
+  })
 })
