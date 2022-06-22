@@ -1,4 +1,4 @@
-import { RepositorioLogDeErro } from '../../../../dados/protocolos/bd/repositorio-log-de-erro'
+import { RepositorioLogDeErro } from '../../../../dados/protocolos/bd/log-de-erro/repositorio-log-de-erro'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { Erros } from '../models/modelo-erros'
 

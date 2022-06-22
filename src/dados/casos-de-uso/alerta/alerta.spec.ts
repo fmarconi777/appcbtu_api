@@ -1,6 +1,6 @@
 import { DadosAlerta } from '../../../dominio/casos-de-uso/alerta/cadastro-de-alerta'
 import { ModeloAlerta } from '../../../dominio/modelos/alerta'
-import { RepositorioAlerta } from '../../protocolos/bd/repositorio-alerta'
+import { RepositorioAlerta } from '../../protocolos/bd/alerta/repositorio-alerta'
 import { CadastroDeAlerta } from './alerta'
 
 const makeRepositorioAlerta = (): RepositorioAlerta => {

@@ -1,7 +1,7 @@
 import { RepositorioFuncionario, InserirModeloFuncionario, ModeloFuncionario } from '../../../../dados/protocolos/bd/repositorio-funcionario'
 import { Funcionario, Op } from '../models/modelo-funcionarios'
 import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
-import { RepositorioConsultaFuncionarioPorEmail } from '../../../../dados/protocolos/bd/repositorio-consulta-funcionario-por-email'
+import { RepositorioConsultaFuncionarioPorEmail } from '../../../../dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-email'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { RepositorioConsultaFuncionarioPorId } from '../../../../dados/protocolos/bd/repositorio-consulta-funcionario-por-id'
 

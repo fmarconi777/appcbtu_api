@@ -1,4 +1,4 @@
-import { ModeloArea } from '../../../dominio/modelos/area'
+import { ModeloArea } from '../../../../dominio/modelos/area'
 
 export type ModelosAreas = ModeloArea | ModeloArea[] | any
 

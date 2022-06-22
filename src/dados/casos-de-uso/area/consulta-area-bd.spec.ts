@@ -1,5 +1,5 @@
 import { ConsultaAreaBD } from './consulta-area-bd'
-import { RepositorioArea, ModelosAreas } from '../../protocolos/bd/repositorio-area'
+import { RepositorioArea, ModelosAreas } from '../../protocolos/bd/area/repositorio-area'
 import { ModeloArea } from '../../../dominio/modelos/area'
 
 const makeAreaFalsa = (): ModeloArea => ({

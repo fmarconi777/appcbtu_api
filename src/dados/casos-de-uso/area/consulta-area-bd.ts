@@ -1,6 +1,6 @@
 import { ConsultaArea } from '../../../dominio/casos-de-uso/area/consulta-area'
 import { ModeloArea } from '../../../dominio/modelos/area'
-import { RepositorioArea } from '../../protocolos/bd/repositorio-area'
+import { RepositorioArea } from '../../protocolos/bd/area/repositorio-area'
 
 export class ConsultaAreaBD implements ConsultaArea {
   constructor (private readonly repositorioArea: RepositorioArea) {}

@@ -1,5 +1,5 @@
 import { Autenticador, ModeloAutenticacao } from '../../../dominio/casos-de-uso/autenticador/autenticador'
-import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/bd/repositorio-consulta-funcionario-por-email'
+import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/bd/funcionario/repositorio-consulta-funcionario-por-email'
 import { ComparadorHash } from '../../protocolos/criptografia/comparador-hash'
 import { Encriptador } from '../../protocolos/criptografia/encriptador'
 

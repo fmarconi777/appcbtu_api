@@ -1,6 +1,6 @@
 import { CadastroDeEquipamento, DadosEquipamento } from '../../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
 import { ModeloEquipamento } from '../../../dominio/modelos/equipamento'
-import { RepositorioEquipamento } from '../../protocolos/bd/repositorio-equipamento'
+import { RepositorioEquipamento } from '../../protocolos/bd/equipamento/repositorio-equipamento'
 
 export class CadastroDeEquipamentoBd implements CadastroDeEquipamento {
   private readonly inserirRepositorioEquipamento: RepositorioEquipamento

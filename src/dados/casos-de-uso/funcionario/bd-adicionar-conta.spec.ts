@@ -2,7 +2,7 @@ import { GeradorDeHash } from '../../protocolos/criptografia/gerador-de-hash'
 import { BdAdicionarConta } from './bd-adicionar-conta'
 import { InserirModeloFuncionario, RepositorioFuncionario } from './bd-adicionar-conta-protocolos'
 import { ModeloFuncionario } from '../../../dominio/modelos/funcionario'
-import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/bd/repositorio-consulta-funcionario-por-email'
+import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/bd/funcionario/repositorio-consulta-funcionario-por-email'
 
 const makeGeradorDeHash = (): GeradorDeHash => {
   class GeradorDeHashStub implements GeradorDeHash {
