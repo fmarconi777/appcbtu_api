@@ -75,4 +75,12 @@ describe('CadastroDeAreaBD', () => {
     await sut.inserir(area)
     expect(inserirSpy).toHaveBeenCalledWith('AREA_QUALQUER')
   })
+
+  test('Deve retornar um erro caso o RepositorioInserirArea retorne um erro', async () => {
+    const { sut, repositorioInserirAreaStub } = makeSut()
+    jest.spyOn(repositorioInserirAreaStub, 'inserir').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const area = 'AREA_QUALQUER'
+    const resposta = sut.inserir(area)
+    await expect(resposta).rejects.toThrow()
+  })
 })
