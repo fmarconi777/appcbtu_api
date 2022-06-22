@@ -14,7 +14,6 @@ export class CadastroDeAreaBD implements CadastroArea {
     if (area) { //eslint-disable-line
       return 'área já cadastrada'
     }
-    await this.repositorioInserirArea.inserir(nome)
-    return await new Promise(resolve => resolve({ id: '', nome: '' }))
+    return await this.repositorioInserirArea.inserir(nome)
   }
 }
