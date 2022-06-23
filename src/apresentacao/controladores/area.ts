@@ -7,12 +7,14 @@ import { Validador } from '../protocolos/validador'
 import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { CadastroArea } from '../../dominio/casos-de-uso/area/cadastro-de-area'
+import { DeletaArea } from '../../dominio/casos-de-uso/area/deleta-area'
 
 export class ControladorDeArea implements Controlador {
   constructor (
     private readonly consultaArea: ConsultaArea,
     private readonly validaArea: Validador,
-    private readonly cadastroDeArea: CadastroArea
+    private readonly cadastroDeArea: CadastroArea,
+    private readonly deletaArea: DeletaArea
   ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
@@ -29,7 +31,7 @@ export class ControladorDeArea implements Controlador {
           if (!areaValida) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
           }
-          const area = await this.consultaArea.consultar(parametro)
+          const area = await this.consultaArea.consultar(parametro.toUpperCase())
           return resposta(area)
         } catch (erro: any) {
           return erroDeServidor(erro)
@@ -54,6 +56,7 @@ export class ControladorDeArea implements Controlador {
         if (!areaValida) {
           return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
         }
+        await this.deletaArea.deletar(parametro.toUpperCase())
         return await new Promise((resolve) => resolve({ status: 200, corpo: 'Deletado com sucesso' }))
       }
       default:
