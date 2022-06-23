@@ -8,6 +8,7 @@ import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 import { ModeloArea } from '../../dominio/modelos/area'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { CadastroArea } from '../../dominio/casos-de-uso/area/cadastro-de-area'
+import { DeletaArea } from '../../dominio/casos-de-uso/area/deleta-area'
 
 describe('Controlador de estações', () => {
   const makeConsultaArea = (): ConsultaArea => {
@@ -52,23 +53,35 @@ describe('Controlador de estações', () => {
     return new CadastroDeAreaStub()
   }
 
+  const makeDeletaArea = (): DeletaArea => {
+    class DeletaAreaStub implements DeletaArea {
+      async deletar (area: string): Promise<string> {
+        return await new Promise(resolve => resolve('Área deletada com sucesso'))
+      }
+    }
+    return new DeletaAreaStub()
+  }
+
   interface SutTypes {
     sut: ControladorDeArea
     consultaAreaStub: ConsultaArea
     validaAreaStub: Validador
     cadastroDeAreaStub: CadastroArea
+    deletaAreaStub: DeletaArea
   }
 
   const makeSut = (): SutTypes => {
+    const deletaAreaStub = makeDeletaArea()
     const cadastroDeAreaStub = makeCadastroDeArea()
     const consultaAreaStub = makeConsultaArea()
     const validaAreaStub = makeValidaArea()
-    const sut = new ControladorDeArea(consultaAreaStub, validaAreaStub, cadastroDeAreaStub)
+    const sut = new ControladorDeArea(consultaAreaStub, validaAreaStub, cadastroDeAreaStub, deletaAreaStub)
     return {
       sut,
       consultaAreaStub,
       validaAreaStub,
-      cadastroDeAreaStub
+      cadastroDeAreaStub,
+      deletaAreaStub
     }
   }
 
@@ -92,12 +105,12 @@ describe('Controlador de estações', () => {
       }])
     })
 
-    test('Deve chamar ConsultaEstacao com o valor correto', async () => {
+    test('Deve chamar ConsultaArea com o valor correto', async () => {
       const { sut, consultaAreaStub } = makeSut()
       const spyConsula = jest.spyOn(consultaAreaStub, 'consultar')
       const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'GET' }
       await sut.tratar(requisicaoHttp)
-      expect(spyConsula).toHaveBeenCalledWith('area_qualquer')
+      expect(spyConsula).toHaveBeenCalledWith('AREA_QUALQUER')
     })
 
     test('Deve retornar codigo 200 e uma área se o parâmetro estiver correto', async () => {
@@ -107,7 +120,7 @@ describe('Controlador de estações', () => {
       expect(respostaHttp.status).toBe(200)
       expect(respostaHttp.corpo).toEqual({
         id: 'id_valida',
-        nome: 'area_valida'
+        nome: 'AREA_VALIDA'
       })
     })
 
@@ -231,6 +244,14 @@ describe('Controlador de estações', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(404)
       expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('área'))
+    })
+
+    test('Deve chamar DeletaArea com o valor correto', async () => {
+      const { sut, deletaAreaStub } = makeSut()
+      const spyDeletar = jest.spyOn(deletaAreaStub, 'deletar')
+      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'DELETE' }
+      await sut.tratar(requisicaoHttp)
+      expect(spyDeletar).toHaveBeenCalledWith('AREA_QUALQUER')
     })
   })
 })
