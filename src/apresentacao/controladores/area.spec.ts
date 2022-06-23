@@ -205,4 +205,15 @@ describe('Controlador de estações', () => {
       })
     })
   })
+
+  describe('Método DELETE', () => {
+    test('Deve retornar um erro caso um parametro não seja fornecido na url', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        metodo: 'DELETE'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(requisicaoImpropria(new ErroFaltaParametro('área')))
+    })
+  })
 })
