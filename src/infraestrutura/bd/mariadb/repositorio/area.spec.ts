@@ -20,19 +20,31 @@ describe('RepositorioAreaMariaDB', () => {
     nome: 'COINF'
   }
 
-  test('Deve retornar uma área se um parametro for fornecido', async () => {
-    const sut = makeSut()
-    const resposta = await sut.consultar('COINF')
-    expect(resposta).toBeTruthy()
-    expect(resposta.id).toBeTruthy()
-    expect(resposta).toMatchObject(resultadoEsperado)
+  describe('Método consultar', () => {
+    test('Deve retornar uma área se um parametro for fornecido', async () => {
+      const sut = makeSut()
+      const resposta = await sut.consultar('COINF')
+      expect(resposta).toBeTruthy()
+      expect(resposta.id).toBeTruthy()
+      expect(resposta).toMatchObject(resultadoEsperado)
+    })
+
+    test('Deve retornar todas as áreas se um parametro não for fornecido', async () => {
+      const sut = makeSut()
+      const resposta = await sut.consultar()
+      expect(resposta).toBeTruthy()
+      expect(Array.isArray(resposta)).toBeTruthy()
+      expect(resposta.length).toBeGreaterThan(0)
+    })
   })
 
-  test('Deve retornar todas as áreas se um parametro não for fornecido', async () => {
-    const sut = makeSut()
-    const resposta = await sut.consultar()
-    expect(resposta).toBeTruthy()
-    expect(Array.isArray(resposta)).toBeTruthy()
-    expect(resposta.length).toBeGreaterThan(0)
+  describe('Método consultarPorNome', () => {
+    test('Deve retornar uma área em caso de sucesso ao consultar por nome', async () => {
+      const sut = makeSut()
+      const resposta = await sut.consultarPorNome('COINF')
+      expect(resposta).toBeTruthy()
+      expect(resposta?.id).toBeTruthy()
+      expect(resposta).toMatchObject(resultadoEsperado)
+    })
   })
 })
