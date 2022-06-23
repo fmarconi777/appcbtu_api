@@ -68,4 +68,13 @@ describe('Rotas Area', () => {
         .expect(200)
     })
   })
+
+  describe('POST', () => {
+    test('Deve retornar status 403 ao inserir uma area sem autenticação', async () => {
+      await request(app)
+        .post('/area')
+        .send()
+        .expect(403)
+    })
+  })
 })
