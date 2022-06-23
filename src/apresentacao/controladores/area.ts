@@ -50,6 +50,7 @@ export class ControladorDeArea implements Controlador {
         if (!parametro) { // eslint-disable-line
           return requisicaoImpropria(new ErroFaltaParametro('área'))
         }
+        this.validaArea.validar(parametro.toUpperCase())
         return await new Promise((resolve) => resolve({ status: 200, corpo: 'Deletado com sucesso' }))
       }
       default:
