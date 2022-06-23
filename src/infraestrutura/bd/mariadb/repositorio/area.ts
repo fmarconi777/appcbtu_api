@@ -1,11 +1,12 @@
 import { RepositorioArea, ModelosAreas } from '../../../../dados/protocolos/bd/area/repositorio-area'
 import { ConsultaAreaPorNome } from '../../../../dados/protocolos/bd/area/repositorio-consulta-area-por-nome'
+import { RepositorioInserirArea } from '../../../../dados/protocolos/bd/area/repositorio-inserir-area'
 import { ModeloArea } from '../../../../dominio/modelos/area'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
 import { Area } from '../models/modelo-area'
 
-export class RepositorioAreaMariaDB implements RepositorioArea, ConsultaAreaPorNome {
+export class RepositorioAreaMariaDB implements RepositorioArea, ConsultaAreaPorNome, RepositorioInserirArea {
   async consultar (area?: string | undefined): Promise<ModelosAreas> {
     AuxiliaresMariaDB.verificaConexao()
     if (area) { //eslint-disable-line
@@ -18,5 +19,11 @@ export class RepositorioAreaMariaDB implements RepositorioArea, ConsultaAreaPorN
     AuxiliaresMariaDB.verificaConexao()
     const area = await Area.findOne({ where: { nome: nome } })
     return area ? FuncoesAuxiliares.mapeadorDeDados(area) : null //eslint-disable-line
+  }
+
+  async inserir (nome: string): Promise<ModeloArea> {
+    AuxiliaresMariaDB.verificaConexao()
+    const area = await Area.create({ nome })
+    return FuncoesAuxiliares.mapeadorDeDados(area)
   }
 }
