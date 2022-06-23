@@ -1,13 +1,22 @@
 import { RepositorioArea, ModelosAreas } from '../../../../dados/protocolos/bd/area/repositorio-area'
+import { ConsultaAreaPorNome } from '../../../../dados/protocolos/bd/area/repositorio-consulta-area-por-nome'
+import { ModeloArea } from '../../../../dominio/modelos/area'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
+import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
 import { Area } from '../models/modelo-area'
 
-export class RepositorioAreaMariaDB implements RepositorioArea {
+export class RepositorioAreaMariaDB implements RepositorioArea, ConsultaAreaPorNome {
   async consultar (area?: string | undefined): Promise<ModelosAreas> {
     AuxiliaresMariaDB.verificaConexao()
     if (area) { //eslint-disable-line
       return await Area.findOne({ where: { nome: area } })
     }
     return await Area.findAll()
+  }
+
+  async consultarPorNome (nome: string): Promise<ModeloArea | null> {
+    AuxiliaresMariaDB.verificaConexao()
+    const area = await Area.findOne({ where: { nome: nome } })
+    return area ? FuncoesAuxiliares.mapeadorDeDados(area) : null //eslint-disable-line
   }
 }
