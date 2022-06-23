@@ -49,5 +49,23 @@ describe('Rotas Area', () => {
         .send()
         .expect(200)
     })
+
+    test('Deve retornar status 200 ao consultar uma area específica com token de acesso válido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app)
+        .get('/area/coinf')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .send()
+        .expect(200)
+    })
   })
 })
