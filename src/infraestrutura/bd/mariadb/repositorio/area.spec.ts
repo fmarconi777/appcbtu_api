@@ -1,4 +1,5 @@
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
+import { Area } from '../models/modelo-area'
 import { RepositorioAreaMariaDB } from './area'
 
 describe('RepositorioAreaMariaDB', () => {
@@ -49,8 +50,19 @@ describe('RepositorioAreaMariaDB', () => {
 
     test('Deve retornar null caso ao consultar por nome falhar', async () => {
       const sut = makeSut()
-      const resposta = await sut.consultarPorNome('AREA_VALIDA')
+      const resposta = await sut.consultarPorNome('AREA')
       expect(resposta).toBeNull()
+    })
+  })
+
+  describe('Método inserir', () => {
+    test('Deve retornar uma área em caso de sucesso', async () => {
+      const sut = makeSut()
+      const resposta = await sut.inserir('AREA_VALIDA')
+      expect(resposta).toBeTruthy()
+      expect(resposta.id).toBeTruthy()
+      expect(resposta.nome).toEqual('AREA_VALIDA')
+      await Area.destroy({ where: { nome: 'AREA_VALIDA' } })
     })
   })
 })
