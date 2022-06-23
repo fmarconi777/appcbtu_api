@@ -4,6 +4,7 @@ import app from '../config/app'
 import { hash } from 'bcrypt'
 import { Funcionario } from '../../infraestrutura/bd/mariadb/models/modelo-funcionarios'
 import { sign } from 'jsonwebtoken'
+import { Area } from '../../infraestrutura/bd/mariadb/models/modelo-area'
 
 describe('Rotas Area', () => {
   beforeAll(async () => {
@@ -83,6 +84,25 @@ describe('Rotas Area', () => {
         .set('authorization', 'Bearer ')
         .send()
         .expect(403)
+    })
+
+    test('Deve retornar status 200 ao inserir uma area com token de acesso válido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app)
+        .post('/area')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .send({ nome: 'area_qualquer' })
+        .expect(200)
+      await Area.destroy({ where: { nome: 'area_qualquer' } })
     })
   })
 })
