@@ -215,5 +215,13 @@ describe('Controlador de estações', () => {
       const resposta = await sut.tratar(requisicaoHttp)
       expect(resposta).toEqual(requisicaoImpropria(new ErroFaltaParametro('área')))
     })
+
+    test('Deve chamar ValidaArea com o valor correto', async () => {
+      const { sut, validaAreaStub } = makeSut()
+      const validarSpy = jest.spyOn(validaAreaStub, 'validar')
+      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'DELETE' }
+      await sut.tratar(requisicaoHttp)
+      expect(validarSpy).toHaveBeenCalledWith('AREA_QUALQUER')
+    })
   })
 })
