@@ -46,5 +46,11 @@ describe('RepositorioAreaMariaDB', () => {
       expect(resposta?.id).toBeTruthy()
       expect(resposta).toMatchObject(resultadoEsperado)
     })
+
+    test('Deve retornar null caso ao consultar por nome falhar', async () => {
+      const sut = makeSut()
+      const resposta = await sut.consultarPorNome('AREA_VALIDA')
+      expect(resposta).toBeNull()
+    })
   })
 })
