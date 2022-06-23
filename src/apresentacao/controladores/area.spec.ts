@@ -223,5 +223,14 @@ describe('Controlador de estações', () => {
       await sut.tratar(requisicaoHttp)
       expect(validarSpy).toHaveBeenCalledWith('AREA_QUALQUER')
     })
+
+    test('Deve retornar codigo 400 se o parâmetro estiver incorreto', async () => {
+      const { sut, validaAreaStub } = makeSut()
+      jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(false)
+      const requisicaoHttp = { parametro: 'area_invalida', metodo: 'DELETE' }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp.status).toBe(404)
+      expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('área'))
+    })
   })
 })
