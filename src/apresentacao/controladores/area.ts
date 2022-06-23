@@ -17,10 +17,10 @@ export class ControladorDeArea implements Controlador {
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
     const metodo = requisicaoHttp.metodo
+    const parametro = requisicaoHttp.parametro
     switch (metodo) {
       case 'GET':
         try {
-          const parametro = requisicaoHttp.parametro
           if (!parametro) { // eslint-disable-line
             const todasAreas = await this.consultaArea.consultarTodas()
             return resposta(todasAreas)
@@ -36,7 +36,8 @@ export class ControladorDeArea implements Controlador {
         }
       case 'POST':
         try {
-          if (!requisicaoHttp.corpo.nome || requisicaoHttp.corpo.nome === 'undefined') { // eslint-disable-line
+          const nome = requisicaoHttp.corpo.nome
+          if (!nome || nome === 'undefined') { // eslint-disable-line
             return requisicaoImpropria(new ErroFaltaParametro('nome'))
           }
           const area = await this.cadastroDeArea.inserir(requisicaoHttp.corpo.nome.toUpperCase())
@@ -44,6 +45,13 @@ export class ControladorDeArea implements Controlador {
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
+      case 'DELETE':
+      {
+        if (!parametro) { // eslint-disable-line
+          return requisicaoImpropria(new ErroFaltaParametro('área'))
+        }
+        return await new Promise((resolve) => resolve({ status: 200, corpo: 'Deletado com sucesso' }))
+      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
