@@ -48,17 +48,19 @@ export class ControladorDeArea implements Controlador {
           return erroDeServidor(erro)
         }
       case 'DELETE':
-      {
-        if (!parametro) { // eslint-disable-line
-          return requisicaoImpropria(new ErroFaltaParametro('área'))
+        try {
+          if (!parametro) { // eslint-disable-line
+            return requisicaoImpropria(new ErroFaltaParametro('área'))
+          }
+          const areaValida = this.validaArea.validar(parametro.toUpperCase())
+          if (!areaValida) {
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
+          }
+          await this.deletaArea.deletar(parametro.toUpperCase())
+          return await new Promise((resolve) => resolve({ status: 200, corpo: 'Deletado com sucesso' }))
+        } catch (erro: any) {
+          return erroDeServidor(erro)
         }
-        const areaValida = this.validaArea.validar(parametro.toUpperCase())
-        if (!areaValida) {
-          return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
-        }
-        await this.deletaArea.deletar(parametro.toUpperCase())
-        return await new Promise((resolve) => resolve({ status: 200, corpo: 'Deletado com sucesso' }))
-      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
