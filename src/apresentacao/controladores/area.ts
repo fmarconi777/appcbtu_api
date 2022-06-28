@@ -56,8 +56,8 @@ export class ControladorDeArea implements Controlador {
           if (!areaValida) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
           }
-          await this.deletaArea.deletar(parametro.toUpperCase())
-          return await new Promise((resolve) => resolve({ status: 200, corpo: 'Deletado com sucesso' }))
+          const area = await this.deletaArea.deletar(parametro.toUpperCase())
+          return resposta(area)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
