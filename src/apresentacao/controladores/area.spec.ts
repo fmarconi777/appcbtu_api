@@ -132,6 +132,14 @@ describe('Controlador de estações', () => {
       expect(spyConsula).toHaveBeenCalledWith('AREA_QUALQUER')
     })
 
+    test('Deve retornar um erro caso o ValidaArea retornar um erro', async () => {
+      const { sut, validaAreaStub } = makeSut()
+      jest.spyOn(validaAreaStub, 'validar').mockImplementationOnce(() => { throw new Error() })
+      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'GET' }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(erroDeServidor(new Error()))
+    })
+
     test('Deve retornar codigo 400 se o parâmetro estiver incorreto', async () => {
       const { sut, validaAreaStub } = makeSut()
       jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(false)
@@ -244,6 +252,14 @@ describe('Controlador de estações', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(404)
       expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('área'))
+    })
+
+    test('Deve retornar um erro caso o ValidaArea retornar um erro', async () => {
+      const { sut, validaAreaStub } = makeSut()
+      jest.spyOn(validaAreaStub, 'validar').mockImplementationOnce(() => { throw new Error() })
+      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'DELETE' }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(erroDeServidor(new Error()))
     })
 
     test('Deve chamar DeletaArea com o valor correto', async () => {
