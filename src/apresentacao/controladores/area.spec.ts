@@ -269,5 +269,13 @@ describe('Controlador de estações', () => {
       await sut.tratar(requisicaoHttp)
       expect(spyDeletar).toHaveBeenCalledWith('AREA_QUALQUER')
     })
+
+    test('Deve retornar status 200 e a mensagem "Área deletada com sucesso" em caso de sucesso', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'DELETE' }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta.status).toEqual(200)
+      expect(resposta.corpo).toEqual('Área deletada com sucesso')
+    })
   })
 })
