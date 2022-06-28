@@ -277,5 +277,13 @@ describe('Controlador de estações', () => {
       expect(resposta.status).toEqual(200)
       expect(resposta.corpo).toEqual('Área deletada com sucesso')
     })
+
+    test('Deve retornar erro 500 caso o DeletaArea retornar um erro', async () => {
+      const { sut, deletaAreaStub } = makeSut()
+      jest.spyOn(deletaAreaStub, 'deletar').mockImplementationOnce(async () => await Promise.reject(new Error()))
+      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'DELETE' }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(erroDeServidor(new Error()))
+    })
   })
 })
