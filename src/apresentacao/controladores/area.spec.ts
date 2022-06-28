@@ -1,4 +1,4 @@
-import { Validador } from '../protocolos/validador'
+import { ValidadorArea } from '../protocolos/validador-area'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
@@ -32,10 +32,10 @@ describe('Controlador de estações', () => {
     return new ConsultaAreaStub()
   }
 
-  const makeValidaArea = (): Validador => {
-    class ValidaAreaStub implements Validador {
-      validar (parametro: string): boolean {
-        return true
+  const makeValidaArea = (): ValidadorArea => {
+    class ValidaAreaStub implements ValidadorArea {
+      async validar (parametro: string): Promise<boolean> {
+        return await new Promise(resolve => resolve(true))
       }
     }
     return new ValidaAreaStub()
@@ -65,7 +65,7 @@ describe('Controlador de estações', () => {
   interface SutTypes {
     sut: ControladorDeArea
     consultaAreaStub: ConsultaArea
-    validaAreaStub: Validador
+    validaAreaStub: ValidadorArea
     cadastroDeAreaStub: CadastroArea
     deletaAreaStub: DeletaArea
   }
@@ -140,9 +140,9 @@ describe('Controlador de estações', () => {
       expect(resposta).toEqual(erroDeServidor(new Error()))
     })
 
-    test('Deve retornar codigo 400 se o parâmetro estiver incorreto', async () => {
+    test('Deve retornar codigo 404 se o parâmetro estiver incorreto', async () => {
       const { sut, validaAreaStub } = makeSut()
-      jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(false)
+      jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(new Promise(resolve => resolve(false)))
       const requisicaoHttp = { parametro: 'area_invalida', metodo: 'GET' }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(404)
@@ -245,9 +245,9 @@ describe('Controlador de estações', () => {
       expect(validarSpy).toHaveBeenCalledWith('AREA_QUALQUER')
     })
 
-    test('Deve retornar codigo 400 se o parâmetro estiver incorreto', async () => {
+    test('Deve retornar codigo 404 se o parâmetro estiver incorreto', async () => {
       const { sut, validaAreaStub } = makeSut()
-      jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(false)
+      jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(new Promise(resolve => resolve(false)))
       const requisicaoHttp = { parametro: 'area_invalida', metodo: 'DELETE' }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(404)

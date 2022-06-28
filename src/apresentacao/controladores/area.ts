@@ -3,7 +3,7 @@ import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { resposta, requisicaoNaoEncontrada, erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
-import { Validador } from '../protocolos/validador'
+import { ValidadorArea } from '../protocolos/validador-area'
 import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { CadastroArea } from '../../dominio/casos-de-uso/area/cadastro-de-area'
@@ -12,7 +12,7 @@ import { DeletaArea } from '../../dominio/casos-de-uso/area/deleta-area'
 export class ControladorDeArea implements Controlador {
   constructor (
     private readonly consultaArea: ConsultaArea,
-    private readonly validaArea: Validador,
+    private readonly validaArea: ValidadorArea,
     private readonly cadastroDeArea: CadastroArea,
     private readonly deletaArea: DeletaArea
   ) {}
@@ -27,7 +27,7 @@ export class ControladorDeArea implements Controlador {
             const todasAreas = await this.consultaArea.consultarTodas()
             return resposta(todasAreas)
           }
-          const areaValida = this.validaArea.validar(parametro.toUpperCase())
+          const areaValida = await this.validaArea.validar(parametro.toUpperCase())
           if (!areaValida) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
           }
@@ -52,7 +52,7 @@ export class ControladorDeArea implements Controlador {
           if (!parametro) { // eslint-disable-line
             return requisicaoImpropria(new ErroFaltaParametro('área'))
           }
-          const areaValida = this.validaArea.validar(parametro.toUpperCase())
+          const areaValida = await this.validaArea.validar(parametro.toUpperCase())
           if (!areaValida) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
           }
