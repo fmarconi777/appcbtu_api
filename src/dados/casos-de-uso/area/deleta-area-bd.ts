@@ -5,7 +5,7 @@ export class DeletaAreaBD implements DeletaArea {
   constructor (private readonly repositorioDeletaArea: RepositorioDeletaArea) {}
 
   async deletar (area: string): Promise<string> {
-    await this.repositorioDeletaArea.deletar(area)
-    return await new Promise(resolve => resolve(''))
+    const areaDeleta = await this.repositorioDeletaArea.deletar(area)
+    return areaDeleta
   }
 }
