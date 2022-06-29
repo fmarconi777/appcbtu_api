@@ -41,8 +41,8 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
       return await new Promise(resolve => resolve(listaFalsa))
     }
 
-    async consultaalertaTodas (): Promise<ModeloAlerta> {
-      const alertaFalsa = {
+    async consultaalertaTodas (): Promise<ModeloAlerta[]> {
+      const alertaFalsa = [{
         id: 'id_qualquer',
         descricao: 'descricao_qualquer',
         prioridade: 'prioridade_qualquer',
@@ -50,7 +50,7 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
         dataFim: 'datafim_qualquer',
         ativo: 'ativo_qualquer',
         estacaoId: 'estacaoid_qualquer'
-      }
+      }]
       return await new Promise(resolve => resolve(alertaFalsa))
     }
   }

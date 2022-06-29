@@ -5,7 +5,7 @@ import { RepositorioConsultaAlerta } from '../../protocolos/bd/alerta/repositori
 export class ConsultaAlertaBD implements ConsultaAlerta {
   constructor (private readonly repositorioConsultaAlerta: RepositorioConsultaAlerta) {}
 
-  async consultaalertaTodas (): Promise<ModeloAlerta> {
+  async consultaalertaTodas (): Promise<ModeloAlerta[]> {
     const resposta = await this.repositorioConsultaAlerta.consultaalerta()
     return resposta
   }
