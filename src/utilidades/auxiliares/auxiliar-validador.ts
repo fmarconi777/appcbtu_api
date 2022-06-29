@@ -69,6 +69,11 @@ enum Area {
   COARC
 }
 
+enum Alerta {
+  ALTA,
+  BAIXA
+}
+
 /*
 A função eSigla transforma o objeto Sigla em array e verifica se o
 parâmetro recebido está no array, retornando assim um valor booleano.
@@ -82,7 +87,12 @@ function eArea (parametro: any): boolean {
   return Object.values(Area).includes(parametro)
 }
 
+function eAlerta (parametro: any): boolean {
+  return Object.values(Alerta).includes(parametro)
+}
+
 export const validador = {
   eSigla,
-  eArea
+  eArea,
+  eAlerta
 }
