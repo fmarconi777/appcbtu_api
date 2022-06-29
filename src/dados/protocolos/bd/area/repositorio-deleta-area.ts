@@ -1,3 +1,3 @@
 export interface RepositorioDeletaArea {
-  deletar: (area: string) => Promise<string>
+  deletar: (nome: string) => Promise<string>
 }

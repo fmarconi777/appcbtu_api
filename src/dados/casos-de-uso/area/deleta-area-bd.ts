@@ -4,8 +4,8 @@ import { RepositorioDeletaArea } from '../../protocolos/bd/area/repositorio-dele
 export class DeletaAreaBD implements DeletaArea {
   constructor (private readonly repositorioDeletaArea: RepositorioDeletaArea) {}
 
-  async deletar (area: string): Promise<string> {
-    const areaDeleta = await this.repositorioDeletaArea.deletar(area)
+  async deletar (nome: string): Promise<string> {
+    const areaDeleta = await this.repositorioDeletaArea.deletar(nome)
     return areaDeleta
   }
 }

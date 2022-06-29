@@ -3,7 +3,7 @@ import { DeletaAreaBD } from './deleta-area-bd'
 
 const makeRepositorioArea = (): RepositorioDeletaArea => {
   class RepositorioDeletaAreaStub implements RepositorioDeletaArea {
-    async deletar (area: string): Promise<string> {
+    async deletar (nome: string): Promise<string> {
       return await new Promise(resolve => resolve('Área deletada com sucesso'))
     }
   }
