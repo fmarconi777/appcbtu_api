@@ -31,4 +31,10 @@ describe('DeletaAreaBD', () => {
     await sut.deletar('AREA_QUALQUER')
     expect(deletarSpy).toHaveBeenCalledWith('AREA_QUALQUER')
   })
+
+  test('Deve retornar a mensagem "Área deletada com sucesso" em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const resposta = await sut.deletar('AREA_QUALQUER')
+    expect(resposta).toBe('Área deletada com sucesso')
+  })
 })
