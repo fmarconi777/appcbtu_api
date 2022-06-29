@@ -17,6 +17,10 @@ describe('Repositorio mariaDB Alerta', () => {
     await Alerta.destroy({ truncate: true, cascade: false })
   })
 
+  const makeSut = (): RepositorioAlertaMariaDB => {
+    return new RepositorioAlertaMariaDB()
+  }
+
   test('Deve retornar um alerta em caso de sucesso', async () => {
     const sut = new RepositorioAlertaMariaDB()
     const alerta = await sut.inserir({
@@ -34,5 +38,25 @@ describe('Repositorio mariaDB Alerta', () => {
     expect(alerta.dataFim).toBe('2022-02-01T00:00:00.000Z')
     expect(alerta.ativo).toBe('false')
     expect(alerta.estacaoId).toBe('1')
+  })
+  describe('Metodo Consultar', () => {
+    test('Deve retornar todos alertas se um parametro for fornecido', async () => {
+      const sut = makeSut()
+      const resultadoEsperado = {
+        descricao: 'Estação São Gabriel com escada com defeito',
+        prioridade: 'Alta'
+      }
+      const resposta = await sut.consultaalerta('ALTA')
+      expect(resposta).toBeTruthy()
+      expect(resposta.id).toBeTruthy()
+      expect(resposta).toMatchObject(resultadoEsperado)
+    })
+  })
+  test('Deve retonar todos os alertas se um parametro não for fornecido', async () => {
+    const sut = makeSut()
+    const resposta = await sut.consultaalerta()
+    expect(resposta).toBeTruthy()
+    expect(Array.isArray(resposta)).toBeTruthy()
+    expect(resposta.lenght).toBeGreaterThan(0)
   })
 })
