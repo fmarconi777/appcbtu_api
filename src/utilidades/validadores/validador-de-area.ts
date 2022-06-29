@@ -1,12 +1,10 @@
 import { ValidadorArea } from '../../apresentacao/protocolos/validador-area'
-import { ConsultaAreaBD } from '../../dados/casos-de-uso/area/consulta-area-bd'
-import { RepositorioAreaMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/area'
+import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 
 export class ValidadorDeArea implements ValidadorArea {
+  constructor (private readonly consultaArea: ConsultaArea) {}
   async validar (parametro: string): Promise<boolean> {
-    const repositorioArea = new RepositorioAreaMariaDB()
-    const consultaAreaBD = new ConsultaAreaBD(repositorioArea)
-    const listaAreas = await consultaAreaBD.consultarTodas()
+    const listaAreas = await this.consultaArea.consultarTodas()
     return listaAreas.some(area => area.nome === parametro)
   }
 }
