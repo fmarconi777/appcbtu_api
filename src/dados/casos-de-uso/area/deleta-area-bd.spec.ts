@@ -37,4 +37,11 @@ describe('DeletaAreaBD', () => {
     const resposta = await sut.deletar('AREA_QUALQUER')
     expect(resposta).toBe('Área deletada com sucesso')
   })
+
+  test('Deve retornar um erro caso o RepositorioArea retorne um erro', async () => {
+    const { sut, repositorioDeletaAreaStub } = makeSut()
+    jest.spyOn(repositorioDeletaAreaStub, 'deletar').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.deletar('AREA_QUALQUER')
+    await expect(resposta).rejects.toThrow()
+  })
 })
