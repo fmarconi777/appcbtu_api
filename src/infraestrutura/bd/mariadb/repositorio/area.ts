@@ -34,6 +34,6 @@ export class RepositorioAreaMariaDB implements RepositorioArea, ConsultaAreaPorN
     if (areaDeletada === 0) {
       return 'Erro ao deletar área'
     }
-    return await new Promise(resolve => resolve(''))
+    return 'Área deletada com sucesso'
   }
 }
