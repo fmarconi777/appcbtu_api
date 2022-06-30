@@ -9,5 +9,6 @@ export default (router: Router): Router => {
   const autentificacaoAdmin = adaptadorDeMiddleware(criaMiddlewareDeAutenticacao('admin'))
   router.get('/area/:parametro?',autentificacao, adaptadorDeRota(criaControladorDeArea())) // eslint-disable-line
   router.post('/area', autentificacaoAdmin, adaptadorDeRota(criaControladorDeArea())) // eslint-disable-line
+  router.delete('/area/:parametro', autentificacaoAdmin, adaptadorDeRota(criaControladorDeArea())) // eslint-disable-line
   return router
 }
