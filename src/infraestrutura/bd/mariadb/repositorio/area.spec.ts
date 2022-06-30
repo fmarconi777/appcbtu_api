@@ -65,4 +65,12 @@ describe('RepositorioAreaMariaDB', () => {
       await Area.destroy({ where: { nome: 'AREA_VALIDA' } })
     })
   })
+
+  describe('Método deletar', () => {
+    test('Deve retornar a mensagem "Erro ao deletar área" em caso de falha', async () => {
+      const sut = makeSut()
+      const resposta = await sut.deletar('AREA_INVALIDA')
+      expect(resposta).toBe('Erro ao deletar área')
+    })
+  })
 })
