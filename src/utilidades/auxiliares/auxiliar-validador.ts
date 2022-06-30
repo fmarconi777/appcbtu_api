@@ -29,6 +29,11 @@ function eSigla (parametro: any): boolean {
   return Object.values(Sigla).includes(parametro)
 }
 
+function eAlerta (parametro: any): boolean {
+  return Object.values(Alerta).includes(parametro)
+}
+
 export const validador = {
-  eSigla
+  eSigla,
+  eAlerta
 }

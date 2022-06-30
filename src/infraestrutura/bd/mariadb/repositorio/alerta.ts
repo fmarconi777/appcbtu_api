@@ -1,8 +1,9 @@
 import { RepositorioAlerta, DadosAlerta, ModeloAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-alerta'
+import { ModelosAlertas, RepositorioConsultaAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-consulta-alerta-todas'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { Alerta } from '../models/modelo-alerta'
 
-export class RepositorioAlertaMariaDB implements RepositorioAlerta {
+export class RepositorioAlertaMariaDB implements RepositorioAlerta, RepositorioConsultaAlerta {
   async inserir (dadosAlerta: DadosAlerta): Promise<ModeloAlerta> {
     AuxiliaresMariaDB.verificaConexao()
     const alerta = await Alerta.create(this.transformaDados(dadosAlerta))
@@ -17,6 +18,19 @@ export class RepositorioAlertaMariaDB implements RepositorioAlerta {
       ativo: String(alerta.ativo),
       estacaoId: alerta.estacaoId.toString()
     }
+  }
+
+  async consultaalertaTodas (parametro?: string | undefined): Promise<ModelosAlertas> {
+    AuxiliaresMariaDB.verificaConexao()
+    if (parametro) { //eslint-disable-line
+      return await Alerta.findOne({ where: { descricao: parametro } })
+    }
+    return await Alerta.findAll()
+  }
+
+  async consultaalerta (parametro?: string | undefined): Promise<ModelosAlertas> {
+    AuxiliaresMariaDB.verificaConexao()
+    return await Alerta.findAll()
   }
 
   private transformaDados (dadosAlerta: DadosAlerta): any {
