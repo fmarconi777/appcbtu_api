@@ -72,3 +72,5 @@ Para utilizar os endpoints acesse o servidor de testes, vá para o diretório da
 * `http://10.10.20.202:5000/api/equipamento` - Métodos: POST
 * `http://10.10.20.202:5000/api/funcionario` - Métodos: POST
 * `http://10.10.20.202:5000/api/login` - Método: POST
+* `http://10.10.20.202:5000/api/area` - Métodos: POST, GET
+* `http://10.10.20.202:5000/api/area/(nome da área)` - Métodos: GET, DELETE
