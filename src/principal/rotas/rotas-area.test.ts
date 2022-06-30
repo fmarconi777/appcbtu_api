@@ -107,9 +107,17 @@ describe('Rotas Area', () => {
   })
 
   describe('DELETE', () => {
-    test('Deve retornar status 403 ao inserir uma area sem autenticação', async () => {
+    test('Deve retornar status 403 ao deletar uma area sem autenticação', async () => {
       await request(app)
         .delete('/area/coinf')
+        .send()
+        .expect(403)
+    })
+
+    test('Deve retornar status 403 ao deletar uma area com authorization sem token de acesso', async () => {
+      await request(app)
+        .delete('/area/coinf')
+        .set('authorization', 'Bearer ')
         .send()
         .expect(403)
     })
