@@ -80,7 +80,7 @@ describe('Rotas Area', () => {
 
     test('Deve retornar status 403 ao inserir uma area com authorization sem token de acesso', async () => {
       await request(app)
-        .get('/area')
+        .post('/area')
         .set('authorization', 'Bearer ')
         .send()
         .expect(403)
@@ -103,6 +103,15 @@ describe('Rotas Area', () => {
         .send({ nome: 'area_qualquer' })
         .expect(200)
       await Area.destroy({ where: { nome: 'area_qualquer' } })
+    })
+  })
+
+  describe('DELETE', () => {
+    test('Deve retornar status 403 ao inserir uma area sem autenticação', async () => {
+      await request(app)
+        .delete('/area/coinf')
+        .send()
+        .expect(403)
     })
   })
 })
