@@ -49,7 +49,7 @@ export class ControladorDeArea implements Controlador {
         }
       case 'DELETE':
         try {
-          if (!parametro) { // eslint-disable-line
+          if (!parametro || parametro === 'undefined') { // eslint-disable-line
             return requisicaoImpropria(new ErroFaltaParametro('área'))
           }
           const areaValida = await this.validaArea.validar(parametro.toUpperCase())
