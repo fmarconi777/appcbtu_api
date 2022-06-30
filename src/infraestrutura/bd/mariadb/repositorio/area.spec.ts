@@ -72,5 +72,12 @@ describe('RepositorioAreaMariaDB', () => {
       const resposta = await sut.deletar('AREA_INVALIDA')
       expect(resposta).toBe('Erro ao deletar área')
     })
+
+    test('Deve retornar a mensagem "Área deletada com sucesso" em caso de sucesso', async () => {
+      const sut = makeSut()
+      await sut.inserir('AREA_VALIDA')
+      const resposta = await sut.deletar('AREA_VALIDA')
+      expect(resposta).toBe('Área deletada com sucesso')
+    })
   })
 })
