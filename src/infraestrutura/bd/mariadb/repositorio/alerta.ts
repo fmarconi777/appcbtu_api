@@ -20,16 +20,11 @@ export class RepositorioAlertaMariaDB implements RepositorioAlerta, RepositorioC
     }
   }
 
-  async consultaalertaTodas (parametro?: string | undefined): Promise<ModelosAlertas> {
+  async consultaalerta (parametro?: string): Promise<ModelosAlertas> {
     AuxiliaresMariaDB.verificaConexao()
     if (parametro) { //eslint-disable-line
-      return await Alerta.findOne({ where: { descricao: parametro } })
+      return await Alerta.findOne({ where: { id: parametro } })
     }
-    return await Alerta.findAll()
-  }
-
-  async consultaalerta (parametro?: string | undefined): Promise<ModelosAlertas> {
-    AuxiliaresMariaDB.verificaConexao()
     return await Alerta.findAll()
   }
 

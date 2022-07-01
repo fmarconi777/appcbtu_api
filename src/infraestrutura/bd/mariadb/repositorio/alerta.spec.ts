@@ -40,13 +40,21 @@ describe('Repositorio mariaDB Alerta', () => {
     expect(alerta.estacaoId).toBe('1')
   })
   describe('Metodo Consultar', () => {
-    test('Deve retornar todos alertas se um parametro for fornecido', async () => {
+    test('Deve retornar um alerta se um parametro for fornecido', async () => {
       const sut = makeSut()
       const resultadoEsperado = {
-        descricao: 'Estação São Gabriel com escada com defeito',
-        prioridade: 'Alta'
+        descricao: 'descricao_valido',
+        prioridade: 'pri_valido'
       }
-      const resposta = await sut.consultaalerta('ALTA')
+      await sut.inserir({
+        descricao: 'descricao_valido',
+        prioridade: 'pri_valido',
+        dataInicio: '2022-01-01 00:00:00z',
+        dataFim: '2022-02-01 00:00:00z',
+        ativo: 'false',
+        estacaoId: '1'
+      })
+      const resposta = await sut.consultaalerta('1')
       expect(resposta).toBeTruthy()
       expect(resposta.id).toBeTruthy()
       expect(resposta).toMatchObject(resultadoEsperado)
@@ -54,9 +62,17 @@ describe('Repositorio mariaDB Alerta', () => {
   })
   test('Deve retonar todos os alertas se um parametro não for fornecido', async () => {
     const sut = makeSut()
+    await sut.inserir({
+      descricao: 'descricao_valido',
+      prioridade: 'pri_valido',
+      dataInicio: '2022-01-01 00:00:00z',
+      dataFim: '2022-02-01 00:00:00z',
+      ativo: 'false',
+      estacaoId: '1'
+    })
     const resposta = await sut.consultaalerta()
     expect(resposta).toBeTruthy()
     expect(Array.isArray(resposta)).toBeTruthy()
-    expect(resposta.lenght).toBeGreaterThan(0)
+    expect(resposta.length).toBeGreaterThan(0)
   })
 })
