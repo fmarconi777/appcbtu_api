@@ -5,7 +5,7 @@ import { ModeloAlerta } from '../../dominio/modelos/alerta'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alerta'
-import { Validador } from '../protocolos/validador'
+import { ValidadorBD } from '../protocolos/validadorBD'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { erroDeServidor } from '../auxiliares/auxiliar-http'
 const makeCadastroAlerta = (): CadastroAlerta => {
@@ -56,10 +56,10 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
   }
   return new ConsultaAlertaStub()
 }
-const makeValidaAlerta = (): Validador => {
-  class ValidaAlertaStub implements Validador {
-    validar (parametro: string): boolean {
-      return true
+const makeValidaAlerta = (): ValidadorBD => {
+  class ValidaAlertaStub implements ValidadorBD {
+    async validar (parametro: string): Promise<boolean> {
+      return await new Promise(resolve => resolve(true))
     }
   }
   return new ValidaAlertaStub()
@@ -68,7 +68,7 @@ interface SutTypes {
   sut: ControladorDeAlerta
   cadastroDeAlertaStub: CadastroAlerta
   consultaAlertaStub: ConsultaAlerta
-  validaAlertaStub: Validador
+  validaAlertaStub: ValidadorBD
 }
 
 const makeSut = (): SutTypes => {
@@ -317,13 +317,13 @@ describe('Controlador de Alerta', () => {
       expect(spyConsula).toHaveBeenCalledWith('alerta_qualquer')
     })
 
-    test('Deve retornar codigo 400 se o parâmetro estiver incorreto', async () => {
+    test('Deve retornar codigo 404 se o parâmetro estiver incorreto', async () => {
       const { sut, validaAlertaStub } = makeSut()
-      jest.spyOn(validaAlertaStub, 'validar').mockReturnValueOnce(false)
+      jest.spyOn(validaAlertaStub, 'validar').mockReturnValueOnce(new Promise(resolve => resolve(false)))
       const requisicaoHttp = { parametro: 'alerta_invalido', metodo: 'GET' }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(404)
-      expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido(''))
+      expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('id'))
     })
 
     test('Deve retornar codigo 500 se o ConsultaAlerta retornar um erro', async () => {

@@ -1,4 +1,4 @@
-import { ValidadorArea } from '../protocolos/validador-area'
+import { ValidadorBD } from '../protocolos/validadorBD'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
@@ -32,8 +32,8 @@ describe('Controlador de estações', () => {
     return new ConsultaAreaStub()
   }
 
-  const makeValidaArea = (): ValidadorArea => {
-    class ValidaAreaStub implements ValidadorArea {
+  const makeValidaArea = (): ValidadorBD => {
+    class ValidaAreaStub implements ValidadorBD {
       async validar (parametro: string): Promise<boolean> {
         return await new Promise(resolve => resolve(true))
       }
@@ -65,7 +65,7 @@ describe('Controlador de estações', () => {
   interface SutTypes {
     sut: ControladorDeArea
     consultaAreaStub: ConsultaArea
-    validaAreaStub: ValidadorArea
+    validaAreaStub: ValidadorBD
     cadastroDeAreaStub: CadastroArea
     deletaAreaStub: DeletaArea
   }

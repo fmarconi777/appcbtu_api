@@ -9,8 +9,8 @@ import { ConsultaAlertaBD } from '../../dados/casos-de-uso/alerta/consulta-alert
 
 export const criaControladorDeAlerta = (): Controlador => {
   const inserirRepositorioAlerta = new RepositorioAlertaMariaDB()
-  const validadorDeAlerta = new ValidadorDeAlerta()
   const consultaAlertaBD = new ConsultaAlertaBD(inserirRepositorioAlerta)
+  const validadorDeAlerta = new ValidadorDeAlerta(consultaAlertaBD)
   const cadastroDeAlerta = new CadastroDeAlerta(inserirRepositorioAlerta)
   const controladorDeAlerta = new ControladorDeAlerta(cadastroDeAlerta, consultaAlertaBD, validadorDeAlerta)
   const repositorioLogDeErro = new RepositorioLogDeErroMariaDB()

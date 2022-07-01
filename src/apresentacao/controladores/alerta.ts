@@ -6,14 +6,14 @@ import { CadastroAlerta } from '../../dominio/casos-de-uso/alerta/cadastro-de-al
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alerta'
-import { Validador } from '../protocolos/validador'
+import { ValidadorBD } from '../protocolos/validadorBD'
 
 export class ControladorDeAlerta implements Controlador {
   private readonly cadastroDeAlerta: CadastroAlerta
   private readonly consultaAlerta: ConsultaAlerta
-  private readonly validaParametro: Validador
+  private readonly validaParametro: ValidadorBD
 
-  constructor (cadastroDeAlerta: CadastroAlerta, consultaAlerta: ConsultaAlerta, validaParametro: Validador) {
+  constructor (cadastroDeAlerta: CadastroAlerta, consultaAlerta: ConsultaAlerta, validaParametro: ValidadorBD) {
     this.cadastroDeAlerta = cadastroDeAlerta
     this.consultaAlerta = consultaAlerta
     this.validaParametro = validaParametro
@@ -42,9 +42,9 @@ export class ControladorDeAlerta implements Controlador {
             const todosAlertas = await this.consultaAlerta.consultaalertaTodas()
             return resposta(todosAlertas)
           }
-          const parametroValido = this.validaParametro.validar(parametro)
-          if (!parametroValido) {
-            return requisicaoNaoEncontrada(new ErroParametroInvalido(''))
+          const parametroValido = await this.validaParametro.validar(parametro)
+          if (!parametroValido) { // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
           const alerta = await this.consultaAlerta.consultaalerta(parametro)
           return resposta(alerta)

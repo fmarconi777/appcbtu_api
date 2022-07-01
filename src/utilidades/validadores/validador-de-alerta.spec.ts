@@ -1,29 +1,68 @@
-import { Validador } from '../../apresentacao/protocolos/validador'
-import { validador } from '../auxiliares/auxiliar-validador'
+import { ValidadorBD } from '../../apresentacao/protocolos/validadorBD'
 import { ValidadorDeAlerta } from './validador-de-alerta'
+import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alerta'
+import { ModeloAlerta } from '../../dominio/modelos/alerta'
 
-const makeSut = (): Validador => {
-  const sut = new ValidadorDeAlerta()
-  return sut
+const makeConsultaAlerta = (): ConsultaAlerta => {
+  class ConsultaAlertaStub implements ConsultaAlerta {
+    async consultaalerta (): Promise<ModeloAlerta> {
+      const listaFalsa = {
+        id: 'id_valida',
+        descricao: 'descricao_valida',
+        prioridade: 'prioridade_valida',
+        dataInicio: 'datainicio_valida',
+        dataFim: 'datafim_valida',
+        ativo: 'ativo_valida',
+        estacaoId: 'estacaoid_valida'
+      }
+      return await new Promise(resolve => resolve(listaFalsa))
+    }
+
+    async consultaalertaTodas (): Promise<ModeloAlerta[]> {
+      const alertaFalsa = [{
+        id: 'id_qualquer',
+        descricao: 'descricao_qualquer',
+        prioridade: 'prioridade_qualquer',
+        dataInicio: 'datainicio_qualquer',
+        dataFim: 'datafim_qualquer',
+        ativo: 'ativo_qualquer',
+        estacaoId: 'estacaoid_qualquer'
+      }]
+      return await new Promise(resolve => resolve(alertaFalsa))
+    }
+  }
+  return new ConsultaAlertaStub()
+}
+interface Subtype {
+  sut: ValidadorBD
+  consultaAlertaStub: ConsultaAlerta
+}
+const makeSut = (): Subtype => {
+  const consultaAlertaStub = makeConsultaAlerta()
+  const sut = new ValidadorDeAlerta(consultaAlertaStub)
+  return {
+    sut,
+    consultaAlertaStub
+  }
 }
 
 describe('Validador de parametro', () => {
-  test('Deve retornar false se o validador retornar falso', () => {
-    const sut = makeSut()
-    const eValido = sut.validar('alerta_invalido')
+  test('Deve retornar false se o validador retornar falso', async () => {
+    const { sut } = makeSut()
+    const eValido = await sut.validar('alerta_invalido')
     expect(eValido).toBe(false)
   })
 
-  test('Deve chamar o validador com o parametro correto', () => {
-    const sut = makeSut()
-    const eAlertaSpy = jest.spyOn(validador, 'eAlerta')
-    sut.validar('alerta_qualquer')
-    expect(eAlertaSpy).toHaveBeenCalledWith('alerta_qualquer')
+  test('Deve retornar um erro caso o consultaAlerta retorne um erro', async () => {
+    const { sut, consultaAlertaStub } = makeSut()
+    jest.spyOn(consultaAlertaStub, 'consultaalertaTodas').mockImplementationOnce(async () => await Promise.reject(new Error()))
+    const resposta = sut.validar('alerta_qualquer')
+    await expect(resposta).rejects.toThrow()
   })
 
-  test('Deve retornar true se o validador retornar true', () => {
-    const sut = makeSut()
-    const eValido = sut.validar('ALTA')
+  test('Deve retornar true se o validador retornar true', async () => {
+    const { sut } = makeSut()
+    const eValido = await sut.validar('id_qualquer')
     expect(eValido).toBe(true)
   })
 })

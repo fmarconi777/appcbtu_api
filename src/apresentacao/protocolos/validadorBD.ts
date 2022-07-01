@@ -4,6 +4,6 @@ deve ser implementada na pasta de utilidades, o que deve receber e o que
 deve retornar.
 */
 
-export interface ValidadorArea {
+export interface ValidadorBD {
   validar: (parametro: string) => Promise<boolean>
 }

@@ -1,4 +1,4 @@
-import { ValidadorArea } from '../../apresentacao/protocolos/validador-area'
+import { ValidadorBD } from '../../apresentacao/protocolos/validadorBD'
 import { ValidadorDeArea } from './validador-de-area'
 import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 import { ModeloArea } from '../../dominio/modelos/area'
@@ -25,7 +25,7 @@ const makeConsultaArea = (): ConsultaArea => {
 }
 
 interface SubTipos {
-  sut: ValidadorArea
+  sut: ValidadorBD
   consultaAreaStub: ConsultaArea
 }
 
