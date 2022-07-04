@@ -65,6 +65,7 @@ export class ControladorDeArea implements Controlador {
         if (!parametro || parametro === 'undefined') { // eslint-disable-line
           return requisicaoImpropria(new ErroFaltaParametro('área'))
         }
+        await this.validaArea.validar(parametro.toUpperCase())
         return resposta('')
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
