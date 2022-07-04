@@ -300,7 +300,13 @@ describe('Controlador de estações', () => {
     test('Deve chamar ValidaArea com o valor correto', async () => {
       const { sut, validaAreaStub } = makeSut()
       const validarSpy = jest.spyOn(validaAreaStub, 'validar')
-      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'PATCH' }
+      const requisicaoHttp = {
+        parametro: 'area_qualquer',
+        corpo: {
+          nome: 'nome_qualquer'
+        },
+        metodo: 'PATCH'
+      }
       await sut.tratar(requisicaoHttp)
       expect(validarSpy).toHaveBeenCalledWith('AREA_QUALQUER')
     })
@@ -312,6 +318,19 @@ describe('Controlador de estações', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(404)
       expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('área'))
+    })
+
+    test('Deve retornar status 400 caso o nome da área for fornecido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: 'area_qualquer',
+        corpo: {
+          nome: ''
+        },
+        metodo: 'PATCH'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(requisicaoImpropria(new ErroFaltaParametro('nome')))
     })
   })
 })
