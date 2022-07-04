@@ -64,21 +64,23 @@ export class ControladorDeArea implements Controlador {
           return erroDeServidor(erro)
         }
       case 'PATCH':
-      {
-        if (!parametro || parametro === 'undefined') { // eslint-disable-line
-          return requisicaoImpropria(new ErroFaltaParametro('área'))
+        try {
+          if (!parametro || parametro === 'undefined') { // eslint-disable-line
+            return requisicaoImpropria(new ErroFaltaParametro('área'))
+          }
+          const areaValida = await this.validaArea.validar(parametro.toUpperCase())
+          if (!areaValida) {
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
+          }
+          const nome = requisicaoHttp.corpo.nome
+          if (!nome || nome === 'undefined') { // eslint-disable-line
+            return requisicaoImpropria(new ErroFaltaParametro('nome'))
+          }
+          await this.alteraArea.alterar(nome.toUpperCase())
+          return resposta('')
+        } catch (erro: any) {
+          return erroDeServidor(erro)
         }
-        const areaValida = await this.validaArea.validar(parametro.toUpperCase())
-        if (!areaValida) {
-          return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
-        }
-        const nome = requisicaoHttp.corpo.nome
-        if (!nome || nome === 'undefined') { // eslint-disable-line
-          return requisicaoImpropria(new ErroFaltaParametro('nome'))
-        }
-        await this.alteraArea.alterar(nome.toUpperCase())
-        return resposta('')
-      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
