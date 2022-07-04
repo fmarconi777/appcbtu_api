@@ -9,6 +9,7 @@ import { ModeloArea } from '../../dominio/modelos/area'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { CadastroArea } from '../../dominio/casos-de-uso/area/cadastro-de-area'
 import { DeletaArea } from '../../dominio/casos-de-uso/area/deleta-area'
+import { AlteraArea } from '../../dominio/casos-de-uso/area/altera-area'
 
 describe('Controlador de estações', () => {
   const makeConsultaArea = (): ConsultaArea => {
@@ -62,26 +63,38 @@ describe('Controlador de estações', () => {
     return new DeletaAreaStub()
   }
 
+  const makeAlteraArea = (): AlteraArea => {
+    class AlteraAreaStub implements AlteraArea {
+      async alterar (nome: string): Promise<string> {
+        return await new Promise(resolve => resolve('Área alterada com sucesso'))
+      }
+    }
+    return new AlteraAreaStub()
+  }
+
   interface SutTypes {
     sut: ControladorDeArea
     consultaAreaStub: ConsultaArea
     validaAreaStub: ValidadorBD
     cadastroDeAreaStub: CadastroArea
     deletaAreaStub: DeletaArea
+    alteraAreaStub: AlteraArea
   }
 
   const makeSut = (): SutTypes => {
+    const alteraAreaStub = makeAlteraArea()
     const deletaAreaStub = makeDeletaArea()
     const cadastroDeAreaStub = makeCadastroDeArea()
     const consultaAreaStub = makeConsultaArea()
     const validaAreaStub = makeValidaArea()
-    const sut = new ControladorDeArea(consultaAreaStub, validaAreaStub, cadastroDeAreaStub, deletaAreaStub)
+    const sut = new ControladorDeArea(consultaAreaStub, validaAreaStub, cadastroDeAreaStub, deletaAreaStub, alteraAreaStub)
     return {
       sut,
       consultaAreaStub,
       validaAreaStub,
       cadastroDeAreaStub,
-      deletaAreaStub
+      deletaAreaStub,
+      alteraAreaStub
     }
   }
 
@@ -331,6 +344,20 @@ describe('Controlador de estações', () => {
       }
       const resposta = await sut.tratar(requisicaoHttp)
       expect(resposta).toEqual(requisicaoImpropria(new ErroFaltaParametro('nome')))
+    })
+
+    test('Deve chamar o alteraArea com o valor correto', async () => {
+      const { sut, alteraAreaStub } = makeSut()
+      const alterarSpy = jest.spyOn(alteraAreaStub, 'alterar')
+      const requisicaoHttp = {
+        parametro: 'area_qualquer',
+        corpo: {
+          nome: 'nome_qualquer'
+        },
+        metodo: 'PATCH'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(alterarSpy).toHaveBeenCalledWith('NOME_QUALQUER')
     })
   })
 })
