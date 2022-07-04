@@ -387,5 +387,19 @@ describe('Controlador de estações', () => {
       const resposta = await sut.tratar(requisicaoHttp)
       expect(resposta).toEqual(erroDeServidor(new Error()))
     })
+
+    test('Deve retornar status 200 e a mensagem "Área alterada com sucesso" em caso de sucesso', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: 'area_qualquer',
+        corpo: {
+          nome: 'nome_qualquer'
+        },
+        metodo: 'PATCH'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta.status).toEqual(200)
+      expect(resposta.corpo).toEqual('Área alterada com sucesso')
+    })
   })
 })
