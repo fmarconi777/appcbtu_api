@@ -70,6 +70,10 @@ export class ControladorDeArea implements Controlador {
         if (!areaValida) {
           return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
         }
+        const nome = requisicaoHttp.corpo.nome
+        if (!nome || nome === 'undefined') { // eslint-disable-line
+          return requisicaoImpropria(new ErroFaltaParametro('nome'))
+        }
         return resposta('')
       }
       default:
