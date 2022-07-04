@@ -61,6 +61,11 @@ export class ControladorDeArea implements Controlador {
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
+      case 'PATCH':
+        if (!parametro || parametro === 'undefined') { // eslint-disable-line
+          return requisicaoImpropria(new ErroFaltaParametro('área'))
+        }
+        return resposta('')
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
