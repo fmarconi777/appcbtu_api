@@ -324,6 +324,20 @@ describe('Controlador de estações', () => {
       expect(validarSpy).toHaveBeenCalledWith('AREA_QUALQUER')
     })
 
+    test('Deve retornar um erro caso o ValidaArea retornar um erro', async () => {
+      const { sut, validaAreaStub } = makeSut()
+      jest.spyOn(validaAreaStub, 'validar').mockImplementationOnce(() => { throw new Error() })
+      const requisicaoHttp = {
+        parametro: 'area_qualquer',
+        corpo: {
+          nome: 'nome_qualquer'
+        },
+        metodo: 'PATCH'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(erroDeServidor(new Error()))
+    })
+
     test('Deve retornar codigo 404 se o parâmetro estiver incorreto', async () => {
       const { sut, validaAreaStub } = makeSut()
       jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(new Promise(resolve => resolve(false)))
