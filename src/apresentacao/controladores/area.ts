@@ -8,13 +8,15 @@ import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { CadastroArea } from '../../dominio/casos-de-uso/area/cadastro-de-area'
 import { DeletaArea } from '../../dominio/casos-de-uso/area/deleta-area'
+import { AlteraArea } from '../../dominio/casos-de-uso/area/altera-area'
 
 export class ControladorDeArea implements Controlador {
   constructor (
     private readonly consultaArea: ConsultaArea,
     private readonly validaArea: ValidadorBD,
     private readonly cadastroDeArea: CadastroArea,
-    private readonly deletaArea: DeletaArea
+    private readonly deletaArea: DeletaArea,
+    private readonly alteraArea: AlteraArea
   ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
@@ -74,6 +76,7 @@ export class ControladorDeArea implements Controlador {
         if (!nome || nome === 'undefined') { // eslint-disable-line
           return requisicaoImpropria(new ErroFaltaParametro('nome'))
         }
+        await this.alteraArea.alterar(nome.toUpperCase())
         return resposta('')
       }
       default:
