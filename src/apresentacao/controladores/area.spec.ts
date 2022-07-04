@@ -373,5 +373,19 @@ describe('Controlador de estações', () => {
       await sut.tratar(requisicaoHttp)
       expect(alterarSpy).toHaveBeenCalledWith('NOME_QUALQUER')
     })
+
+    test('Deve retornar erro 500 caso o AlteraArea retornar um erro', async () => {
+      const { sut, alteraAreaStub } = makeSut()
+      jest.spyOn(alteraAreaStub, 'alterar').mockImplementationOnce(async () => await Promise.reject(new Error()))
+      const requisicaoHttp = {
+        parametro: 'area_qualquer',
+        corpo: {
+          nome: 'nome_qualquer'
+        },
+        metodo: 'PATCH'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(erroDeServidor(new Error()))
+    })
   })
 })
