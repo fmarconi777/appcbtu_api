@@ -76,8 +76,8 @@ export class ControladorDeArea implements Controlador {
           if (!nome || nome === 'undefined') { // eslint-disable-line
             return requisicaoImpropria(new ErroFaltaParametro('nome'))
           }
-          await this.alteraArea.alterar(nome.toUpperCase())
-          return resposta('')
+          const area = await this.alteraArea.alterar(nome.toUpperCase())
+          return resposta(area)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
