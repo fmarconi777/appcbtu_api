@@ -62,11 +62,16 @@ export class ControladorDeArea implements Controlador {
           return erroDeServidor(erro)
         }
       case 'PATCH':
+      {
         if (!parametro || parametro === 'undefined') { // eslint-disable-line
           return requisicaoImpropria(new ErroFaltaParametro('área'))
         }
-        await this.validaArea.validar(parametro.toUpperCase())
+        const areaValida = await this.validaArea.validar(parametro.toUpperCase())
+        if (!areaValida) {
+          return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
+        }
         return resposta('')
+      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
