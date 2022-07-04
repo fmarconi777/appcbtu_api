@@ -286,4 +286,15 @@ describe('Controlador de estações', () => {
       expect(resposta).toEqual(erroDeServidor(new Error()))
     })
   })
+
+  describe('Método PATCH', () => {
+    test('Deve retornar um erro caso um parametro não seja fornecido na url', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        metodo: 'PATCH'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(requisicaoImpropria(new ErroFaltaParametro('área')))
+    })
+  })
 })
