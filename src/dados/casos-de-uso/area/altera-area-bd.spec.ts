@@ -42,41 +42,41 @@ describe('AlteraAreaBD', () => {
   test('Deve chamar o consultaAreaPorNome com o valor correto', async () => {
     const { sut, consultaAreaPorNomeStub } = makeSut()
     const consultarPorNomeSpy = jest.spyOn(consultaAreaPorNomeStub, 'consultarPorNome')
-    await sut.alterar('NOME_QULAQUER')
-    expect(consultarPorNomeSpy).toHaveBeenCalledWith('NOME_QULAQUER')
+    await sut.alterar('AREA_ALTERADA', 'AREA_QUALQUER')
+    expect(consultarPorNomeSpy).toHaveBeenCalledWith('AREA_ALTERADA')
   })
 
   test('Deve retornar a mensagem "área já cadastrada" caso a área já exista no banco de dados', async () => {
     const { sut, consultaAreaPorNomeStub } = makeSut()
     jest.spyOn(consultaAreaPorNomeStub, 'consultarPorNome').mockReturnValueOnce(new Promise(resolve => resolve({ id: 'id_qualquer', nome: 'AREA_QUALQUER' })))
-    const resposta = await sut.alterar('AREA_QUALQUER')
+    const resposta = await sut.alterar('AREA_ALTERADA', 'AREA_QUALQUER')
     expect(resposta).toEqual('área já cadastrada')
   })
 
   test('Deve retornar um erro caso consultaAreaPorNome retorne um erro', async () => {
     const { sut, consultaAreaPorNomeStub } = makeSut()
     jest.spyOn(consultaAreaPorNomeStub, 'consultarPorNome').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const resposta = sut.alterar('AREA_QUALQUER')
+    const resposta = sut.alterar('AREA_ALTERADA', 'AREA_QUALQUER')
     await expect(resposta).rejects.toThrow()
   })
 
   test('Deve chamar o RepositorioAlteraArea com o valor correto', async () => {
     const { sut, repositorioAlteraAreaStub } = makeSut()
     const alterarSpy = jest.spyOn(repositorioAlteraAreaStub, 'alterar')
-    await sut.alterar('NOME_QULAQUER')
-    expect(alterarSpy).toHaveBeenCalledWith('NOME_QULAQUER')
+    await sut.alterar('AREA_ALTERADA', 'AREA_QUALQUER')
+    expect(alterarSpy).toHaveBeenCalledWith('AREA_ALTERADA', 'AREA_QUALQUER')
   })
 
   test('Deve retornar um erro caso RepositorioAlteraArea retorne um erro', async () => {
     const { sut, repositorioAlteraAreaStub } = makeSut()
     jest.spyOn(repositorioAlteraAreaStub, 'alterar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const resposta = sut.alterar('AREA_QUALQUER')
+    const resposta = sut.alterar('AREA_ALTERADA', 'AREA_QUALQUER')
     await expect(resposta).rejects.toThrow()
   })
 
   test('Deve retornar a mensagem "Área alterada com sucesso" em caso de sucesso', async () => {
     const { sut } = makeSut()
-    const resposta = await sut.alterar('NOME_QULAQUER')
+    const resposta = await sut.alterar('AREA_ALTERADA', 'AREA_QUALQUER')
     expect(resposta).toEqual('Área alterada com sucesso')
   })
 })

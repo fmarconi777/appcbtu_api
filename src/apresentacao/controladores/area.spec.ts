@@ -371,7 +371,7 @@ describe('Controlador de estações', () => {
         metodo: 'PATCH'
       }
       await sut.tratar(requisicaoHttp)
-      expect(alterarSpy).toHaveBeenCalledWith('NOME_QUALQUER')
+      expect(alterarSpy).toHaveBeenCalledWith('NOME_QUALQUER', 'AREA_QUALQUER')
     })
 
     test('Deve retornar erro 500 caso o AlteraArea retornar um erro', async () => {

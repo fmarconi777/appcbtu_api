@@ -8,11 +8,11 @@ export class AlteraAreaBD implements AlteraArea {
     private readonly repositorioAlteraArea: RepositorioAlteraArea
   ) {}
 
-  async alterar (nome: string): Promise<string> {
+  async alterar (nome: string, parametro: string): Promise<string> {
     const area = await this.consultaAreaPorNome.consultarPorNome(nome)
     if (area) { //eslint-disable-line
       return 'área já cadastrada'
     }
-    return await this.repositorioAlteraArea.alterar(nome)
+    return await this.repositorioAlteraArea.alterar(nome, parametro)
   }
 }
