@@ -5,7 +5,10 @@ export class AlteraAreaBD implements AlteraArea {
   constructor (private readonly consultaAreaPorNome: ConsultaAreaPorNome) {}
 
   async alterar (nome: string): Promise<string> {
-    await this.consultaAreaPorNome.consultarPorNome(nome)
+    const area = await this.consultaAreaPorNome.consultarPorNome(nome)
+    if (area) { //eslint-disable-line
+      return 'área já cadastrada'
+    }
     return await new Promise(resolve => resolve(''))
   }
 }
