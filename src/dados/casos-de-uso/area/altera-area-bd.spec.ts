@@ -73,4 +73,10 @@ describe('AlteraAreaBD', () => {
     const resposta = sut.alterar('AREA_QUALQUER')
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar a mensagem "Área alterada com sucesso" em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const resposta = await sut.alterar('NOME_QULAQUER')
+    expect(resposta).toEqual('Área alterada com sucesso')
+  })
 })
