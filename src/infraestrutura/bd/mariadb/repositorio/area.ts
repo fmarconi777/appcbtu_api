@@ -1,3 +1,4 @@
+import { RepositorioAlteraArea } from '../../../../dados/protocolos/bd/area/repositorio-altera-area'
 import { RepositorioArea, ModelosAreas } from '../../../../dados/protocolos/bd/area/repositorio-area'
 import { ConsultaAreaPorNome } from '../../../../dados/protocolos/bd/area/repositorio-consulta-area-por-nome'
 import { RepositorioDeletaArea } from '../../../../dados/protocolos/bd/area/repositorio-deleta-area'
@@ -7,7 +8,12 @@ import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
 import { Area } from '../models/modelo-area'
 
-export class RepositorioAreaMariaDB implements RepositorioArea, ConsultaAreaPorNome, RepositorioInserirArea, RepositorioDeletaArea {
+export class RepositorioAreaMariaDB implements
+RepositorioArea,
+ConsultaAreaPorNome,
+RepositorioInserirArea,
+RepositorioDeletaArea,
+RepositorioAlteraArea {
   async consultar (area?: string | undefined): Promise<ModelosAreas> {
     AuxiliaresMariaDB.verificaConexao()
     if (area) { //eslint-disable-line
@@ -35,5 +41,11 @@ export class RepositorioAreaMariaDB implements RepositorioArea, ConsultaAreaPorN
       return 'Erro ao deletar área'
     }
     return 'Área deletada com sucesso'
+  }
+
+  async alterar (nome: string, parametro: string): Promise<string> {
+    AuxiliaresMariaDB.verificaConexao()
+    const area = await Area.update({ nome }, { where: { nome: parametro } })
+    return area[0] ? 'Área alterada com sucesso' : 'Erro ao alterar área' //eslint-disable-line
   }
 }
