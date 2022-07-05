@@ -32,4 +32,11 @@ describe('AlteraAreaBD', () => {
     await sut.alterar('NOME_QULAQUER')
     expect(consultarPorNomeSpy).toHaveBeenCalledWith('NOME_QULAQUER')
   })
+
+  test('Deve retornar a mensagem "área já cadastrada" caso a área já exista no banco de dados', async () => {
+    const { sut, consultaAreaPorNomeStub } = makeSut()
+    jest.spyOn(consultaAreaPorNomeStub, 'consultarPorNome').mockReturnValueOnce(new Promise(resolve => resolve({ id: 'id_qualquer', nome: 'AREA_QUALQUER' })))
+    const resposta = await sut.alterar('AREA_QUALQUER')
+    expect(resposta).toEqual('área já cadastrada')
+  })
 })
