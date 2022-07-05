@@ -1,6 +1,7 @@
 import { AlteraAreaBD } from './altera-area-bd'
 import { ConsultaAreaPorNome } from '../../protocolos/bd/area/repositorio-consulta-area-por-nome'
 import { ModeloArea } from '../../../dominio/modelos/area'
+import { RepositorioAlteraArea } from '../../protocolos/bd/area/repositorio-altera-area'
 
 const makeConsultaAreaPorNome = (): ConsultaAreaPorNome => {
   class ConsultaAreaPorNomeStub implements ConsultaAreaPorNome {
@@ -11,17 +12,29 @@ const makeConsultaAreaPorNome = (): ConsultaAreaPorNome => {
   return new ConsultaAreaPorNomeStub()
 }
 
+const makeRepositorioAlteraAreaStub = (): RepositorioAlteraArea => {
+  class RepositorioAlteraAreaStub implements RepositorioAlteraArea {
+    async alterar (nome: string): Promise<string> {
+      return await new Promise(resolve => resolve('Área alterada com sucesso'))
+    }
+  }
+  return new RepositorioAlteraAreaStub()
+}
+
 interface SubTipos {
   sut: AlteraAreaBD
   consultaAreaPorNomeStub: ConsultaAreaPorNome
+  repositorioAlteraAreaStub: RepositorioAlteraArea
 }
 
 const makeSut = (): SubTipos => {
+  const repositorioAlteraAreaStub = makeRepositorioAlteraAreaStub()
   const consultaAreaPorNomeStub = makeConsultaAreaPorNome()
-  const sut = new AlteraAreaBD(consultaAreaPorNomeStub)
+  const sut = new AlteraAreaBD(consultaAreaPorNomeStub, repositorioAlteraAreaStub)
   return {
     sut,
-    consultaAreaPorNomeStub
+    consultaAreaPorNomeStub,
+    repositorioAlteraAreaStub
   }
 }
 
@@ -38,5 +51,12 @@ describe('AlteraAreaBD', () => {
     jest.spyOn(consultaAreaPorNomeStub, 'consultarPorNome').mockReturnValueOnce(new Promise(resolve => resolve({ id: 'id_qualquer', nome: 'AREA_QUALQUER' })))
     const resposta = await sut.alterar('AREA_QUALQUER')
     expect(resposta).toEqual('área já cadastrada')
+  })
+
+  test('Deve chamar o RepositorioAlteraArea com o valor correto', async () => {
+    const { sut, repositorioAlteraAreaStub } = makeSut()
+    const alterarSpy = jest.spyOn(repositorioAlteraAreaStub, 'alterar')
+    await sut.alterar('NOME_QULAQUER')
+    expect(alterarSpy).toHaveBeenCalledWith('NOME_QULAQUER')
   })
 })
