@@ -13,7 +13,6 @@ export class AlteraAreaBD implements AlteraArea {
     if (area) { //eslint-disable-line
       return 'área já cadastrada'
     }
-    await this.repositorioAlteraArea.alterar(nome)
-    return await new Promise(resolve => resolve(''))
+    return await this.repositorioAlteraArea.alterar(nome)
   }
 }
