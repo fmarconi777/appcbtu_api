@@ -53,6 +53,13 @@ describe('AlteraAreaBD', () => {
     expect(resposta).toEqual('área já cadastrada')
   })
 
+  test('Deve retornar um erro caso consultaAreaPorNome retorne um erro', async () => {
+    const { sut, consultaAreaPorNomeStub } = makeSut()
+    jest.spyOn(consultaAreaPorNomeStub, 'consultarPorNome').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const resposta = sut.alterar('AREA_QUALQUER')
+    await expect(resposta).rejects.toThrow()
+  })
+
   test('Deve chamar o RepositorioAlteraArea com o valor correto', async () => {
     const { sut, repositorioAlteraAreaStub } = makeSut()
     const alterarSpy = jest.spyOn(repositorioAlteraAreaStub, 'alterar')
