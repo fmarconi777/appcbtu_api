@@ -165,5 +165,13 @@ describe('Rotas Area', () => {
         .send({ nome: 'area_qualquer' })
         .expect(403)
     })
+
+    test('Deve retornar status 403 ao alterar uma area com authorization sem token de acesso', async () => {
+      await request(app)
+        .patch('/area/coinf')
+        .set('authorization', 'Bearer ')
+        .send({ nome: 'area_qualquer' })
+        .expect(403)
+    })
   })
 })
