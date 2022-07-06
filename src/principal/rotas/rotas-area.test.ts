@@ -173,5 +173,23 @@ describe('Rotas Area', () => {
         .send({ nome: 'area_qualquer' })
         .expect(403)
     })
+
+    test('Deve retornar status 404 caso um parametro inválido seja passado', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app)
+        .patch('/area/area_invalida')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .send({ nome: 'area_qualquer' })
+        .expect(404)
+    })
   })
 })
