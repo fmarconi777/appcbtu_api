@@ -10,5 +10,6 @@ export default (router: Router): Router => {
   router.get('/area/:parametro?',autentificacao, adaptadorDeRota(criaControladorDeArea())) // eslint-disable-line
   router.post('/area', autentificacaoAdmin, adaptadorDeRota(criaControladorDeArea())) // eslint-disable-line
   router.delete('/area/:parametro', autentificacaoAdmin, adaptadorDeRota(criaControladorDeArea())) // eslint-disable-line
+  router.patch('/area/:parametro', autentificacaoAdmin, adaptadorDeRota(criaControladorDeArea())) // eslint-disable-line
   return router
 }

@@ -1,5 +1,6 @@
 import { ControladorDeArea } from '../../apresentacao/controladores/area'
 import { Controlador } from '../../apresentacao/protocolos/controlador'
+import { AlteraAreaBD } from '../../dados/casos-de-uso/area/altera-area-bd'
 import { CadastroDeAreaBD } from '../../dados/casos-de-uso/area/cadastro-de-area-bd'
 import { ConsultaAreaBD } from '../../dados/casos-de-uso/area/consulta-area-bd'
 import { DeletaAreaBD } from '../../dados/casos-de-uso/area/deleta-area-bd'
@@ -14,7 +15,8 @@ export const criaControladorDeArea = (): Controlador => {
   const cadastroDeAreaBD = new CadastroDeAreaBD(repositorioAreaMariaDB, repositorioAreaMariaDB)
   const consultaAreaBD = new ConsultaAreaBD(repositorioAreaMariaDB)
   const validadorDeArea = new ValidadorDeArea(consultaAreaBD)
-  const controladorDeArea = new ControladorDeArea(consultaAreaBD, validadorDeArea, cadastroDeAreaBD, deletaAreaBD)
+  const alteraAraBD = new AlteraAreaBD(repositorioAreaMariaDB, repositorioAreaMariaDB)
+  const controladorDeArea = new ControladorDeArea(consultaAreaBD, validadorDeArea, cadastroDeAreaBD, deletaAreaBD, alteraAraBD)
   const repositorioLogDeErro = new RepositorioLogDeErroMariaDB()
   return new DecoradorControladorLog(controladorDeArea, repositorioLogDeErro)
 }
