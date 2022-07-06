@@ -6,6 +6,7 @@ import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
 import { erroDeServidor } from '../auxiliares/auxiliar-http'
+import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 
 const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
   class CadastroDeEquipamentoStub implements CadastroDeEquipamento {
@@ -242,6 +243,17 @@ describe('Controlador de equipamentos', () => {
       }
       const resposta = await sut.tratar(requisicaoHttp)
       expect(resposta).toEqual(erroDeServidor(new Error()))
+    })
+
+    test('Deve retornar status 404 caso o parametro seja inválido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: 'NaN',
+        metodo: 'GET'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta.status).toBe(404)
+      expect(resposta.corpo).toEqual(new ErroParametroInvalido('id'))
     })
 
     test('Deve chamar o método consultar do consultaEquipamento com o valor correto', async () => {
