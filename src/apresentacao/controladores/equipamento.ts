@@ -4,17 +4,26 @@ import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { CadastroDeEquipamento } from '../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
+import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
 
 export class ControladorDeEquipamento implements Controlador {
-  private readonly cadastroDeEquipamento: CadastroDeEquipamento
-
-  constructor (cadastroDeEquipamento: CadastroDeEquipamento) {
-    this.cadastroDeEquipamento = cadastroDeEquipamento
-  }
+  constructor (
+    private readonly cadastroDeEquipamento: CadastroDeEquipamento,
+    private readonly consultaEquipamento: ConsultaEquipamento
+  ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
     const metodo = requisicaoHttp.metodo
+    const parametro = requisicaoHttp.parametro
     switch (metodo) {
+      case 'GET':
+      {
+        if (!parametro) { // eslint-disable-line
+          const todosEquipamentos = await this.consultaEquipamento.consultarTodos()
+          return resposta(todosEquipamentos)
+        }
+        return await new Promise(resolve => resolve(resposta('')))
+      }
       case 'POST':
         try {
           const camposRequeridos = ['nome', 'tipo', 'numFalha', 'estado', 'estacaoId']

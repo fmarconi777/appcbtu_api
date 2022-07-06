@@ -67,7 +67,7 @@ No VScode é necessário a instalação das extenções "StandardJS", para melho
 Para utilizar os endpoints acesse o servidor de testes, vá para o diretório da API (cd appcbtu_api/) e execute o comando "npm start".
 (Note que ao sair do servidor de testes a aplicação irá parar de executar)
 
-Um usuário administrador é criado automáticamente ao iniciar o servidor, login: admin@email.com e senha: 123
+Um usuário administrador é criado automaticamente ao iniciar o servidor, login: admin@email.com e senha: 123
 
 * `http://10.10.20.202:5000/api/estacao` - Métodos: GET
 * `http://10.10.20.202:5000/api/estacao/(sigla da estação)` - Métodos: GET
