@@ -157,4 +157,13 @@ describe('Rotas Area', () => {
         .expect(200)
     })
   })
+
+  describe('PATCH', () => {
+    test('Deve retornar status 403 ao alterar uma area sem autenticação', async () => {
+      await request(app)
+        .patch('/area/coinf')
+        .send({ nome: 'area_qualquer' })
+        .expect(403)
+    })
+  })
 })
