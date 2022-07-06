@@ -209,5 +209,25 @@ describe('Rotas Area', () => {
         .send()
         .expect(400)
     })
+
+    test('Deve retornar status 200 ao alterar uma area com token de acesso válido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app).post('/area').set('authorization', `Bearer ${tokenDeAcesso}`).send({ nome: 'area_qualquer' })
+      await request(app)
+        .patch('/area/area_qualquer')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .send({ nome: 'area_alterada' })
+        .expect(200)
+      await Area.destroy({ where: { nome: 'area_alterada' } })
+    })
   })
 })
