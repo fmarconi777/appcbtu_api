@@ -191,5 +191,23 @@ describe('Rotas Area', () => {
         .send({ nome: 'area_qualquer' })
         .expect(404)
     })
+
+    test('Deve retornar status 400 caso um nome não seja passado', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app)
+        .patch('/area/coinf')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .send()
+        .expect(400)
+    })
   })
 })
