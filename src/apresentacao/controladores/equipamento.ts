@@ -17,14 +17,16 @@ export class ControladorDeEquipamento implements Controlador {
     const parametro = requisicaoHttp.parametro
     switch (metodo) {
       case 'GET':
-      {
-        if (!parametro) { // eslint-disable-line
-          const todosEquipamentos = await this.consultaEquipamento.consultarTodos()
-          return resposta(todosEquipamentos)
+        try {
+          if (!parametro) { // eslint-disable-line
+            const todosEquipamentos = await this.consultaEquipamento.consultarTodos()
+            return resposta(todosEquipamentos)
+          }
+          const equipamento = await this.consultaEquipamento.consultar(+parametro)
+          return resposta(equipamento)
+        } catch (erro: any) {
+          return erroDeServidor(erro)
         }
-        const equipamento = await this.consultaEquipamento.consultar(+parametro)
-        return resposta(equipamento)
-      }
       case 'POST':
         try {
           const camposRequeridos = ['nome', 'tipo', 'numFalha', 'estado', 'estacaoId']
