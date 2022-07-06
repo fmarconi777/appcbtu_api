@@ -232,5 +232,16 @@ describe('Controlador de equipamentos', () => {
       expect(resposta.status).toBe(200)
       expect(resposta.corpo).toEqual([dadosFalsos])
     })
+
+    test('Deve chamar o método consultar do consultaEquipamento com o valor correto', async () => {
+      const { sut, consultaEquipamentoStub } = makeSut()
+      const consultarSpy = jest.spyOn(consultaEquipamentoStub, 'consultar')
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'GET'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(consultarSpy).toHaveBeenCalledWith(1)
+    })
   })
 })
