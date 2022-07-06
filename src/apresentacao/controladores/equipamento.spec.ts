@@ -5,6 +5,7 @@ import { ModeloEquipamento } from '../../dominio/modelos/equipamento'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
+import { erroDeServidor } from '../auxiliares/auxiliar-http'
 
 const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
   class CadastroDeEquipamentoStub implements CadastroDeEquipamento {
@@ -231,6 +232,16 @@ describe('Controlador de equipamentos', () => {
       const resposta = await sut.tratar(requisicaoHttp)
       expect(resposta.status).toBe(200)
       expect(resposta.corpo).toEqual([dadosFalsos])
+    })
+
+    test('Deve retornar status 500 caso o método consultarTodos retorne um erro', async () => {
+      const { sut, consultaEquipamentoStub } = makeSut()
+      jest.spyOn(consultaEquipamentoStub, 'consultarTodos').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+      const requisicaoHttp = {
+        metodo: 'GET'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(erroDeServidor(new Error()))
     })
 
     test('Deve chamar o método consultar do consultaEquipamento com o valor correto', async () => {
