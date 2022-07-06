@@ -243,5 +243,16 @@ describe('Controlador de equipamentos', () => {
       await sut.tratar(requisicaoHttp)
       expect(consultarSpy).toHaveBeenCalledWith(1)
     })
+
+    test('Deve retornar um equipamento caso um parametro seja fornecido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'GET'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta.status).toBe(200)
+      expect(resposta.corpo).toEqual(dadosFalsos)
+    })
   })
 })
