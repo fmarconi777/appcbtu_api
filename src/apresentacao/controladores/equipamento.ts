@@ -22,8 +22,8 @@ export class ControladorDeEquipamento implements Controlador {
           const todosEquipamentos = await this.consultaEquipamento.consultarTodos()
           return resposta(todosEquipamentos)
         }
-        await this.consultaEquipamento.consultar(+parametro)
-        return await new Promise(resolve => resolve(resposta('')))
+        const equipamento = await this.consultaEquipamento.consultar(+parametro)
+        return resposta(equipamento)
       }
       case 'POST':
         try {
