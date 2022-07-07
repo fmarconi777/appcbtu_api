@@ -50,4 +50,11 @@ describe('ConsultaEquipamentoBD', () => {
     const resposta = sut.consultarTodos()
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve chamar o repositorioConsultaEquipamento com o valor correto no método consultar', async () => {
+    const { sut, repositorioConsultaEquipamentoStub } = makeSut()
+    const consultarSpy = jest.spyOn(repositorioConsultaEquipamentoStub, 'consultar')
+    await sut.consultar(1)
+    expect(consultarSpy).toHaveBeenCalledWith(1)
+  })
 })
