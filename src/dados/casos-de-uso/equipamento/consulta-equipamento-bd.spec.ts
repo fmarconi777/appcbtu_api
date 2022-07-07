@@ -72,4 +72,11 @@ describe('ConsultaEquipamentoBD', () => {
     const resposta = await sut.consultar(1)
     expect(resposta).toEqual('Equipamento não cadastrado')
   })
+
+  test('Deve retornar um erro caso RepositorioConsultaEquipamento retorne um erro no método consultar', async () => {
+    const { sut, repositorioConsultaEquipamentoStub } = makeSut()
+    jest.spyOn(repositorioConsultaEquipamentoStub, 'consultar').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.consultar(1)
+    await expect(resposta).rejects.toThrow()
+  })
 })
