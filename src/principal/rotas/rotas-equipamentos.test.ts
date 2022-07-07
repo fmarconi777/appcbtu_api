@@ -99,5 +99,28 @@ describe('Rotas equipamentos', () => {
         .get('/equipamento')
         .expect(200)
     })
+
+    test('Deve retornar status 200 caso um parametro seja fornecido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app).post('/equipamento').set('authorization', `Bearer ${tokenDeAcesso}`).send({
+        nome: 'Escada rolante',
+        tipo: 'escada',
+        numFalha: '35647',
+        estado: '1',
+        estacaoId: '1'
+      })
+      await request(app)
+        .get('/equipamento/1')
+        .expect(200)
+    })
   })
 })
