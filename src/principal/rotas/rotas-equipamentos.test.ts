@@ -23,54 +23,81 @@ describe('Rotas equipamentos', () => {
     await Funcionario.destroy({ truncate: true, cascade: false })
   })
 
-  test('Deve retornar um status 403 ao adicionar um equipamento sem autenticação', async () => {
-    await request(app)
-      .post('/equipamento')
-      .send({
-        nome: 'Escada rolante',
-        tipo: 'escada',
-        numFalha: '35647',
-        estado: '1',
-        estacaoId: '1'
-      })
-      .expect(403)
-  })
-
-  test('Deve retornar um status 403 ao adicionar um equipamento com authorization sem token de acesso', async () => {
-    await request(app)
-      .post('/equipamento')
-      .set('authorization', 'Bearer ')
-      .send({
-        nome: 'Escada rolante',
-        tipo: 'escada',
-        numFalha: '35647',
-        estado: '1',
-        estacaoId: '1'
-      })
-      .expect(403)
-  })
-
-  test('Deve retornar um status 200 ao adicionar um equipamento com um token válido', async () => {
-    const senha = await hash('123', 12)
-    const resposta = await Funcionario.create({
-      nome: 'alguém',
-      email: 'email@email.com',
-      senha,
-      administrador: true,
-      areaId: 3
+  describe('POST', () => {
+    test('Deve retornar um status 403 ao adicionar um equipamento sem autenticação', async () => {
+      await request(app)
+        .post('/equipamento')
+        .send({
+          nome: 'Escada rolante',
+          tipo: 'escada',
+          numFalha: '35647',
+          estado: '1',
+          estacaoId: '1'
+        })
+        .expect(403)
     })
-    const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
-    const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
-    await request(app)
-      .post('/equipamento')
-      .set('authorization', `Bearer ${tokenDeAcesso}`)
-      .send({
+
+    test('Deve retornar um status 403 ao adicionar um equipamento com authorization sem token de acesso', async () => {
+      await request(app)
+        .post('/equipamento')
+        .set('authorization', 'Bearer ')
+        .send({
+          nome: 'Escada rolante',
+          tipo: 'escada',
+          numFalha: '35647',
+          estado: '1',
+          estacaoId: '1'
+        })
+        .expect(403)
+    })
+
+    test('Deve retornar um status 200 ao adicionar um equipamento com um token válido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app)
+        .post('/equipamento')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .send({
+          nome: 'Escada rolante',
+          tipo: 'escada',
+          numFalha: '35647',
+          estado: '1',
+          estacaoId: '1'
+        })
+        .expect(200)
+    })
+  })
+
+  describe('GET', () => {
+    test('Deve retornar status 200 caso um parametro não seja fornecido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app).post('/equipamento').set('authorization', `Bearer ${tokenDeAcesso}`).send({
         nome: 'Escada rolante',
         tipo: 'escada',
         numFalha: '35647',
         estado: '1',
         estacaoId: '1'
       })
-      .expect(200)
+      await request(app)
+        .get('/equipamento')
+        .expect(200)
+    })
   })
 })
