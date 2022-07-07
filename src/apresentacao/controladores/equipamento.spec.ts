@@ -278,6 +278,18 @@ describe('Controlador de equipamentos', () => {
       expect(resposta.corpo).toEqual(dadosFalsos)
     })
 
+    test('Deve retornar a mensagem "Equipamento não cadastrado" caso um parametro não cadastrado seja fornecido', async () => {
+      const { sut, consultaEquipamentoStub } = makeSut()
+      jest.spyOn(consultaEquipamentoStub, 'consultar').mockReturnValueOnce(new Promise(resolve => resolve('Equipamento não cadastrado')))
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'GET'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta.status).toBe(200)
+      expect(resposta.corpo).toEqual('Equipamento não cadastrado')
+    })
+
     test('Deve retornar status 500 caso o método consultar retorne um erro', async () => {
       const { sut, consultaEquipamentoStub } = makeSut()
       jest.spyOn(consultaEquipamentoStub, 'consultar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
