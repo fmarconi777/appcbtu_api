@@ -4,11 +4,13 @@ import { RepositorioEquipamentoMariaDB } from '../../infraestrutura/bd/mariadb/r
 import { RepositorioLogDeErroMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/log'
 import { Controlador } from '../../apresentacao/protocolos/controlador'
 import { DecoradorControladorLog } from '../decoradores/log'
+import { ConsultaEquipamentoBD } from '../../dados/casos-de-uso/equipamento/consulta-equipamento-bd'
 
 export const criaControladorDeEquipamento = (): Controlador => {
-  const inserirRepositorioEquipamento = new RepositorioEquipamentoMariaDB()
-  const cadastroDeEquipamento = new CadastroDeEquipamentoBd(inserirRepositorioEquipamento)
-  const controladorDeEquipamento = new ControladorDeEquipamento(cadastroDeEquipamento)
+  const repositorioEquipamento = new RepositorioEquipamentoMariaDB()
+  const cadastroDeEquipamento = new CadastroDeEquipamentoBd(repositorioEquipamento)
+  const consultaEquipamentoBD = new ConsultaEquipamentoBD(repositorioEquipamento)
+  const controladorDeEquipamento = new ControladorDeEquipamento(cadastroDeEquipamento, consultaEquipamentoBD)
   const repositorioLogDeErro = new RepositorioLogDeErroMariaDB()
   return new DecoradorControladorLog(controladorDeEquipamento, repositorioLogDeErro)
 }
