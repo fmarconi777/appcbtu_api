@@ -10,6 +10,7 @@ export class ConsultaEquipamentoBD implements ConsultaEquipamento {
   }
 
   async consultar (id: number): Promise<string | ModeloEquipamento> {
+    await this.repositorioConsultaEquipamento.consultar(id)
     return await new Promise(resolve => resolve(''))
   }
 }
