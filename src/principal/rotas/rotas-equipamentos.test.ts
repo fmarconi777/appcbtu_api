@@ -128,5 +128,11 @@ describe('Rotas equipamentos', () => {
         .get('/equipamento/NaN')
         .expect(404)
     })
+
+    test('Deve retornar status 200 caso um parametro não cadastrado seja fornecido', async () => {
+      await request(app)
+        .get('/equipamento/1301')
+        .expect(200)
+    })
   })
 })
