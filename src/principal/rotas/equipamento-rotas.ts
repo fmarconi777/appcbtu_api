@@ -7,6 +7,6 @@ import { criaControladorDeEquipamento } from '../fabrica/equipamento'
 export default (router: Router): Router => {
   const autentificacaoArea = adaptadorDeMiddleware(criaMiddlewareDeAutenticacao('3'))
   router.post('/equipamento', autentificacaoArea, adaptadorDeRota(criaControladorDeEquipamento())) // eslint-disable-line
-  router.get('/equipamento', adaptadorDeRota(criaControladorDeEquipamento())) // eslint-disable-line
+  router.get('/equipamento/:parametro?', adaptadorDeRota(criaControladorDeEquipamento())) // eslint-disable-line
   return router
 }
