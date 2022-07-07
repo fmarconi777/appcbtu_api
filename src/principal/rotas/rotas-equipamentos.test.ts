@@ -122,5 +122,11 @@ describe('Rotas equipamentos', () => {
         .get('/equipamento/1')
         .expect(200)
     })
+
+    test('Deve retornar status 404 caso um parametro inválido seja fornecido', async () => {
+      await request(app)
+        .get('/equipamento/NaN')
+        .expect(404)
+    })
   })
 })
