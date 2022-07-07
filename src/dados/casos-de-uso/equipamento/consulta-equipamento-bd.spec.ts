@@ -57,4 +57,10 @@ describe('ConsultaEquipamentoBD', () => {
     await sut.consultar(1)
     expect(consultarSpy).toHaveBeenCalledWith(1)
   })
+
+  test('Deve retornar um equipamento caso um parametro seja fornecido', async () => {
+    const { sut } = makeSut()
+    const resposta = await sut.consultar(1)
+    expect(resposta).toEqual(dadosFalsos)
+  })
 })
