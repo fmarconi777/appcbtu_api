@@ -63,4 +63,13 @@ describe('ConsultaEquipamentoBD', () => {
     const resposta = await sut.consultar(1)
     expect(resposta).toEqual(dadosFalsos)
   })
+
+  test('Deve retornar a mensagem "Equipamento não cadastrado" caso um parametro não cadastrado seja fornecido', async () => {
+    const { sut, repositorioConsultaEquipamentoStub } = makeSut()
+    jest.spyOn(repositorioConsultaEquipamentoStub, 'consultar').mockImplementationOnce(async () => {
+      return await new Promise(resolve => resolve('Equipamento não cadastrado'))
+    })
+    const resposta = await sut.consultar(1)
+    expect(resposta).toEqual('Equipamento não cadastrado')
+  })
 })
