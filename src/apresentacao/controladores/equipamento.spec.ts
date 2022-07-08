@@ -7,6 +7,7 @@ import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
 import { erroDeServidor } from '../auxiliares/auxiliar-http'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
+import { ValidadorBD } from '../protocolos/validadorBD'
 
 const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
   class CadastroDeEquipamentoStub implements CadastroDeEquipamento {
@@ -45,20 +46,32 @@ const makeConsultaEquipamentoStub = (): ConsultaEquipamento => {
   return new ConsultaEquipamentoStub()
 }
 
+const makeValidaEstacao = (): ValidadorBD => {
+  class ValidaEstacaoStub implements ValidadorBD {
+    async validar (parametro: string): Promise<boolean> {
+      return await new Promise(resolve => resolve(true))
+    }
+  }
+  return new ValidaEstacaoStub()
+}
+
 interface SutTypes {
   sut: ControladorDeEquipamento
   cadastroDeEquipamentoStub: CadastroDeEquipamento
   consultaEquipamentoStub: ConsultaEquipamento
+  validaEstacaoStub: ValidadorBD
 }
 
 const makeSut = (): SutTypes => {
+  const validaEstacaoStub = makeValidaEstacao()
   const consultaEquipamentoStub = makeConsultaEquipamentoStub()
   const cadastroDeEquipamentoStub = makeCadastroDeEquipamento()
-  const sut = new ControladorDeEquipamento(cadastroDeEquipamentoStub, consultaEquipamentoStub)
+  const sut = new ControladorDeEquipamento(cadastroDeEquipamentoStub, consultaEquipamentoStub, validaEstacaoStub)
   return {
     sut,
     cadastroDeEquipamentoStub,
-    consultaEquipamentoStub
+    consultaEquipamentoStub,
+    validaEstacaoStub
   }
 }
 
@@ -135,6 +148,21 @@ describe('Controlador de equipamentos', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(400)
       expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('estacaoId'))
+    })
+    test('Deve chamar o validaEstacao com o valor correto', async () => {
+      const { sut, validaEstacaoStub } = makeSut()
+      const inserirSpy = jest.spyOn(validaEstacaoStub, 'validar')
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'qualquer_nome',
+          tipo: 'qualquer_tipo',
+          estado: 'estado_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'POST'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(inserirSpy).toHaveBeenCalledWith('estacaoId_qualquer')
     })
     test('Deve chamar o CadastroDeEquipamento com os valores corretos', async () => {
       const { sut, cadastroDeEquipamentoStub } = makeSut()
