@@ -20,7 +20,6 @@ describe('Repositorio mariaDB Equipamento', () => {
   const equipamentoFalso = {
     nome: 'nome_valido',
     tipo: 'tipo_valido',
-    numFalha: '1',
     estado: '1',
     estacaoId: '1'
   }
@@ -33,7 +32,6 @@ describe('Repositorio mariaDB Equipamento', () => {
       expect(equipamento.id).toBeTruthy()
       expect(equipamento.nome).toBe('nome_valido')
       expect(equipamento.tipo).toBe('tipo_valido')
-      expect(equipamento.numFalha).toBe('1')
       expect(equipamento.estado).toBe('1')
       expect(equipamento.estacaoId).toBe('1')
     })

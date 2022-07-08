@@ -6,7 +6,6 @@ const dadosFalsos = {
   id: 'id_qualquer',
   nome: 'nome_qualquer',
   tipo: 'tipo_qualquer',
-  numFalha: 'numFalha_qualquer',
   estado: 'estado_qualquer',
   estacaoId: 'estacaoId_qualquer'
 }

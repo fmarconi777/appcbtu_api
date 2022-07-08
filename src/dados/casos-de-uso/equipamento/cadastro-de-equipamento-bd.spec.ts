@@ -10,7 +10,6 @@ const makeRepositorioEquimento = (): RepositorioEquipamento => {
         id: 'id_valida',
         nome: 'nome_valido',
         tipo: 'tipo_valido',
-        numFalha: 'numFalha_valido',
         estado: 'estado_valido',
         estacaoId: 'estacaoId_valido'
       }))
@@ -40,7 +39,6 @@ describe('Caso de uso CadastroDeEquipamentoBd', () => {
     const equipamentoFalso = {
       nome: 'qualquer_nome',
       tipo: 'qualquer_tipo',
-      numFalha: 'numFalha_qualquer',
       estado: 'estado_qualquer',
       estacaoId: 'estacaoId_qualquer'
     }
@@ -53,7 +51,6 @@ describe('Caso de uso CadastroDeEquipamentoBd', () => {
     const equipamentoFalso = {
       nome: 'qualquer_nome',
       tipo: 'qualquer_tipo',
-      numFalha: 'numFalha_qualquer',
       estado: 'estado_qualquer',
       estacaoId: 'estacaoId_qualquer'
     }
@@ -65,7 +62,6 @@ describe('Caso de uso CadastroDeEquipamentoBd', () => {
     const equipamentoFalso = {
       nome: 'qualquer_nome',
       tipo: 'qualquer_tipo',
-      numFalha: 'numFalha_qualquer',
       estado: 'estado_qualquer',
       estacaoId: 'estacaoId_qualquer'
     }
@@ -74,7 +70,6 @@ describe('Caso de uso CadastroDeEquipamentoBd', () => {
       id: 'id_valida',
       nome: 'nome_valido',
       tipo: 'tipo_valido',
-      numFalha: 'numFalha_valido',
       estado: 'estado_valido',
       estacaoId: 'estacaoId_valido'
     })

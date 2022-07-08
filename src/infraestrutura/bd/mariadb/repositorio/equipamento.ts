@@ -20,11 +20,10 @@ export class RepositorioEquipamentoMariaDB implements RepositorioEquipamento, Re
   }
 
   private transformaDados (dadosEquipamento: DadosEquipamento): any {
-    const { nome, tipo, numFalha, estado, estacaoId } = dadosEquipamento
+    const { nome, tipo, estado, estacaoId } = dadosEquipamento
     return {
       nome: nome,
       tipo: tipo,
-      numFalha: +numFalha,
       estado: +estado,
       estacaoId: +estacaoId
     }

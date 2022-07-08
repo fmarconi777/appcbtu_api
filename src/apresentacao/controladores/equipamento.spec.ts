@@ -15,7 +15,6 @@ const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
         id: 'qualquer_id',
         nome: dadosEquipamento.nome,
         tipo: dadosEquipamento.tipo,
-        numFalha: dadosEquipamento.numFalha,
         estado: dadosEquipamento.estado,
         estacaoId: dadosEquipamento.estacaoId
       }
@@ -29,7 +28,6 @@ const dadosFalsos = {
   id: 'id_qualquer',
   nome: 'nome_qualquer',
   tipo: 'tipo_qualquer',
-  numFalha: 'numFalha_qualquer',
   estado: 'estado_qualquer',
   estacaoId: 'estacaoId_qualquer'
 }
@@ -71,7 +69,6 @@ describe('Controlador de equipamentos', () => {
       corpo: {
         nome: 'qualquer_nome',
         tipo: 'qualquer_tipo',
-        numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
       },
@@ -88,7 +85,6 @@ describe('Controlador de equipamentos', () => {
       const requisicaoHttp = {
         corpo: {
           tipo: 'qualquer_tipo',
-          numFalha: 'numFalha_qualquer',
           estado: 'estado_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
@@ -103,7 +99,6 @@ describe('Controlador de equipamentos', () => {
       const requisicaoHttp = {
         corpo: {
           nome: 'qualquer_tipo',
-          numFalha: 'numFalha_qualquer',
           estado: 'estado_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
@@ -113,28 +108,12 @@ describe('Controlador de equipamentos', () => {
       expect(respostaHttp.status).toBe(400)
       expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('tipo'))
     })
-    test('Deve retornar codigo 400 se um numFalha não for fornecido', async () => {
-      const { sut } = makeSut()
-      const requisicaoHttp = {
-        corpo: {
-          nome: 'qualquer_nome',
-          tipo: 'qualquer_tipo',
-          estado: 'estado_qualquer',
-          estacaoId: 'estacaoId_qualquer'
-        },
-        metodo: 'POST'
-      }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp.status).toBe(400)
-      expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('numFalha'))
-    })
     test('Deve retornar codigo 400 se um estado não for fornecido', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
           nome: 'qualquer_nome',
           tipo: 'qualquer_tipo',
-          numFalha: 'numFalha_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
         metodo: 'POST'
@@ -149,7 +128,6 @@ describe('Controlador de equipamentos', () => {
         corpo: {
           nome: 'qualquer_nome',
           tipo: 'qualquer_tipo',
-          numFalha: 'numFalha_qualquer',
           estado: 'estado_qualquer'
         },
         metodo: 'POST'
@@ -165,7 +143,6 @@ describe('Controlador de equipamentos', () => {
         corpo: {
           nome: 'qualquer_nome',
           tipo: 'qualquer_tipo',
-          numFalha: 'numFalha_qualquer',
           estado: 'estado_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
@@ -175,7 +152,6 @@ describe('Controlador de equipamentos', () => {
       expect(inserirSpy).toHaveBeenCalledWith({
         nome: 'qualquer_nome',
         tipo: 'qualquer_tipo',
-        numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
       })
@@ -191,7 +167,6 @@ describe('Controlador de equipamentos', () => {
         corpo: {
           nome: 'qualquer_nome',
           tipo: 'qualquer_tipo',
-          numFalha: 'numFalha_qualquer',
           estado: 'estado_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
@@ -207,7 +182,6 @@ describe('Controlador de equipamentos', () => {
         corpo: {
           nome: 'qualquer_nome',
           tipo: 'qualquer_tipo',
-          numFalha: 'numFalha_qualquer',
           estado: 'estado_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
@@ -219,7 +193,6 @@ describe('Controlador de equipamentos', () => {
         id: 'qualquer_id',
         nome: 'qualquer_nome',
         tipo: 'qualquer_tipo',
-        numFalha: 'numFalha_qualquer',
         estado: 'estado_qualquer',
         estacaoId: 'estacaoId_qualquer'
       })

@@ -28,12 +28,20 @@ create table if not exists Equipamento(
 	id int auto_increment primary key,
     nome varchar(255) not null,
     tipo varchar(255) not null,
-    numFalha int,
     estado int not null,
     estacaoId int not null,
     constraint fk_Equipamento_Estacao
     foreign key (estacaoId)
 		references Estacao(id)
+);
+
+create table if not exists Falha(
+	id int auto_increment primary key,
+    numFalha int not null,
+    equipamentoId int not null,
+    constraint fk_Falha_Equipamento
+    foreign key (equipamentoId)
+		references Equipamento(id)
 );
 
 create table if not exists Telefone(
@@ -158,7 +166,7 @@ values
 ('COTES'),
 ('COARC');
 
-insert into Estacao(nome, sigla, codigo, endereco, latitude, longitude)
+insert into Estacao (nome, sigla, codigo, endereco, latitude, longitude)
 values
 (
 	'Estação São Gabriel',

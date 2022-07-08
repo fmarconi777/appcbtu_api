@@ -10,7 +10,6 @@ InferCreationAttributes<Equipamento>
   declare id: CreationOptional<number>
   declare nome: string
   declare tipo: string
-  declare numFalha: number
   declare estado: number
   declare estacaoId: number
 }
@@ -31,10 +30,6 @@ Equipamento.init(
     tipo: {
       allowNull: false,
       type: DataTypes.TEXT
-    },
-    numFalha: {
-      allowNull: true,
-      type: DataTypes.INTEGER
     },
     estado: {
       allowNull: false,

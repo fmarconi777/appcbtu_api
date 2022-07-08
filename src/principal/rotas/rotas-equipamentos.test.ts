@@ -30,7 +30,6 @@ describe('Rotas equipamentos', () => {
         .send({
           nome: 'Escada rolante',
           tipo: 'escada',
-          numFalha: '35647',
           estado: '1',
           estacaoId: '1'
         })
@@ -44,7 +43,6 @@ describe('Rotas equipamentos', () => {
         .send({
           nome: 'Escada rolante',
           tipo: 'escada',
-          numFalha: '35647',
           estado: '1',
           estacaoId: '1'
         })
@@ -68,7 +66,6 @@ describe('Rotas equipamentos', () => {
         .send({
           nome: 'Escada rolante',
           tipo: 'escada',
-          numFalha: '35647',
           estado: '1',
           estacaoId: '1'
         })
@@ -91,7 +88,6 @@ describe('Rotas equipamentos', () => {
       await request(app).post('/equipamento').set('authorization', `Bearer ${tokenDeAcesso}`).send({
         nome: 'Escada rolante',
         tipo: 'escada',
-        numFalha: '35647',
         estado: '1',
         estacaoId: '1'
       })
@@ -114,7 +110,6 @@ describe('Rotas equipamentos', () => {
       await request(app).post('/equipamento').set('authorization', `Bearer ${tokenDeAcesso}`).send({
         nome: 'Escada rolante',
         tipo: 'escada',
-        numFalha: '35647',
         estado: '1',
         estacaoId: '1'
       })
