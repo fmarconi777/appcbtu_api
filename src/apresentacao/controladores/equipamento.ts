@@ -6,11 +6,13 @@ import { CadastroDeEquipamento } from '../../dominio/casos-de-uso/equipamento/ca
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
+import { ValidadorBD } from '../protocolos/validadorBD'
 
 export class ControladorDeEquipamento implements Controlador {
   constructor (
     private readonly cadastroDeEquipamento: CadastroDeEquipamento,
-    private readonly consultaEquipamento: ConsultaEquipamento
+    private readonly consultaEquipamento: ConsultaEquipamento,
+    private readonly validaEstacao: ValidadorBD
   ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
@@ -39,6 +41,7 @@ export class ControladorDeEquipamento implements Controlador {
               return requisicaoImpropria(new ErroFaltaParametro(campo))
             }
           }
+          await this.validaEstacao.validar(requisicaoHttp.corpo.estacaoId)
           const equipamento = await this.cadastroDeEquipamento.inserir(requisicaoHttp.corpo)
           return resposta(equipamento)
         } catch (erro: any) {
