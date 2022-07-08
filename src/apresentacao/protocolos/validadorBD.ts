@@ -5,5 +5,5 @@ deve retornar.
 */
 
 export interface ValidadorBD {
-  validar: (parametro: string) => Promise<boolean>
+  validar: (parametro: any) => Promise<boolean>
 }
