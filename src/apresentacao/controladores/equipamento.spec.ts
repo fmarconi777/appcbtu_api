@@ -5,7 +5,7 @@ import { ModeloEquipamento } from '../../dominio/modelos/equipamento'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
-import { erroDeServidor } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ValidadorBD } from '../protocolos/validadorBD'
 
@@ -163,6 +163,21 @@ describe('Controlador de equipamentos', () => {
       }
       await sut.tratar(requisicaoHttp)
       expect(inserirSpy).toHaveBeenCalledWith('estacaoId_qualquer')
+    })
+    test('Deve retornar status 404 caso o parametro estacaoId esteja incorreto', async () => {
+      const { sut, validaEstacaoStub } = makeSut()
+      jest.spyOn(validaEstacaoStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'qualquer_nome',
+          tipo: 'qualquer_tipo',
+          estado: 'estado_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId')))
     })
     test('Deve chamar o CadastroDeEquipamento com os valores corretos', async () => {
       const { sut, cadastroDeEquipamentoStub } = makeSut()
