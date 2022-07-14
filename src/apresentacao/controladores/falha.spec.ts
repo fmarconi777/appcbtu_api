@@ -1,3 +1,5 @@
+import { CadastroDeFalha } from '../../dominio/casos-de-uso/falha/cadastro-de-falha'
+import { ModeloFalha } from '../../dominio/modelos/falha'
 import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
@@ -14,6 +16,15 @@ const makeValidaEquipamentoStub = (): ValidadorBD => {
   return new ValidaEquipamentoStub()
 }
 
+const makeCadastroDeFalhaStub = (): CadastroDeFalha => {
+  class CadastroDeFalhaStub implements CadastroDeFalha {
+    async inserir (dados: ModeloFalha): Promise<string> {
+      return await new Promise(resolve => resolve('Falha cadastrada com sucesso'))
+    }
+  }
+  return new CadastroDeFalhaStub()
+}
+
 const falhaFalsa = {
   numFalha: 'numero_qualquer',
   equipamentoId: '1'
@@ -22,14 +33,17 @@ const falhaFalsa = {
 interface SubTipos {
   sut: ControladorDeFalha
   validaEquipamentoStub: ValidadorBD
+  cadastroDeFalhaStub: CadastroDeFalha
 }
 
 const makeSut = (): SubTipos => {
+  const cadastroDeFalhaStub = makeCadastroDeFalhaStub()
   const validaEquipamentoStub = makeValidaEquipamentoStub()
-  const sut = new ControladorDeFalha(validaEquipamentoStub)
+  const sut = new ControladorDeFalha(validaEquipamentoStub, cadastroDeFalhaStub)
   return {
     sut,
-    validaEquipamentoStub
+    validaEquipamentoStub,
+    cadastroDeFalhaStub
   }
 }
 
@@ -101,6 +115,19 @@ describe('ControladorDeFalha', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('equipamentoId')))
+    })
+
+    test('Deve chamar o cadastroDeFalha com os valores corretos', async () => {
+      const { sut, cadastroDeFalhaStub } = makeSut()
+      const validarSpy = jest.spyOn(cadastroDeFalhaStub, 'inserir')
+      const requisicaoHttp = {
+        corpo: falhaFalsa,
+        metodo: 'POST'
+      }
+      const dataCriacao = new Date(Date.now() - 10800000).toISOString()
+      const dadosFalsos = Object.assign({}, requisicaoHttp.corpo, { dataCriacao })
+      await sut.tratar(requisicaoHttp)
+      expect(validarSpy).toHaveBeenCalledWith(dadosFalsos)
     })
   })
 })
