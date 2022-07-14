@@ -1,3 +1,5 @@
+import { requisicaoImpropria } from '../auxiliares/auxiliar-http'
+import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ControladorDeFalha } from './falha'
 
@@ -27,5 +29,19 @@ describe('ControladorDeFalha', () => {
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
+  })
+
+  describe('Método POST', () => {
+    test('Deve retornar codigo 400 caso o parametro numFalha esteja faltando', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: {
+          equipamentoId: 'equipamentoId_qualquer'
+        },
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoImpropria(new ErroFaltaParametro('numFalha')))
+    })
   })
 })
