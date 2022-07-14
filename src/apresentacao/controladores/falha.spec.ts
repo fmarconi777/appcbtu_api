@@ -1,6 +1,6 @@
 import { CadastroDeFalha } from '../../dominio/casos-de-uso/falha/cadastro-de-falha'
 import { ModeloFalha } from '../../dominio/modelos/falha'
-import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
@@ -139,6 +139,16 @@ describe('ControladorDeFalha', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
+
+    test('Deve retornar codigo 200 em caso de sucesso ao cadastrar uma falha', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: falhaFalsa,
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(resposta('Falha cadastrada com sucesso'))
     })
   })
 })
