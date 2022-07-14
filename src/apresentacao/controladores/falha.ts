@@ -1,3 +1,4 @@
+import { CadastroDeFalha } from '../../dominio/casos-de-uso/falha/cadastro-de-falha'
 import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
@@ -7,7 +8,10 @@ import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { ValidadorBD } from '../protocolos/validadorBD'
 
 export class ControladorDeFalha implements Controlador {
-  constructor (private readonly validaEquipamento: ValidadorBD) {}
+  constructor (
+    private readonly validaEquipamento: ValidadorBD,
+    private readonly cadastroDeFalha: CadastroDeFalha
+  ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
     const metodo = requisicaoHttp.metodo
@@ -24,6 +28,9 @@ export class ControladorDeFalha implements Controlador {
           if (!equipamentoIdValido) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('equipamentoId'))
           }
+          const dataCriacao = new Date(Date.now() - 10800000).toISOString()
+          const dados = Object.assign({}, requisicaoHttp.corpo, { dataCriacao })
+          await this.cadastroDeFalha.inserir(dados)
           return resposta('')
         } catch (erro: any) {
           return erroDeServidor(erro)
