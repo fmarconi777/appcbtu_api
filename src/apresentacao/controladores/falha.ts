@@ -10,7 +10,7 @@ export class ControladorDeFalha implements Controlador {
     switch (metodo) {
       case 'POST':
       {
-        const camposRequeridos = ['numFalha']
+        const camposRequeridos = ['numFalha', 'equipamentoId']
         for (const campo of camposRequeridos) {
           if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
             return requisicaoImpropria(new ErroFaltaParametro(campo))
