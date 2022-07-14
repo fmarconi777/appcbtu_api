@@ -1,4 +1,4 @@
-import { requisicaoImpropria } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ValidadorBD } from '../protocolos/validadorBD'
@@ -78,6 +78,17 @@ describe('ControladorDeFalha', () => {
       }
       await sut.tratar(requisicaoHttp)
       expect(validarSpy).toHaveBeenCalledWith(1)
+    })
+
+    test('Deve retornar codigo 500 caso o o validaEquipamento retorne um erro', async () => {
+      const { sut, validaEquipamentoStub } = makeSut()
+      jest.spyOn(validaEquipamentoStub, 'validar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+      const requisicaoHttp = {
+        corpo: falhaFalsa,
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
   })
 })
