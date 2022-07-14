@@ -30,8 +30,8 @@ export class ControladorDeFalha implements Controlador {
           }
           const dataCriacao = new Date(Date.now() - 10800000).toISOString()
           const dados = Object.assign({}, requisicaoHttp.corpo, { dataCriacao })
-          await this.cadastroDeFalha.inserir(dados)
-          return resposta('')
+          const falha = await this.cadastroDeFalha.inserir(dados)
+          return resposta(falha)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
