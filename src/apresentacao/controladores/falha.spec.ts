@@ -129,5 +129,16 @@ describe('ControladorDeFalha', () => {
       await sut.tratar(requisicaoHttp)
       expect(validarSpy).toHaveBeenCalledWith(dadosFalsos)
     })
+
+    test('Deve retornar codigo 500 caso o o cadastroDeFalha retorne um erro', async () => {
+      const { sut, cadastroDeFalhaStub } = makeSut()
+      jest.spyOn(cadastroDeFalhaStub, 'inserir').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+      const requisicaoHttp = {
+        corpo: falhaFalsa,
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
   })
 })
