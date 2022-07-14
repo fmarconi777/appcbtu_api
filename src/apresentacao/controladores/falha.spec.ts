@@ -1,6 +1,7 @@
-import { erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
+import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ValidadorBD } from '../protocolos/validadorBD'
 import { ControladorDeFalha } from './falha'
 
@@ -89,6 +90,17 @@ describe('ControladorDeFalha', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
+
+    test('Deve retornar codigo 404 caso o o validaEquipamento retorne false', async () => {
+      const { sut, validaEquipamentoStub } = makeSut()
+      jest.spyOn(validaEquipamentoStub, 'validar').mockReturnValueOnce(new Promise(resolve => resolve(false)))
+      const requisicaoHttp = {
+        corpo: falhaFalsa,
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('equipamentoId')))
     })
   })
 })
