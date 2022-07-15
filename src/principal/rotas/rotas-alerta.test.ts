@@ -22,57 +22,67 @@ describe('Rotas Alerta', () => {
     await Alerta.destroy({ truncate: true, cascade: false })
   })
 
-  test('Deve retornar status 403 ao adicionar um alerta sem autenticação', async () => {
-    await request(app)
-      .post('/alerta')
-      .send({
-        descricao: 'Estação Parada!',
-        prioridade: 'Altissima',
-        dataInicio: '2022-02-05',
-        dataFim: '2022-02-05',
-        ativo: 'true',
-        estacaoId: '1'
-      })
-      .expect(403)
-  })
-
-  test('Deve retornar status 403 ao adicionar um alerta com authorization sem token de acesso', async () => {
-    await request(app)
-      .post('/alerta')
-      .set('authorization', 'Bearer ')
-      .send({
-        descricao: 'Estação Parada!',
-        prioridade: 'Altissima',
-        dataInicio: '2022-02-05',
-        dataFim: '2022-02-05',
-        ativo: 'true',
-        estacaoId: '1'
-      })
-      .expect(403)
-  })
-
-  test('Deve retornar status 200 ao adicionar um alerta com um token válido', async () => {
-    const senha = await hash('123', 12)
-    const resposta = await Funcionario.create({
-      nome: 'alguém',
-      email: 'email@email.com',
-      senha,
-      administrador: true,
-      areaId: 3
+  describe('Método POST', () => {
+    test('Deve retornar status 403 ao adicionar um alerta sem autenticação', async () => {
+      await request(app)
+        .post('/alerta')
+        .send({
+          descricao: 'Estação Parada!',
+          prioridade: 'Altissima',
+          dataInicio: '2022-02-05',
+          dataFim: '2022-02-05',
+          ativo: 'true',
+          estacaoId: '1'
+        })
+        .expect(403)
     })
-    const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
-    const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
-    await request(app)
-      .post('/alerta')
-      .set('authorization', `Bearer ${tokenDeAcesso}`)
-      .send({
-        descricao: 'Estação Parada!',
-        prioridade: 'Altissima',
-        dataInicio: '2022-02-05',
-        dataFim: '2022-02-05',
-        ativo: 'true',
-        estacaoId: '1'
+
+    test('Deve retornar status 403 ao adicionar um alerta com authorization sem token de acesso', async () => {
+      await request(app)
+        .post('/alerta')
+        .set('authorization', 'Bearer ')
+        .send({
+          descricao: 'Estação Parada!',
+          prioridade: 'Altissima',
+          dataInicio: '2022-02-05',
+          dataFim: '2022-02-05',
+          ativo: 'true',
+          estacaoId: '1'
+        })
+        .expect(403)
+    })
+
+    test('Deve retornar status 200 ao adicionar um alerta com um token válido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
       })
-      .expect(200)
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app)
+        .post('/alerta')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .send({
+          descricao: 'Estação Parada!',
+          prioridade: 'Altissima',
+          dataInicio: '2022-02-05',
+          dataFim: '2022-02-05',
+          ativo: 'true',
+          estacaoId: '1'
+        })
+        .expect(200)
+    })
+
+    describe('Método GET', () => {
+      test('Deve retornar status 200 ao consultar a rota alerta sem parametro', async () => {
+        await request(app)
+          .get('/alerta')
+          .expect(200)
+      })
+    })
   })
 })
