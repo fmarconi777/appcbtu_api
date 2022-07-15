@@ -28,8 +28,7 @@ export class ControladorDeFalha implements Controlador {
           if (!equipamentoIdValido) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('equipamentoId'))
           }
-          const dataCriacao = new Date(Date.now() - 10800000).toISOString()
-          const dados = Object.assign({}, requisicaoHttp.corpo, { dataCriacao })
+          const dados = requisicaoHttp.corpo
           const falha = await this.cadastroDeFalha.inserir(dados)
           return resposta(falha)
         } catch (erro: any) {
