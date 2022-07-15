@@ -72,4 +72,12 @@ describe('ConsultaAlerta', () => {
     const resposta = await sut.consultaalerta(alerta)
     expect(resposta).toEqual(makeAlertaFalsa())
   })
+
+  test('Método consultaralerta deve retornar null caso o RepositorioConsultaAlerta não encontre um alerta para o parametro', async () => {
+    const { sut, repositorioAlertaConsultaStub } = makeSut()
+    jest.spyOn(repositorioAlertaConsultaStub, 'consultaalerta').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const alerta = 'ALERTA_QUALQUER'
+    const respostaConsultar = await sut.consultaalerta(alerta)
+    expect(respostaConsultar).toBeNull()
+  })
 })

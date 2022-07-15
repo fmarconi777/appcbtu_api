@@ -5,7 +5,6 @@ import { ModeloAlerta } from '../../dominio/modelos/alerta'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alerta'
-import { ValidadorBD } from '../protocolos/validadorBD'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { erroDeServidor } from '../auxiliares/auxiliar-http'
 const makeCadastroAlerta = (): CadastroAlerta => {
@@ -28,7 +27,7 @@ const makeCadastroAlerta = (): CadastroAlerta => {
 
 const makeConsultaAlerta = (): ConsultaAlerta => {
   class ConsultaAlertaStub implements ConsultaAlerta {
-    async consultaalerta (): Promise<ModeloAlerta> {
+    async consultaalerta (): Promise<ModeloAlerta | null> {
       const listaFalsa = {
         id: 'id_valida',
         descricao: 'descricao_valida',
@@ -56,31 +55,21 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
   }
   return new ConsultaAlertaStub()
 }
-const makeValidaAlerta = (): ValidadorBD => {
-  class ValidaAlertaStub implements ValidadorBD {
-    async validar (parametro: string): Promise<boolean> {
-      return await new Promise(resolve => resolve(true))
-    }
-  }
-  return new ValidaAlertaStub()
-}
+
 interface SutTypes {
   sut: ControladorDeAlerta
   cadastroDeAlertaStub: CadastroAlerta
   consultaAlertaStub: ConsultaAlerta
-  validaAlertaStub: ValidadorBD
 }
 
 const makeSut = (): SutTypes => {
   const cadastroDeAlertaStub = makeCadastroAlerta()
   const consultaAlertaStub = makeConsultaAlerta()
-  const validaAlertaStub = makeValidaAlerta()
-  const sut = new ControladorDeAlerta(cadastroDeAlertaStub, consultaAlertaStub, validaAlertaStub)
+  const sut = new ControladorDeAlerta(cadastroDeAlertaStub, consultaAlertaStub)
   return {
     sut,
     cadastroDeAlertaStub,
-    consultaAlertaStub,
-    validaAlertaStub
+    consultaAlertaStub
   }
 }
 
@@ -296,7 +285,7 @@ describe('Controlador de Alerta', () => {
     })
     test('Deve retornar codigo 200 e um alerta se o parâmetro estiver correto', async () => {
       const { sut } = makeSut()
-      const requisicaoHttp = { parametro: 'alerta_valido', metodo: 'GET' }
+      const requisicaoHttp = { parametro: '1', metodo: 'GET' }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(200)
       expect(respostaHttp.corpo).toEqual({
@@ -309,17 +298,10 @@ describe('Controlador de Alerta', () => {
         estacaoId: 'estacaoid_valida'
       })
     })
-    test('Deve chamar ValidaAlerta com o valor correto', async () => {
-      const { sut, validaAlertaStub } = makeSut()
-      const spyConsula = jest.spyOn(validaAlertaStub, 'validar')
-      const requisicaoHttp = { parametro: 'alerta_qualquer', metodo: 'GET' }
-      await sut.tratar(requisicaoHttp)
-      expect(spyConsula).toHaveBeenCalledWith('alerta_qualquer')
-    })
 
-    test('Deve retornar codigo 404 se o parâmetro estiver incorreto', async () => {
-      const { sut, validaAlertaStub } = makeSut()
-      jest.spyOn(validaAlertaStub, 'validar').mockReturnValueOnce(new Promise(resolve => resolve(false)))
+    test('Deve retornar codigo 404 se o ConsultaAlerta retornar null', async () => {
+      const { sut, consultaAlertaStub } = makeSut()
+      jest.spyOn(consultaAlertaStub, 'consultaalerta').mockReturnValueOnce(new Promise(resolve => resolve(null)))
       const requisicaoHttp = { parametro: 'alerta_invalido', metodo: 'GET' }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(404)

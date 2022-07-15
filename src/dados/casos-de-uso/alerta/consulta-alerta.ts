@@ -10,7 +10,7 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
     return resposta
   }
 
-  async consultaalerta (parametro: string): Promise<ModeloAlerta> {
+  async consultaalerta (parametro: string): Promise<ModeloAlerta | null> {
     const resposta = await this.repositorioConsultaAlerta.consultaalerta(parametro)
     return resposta
   }
