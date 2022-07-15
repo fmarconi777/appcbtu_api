@@ -107,6 +107,12 @@ describe('Rotas Alerta', () => {
           .get('/alerta/1')
           .expect(200)
       })
+
+      test('Deve retornar status 404 ao consultar a rota alerta com parametro inválido', async () => {
+        await request(app)
+          .get('/alerta/NaN')
+          .expect(404)
+      })
     })
   })
 })
