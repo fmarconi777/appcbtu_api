@@ -12,6 +12,7 @@ export class RepositorioEquipamentoMariaDB implements RepositorioEquipamento, Re
   }
 
   async consultar (id?: number | undefined): Promise<ModeloEquipamento | ModeloEquipamento[] | any> {
+    AuxiliaresMariaDB.verificaConexao()
     if (id) { // eslint-disable-line
       const equipamento = await Equipamento.findOne({ where: { id } })
       return equipamento ? FuncoesAuxiliares.mapeadorDeDados(equipamento) : 'Equipamento não cadastrado' // eslint-disable-line

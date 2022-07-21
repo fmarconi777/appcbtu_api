@@ -1,7 +1,6 @@
 import request from 'supertest'
 import app from '../config/app'
 import { AuxiliaresMariaDB } from '../../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Equipamento } from '../../infraestrutura/bd/mariadb/models/modelo-equipamento'
 import { Funcionario } from '../../infraestrutura/bd/mariadb/models/modelo-funcionarios'
 import { hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
@@ -19,7 +18,6 @@ describe('Rotas equipamentos', () => {
   })
 
   beforeEach(async () => {
-    await Equipamento.destroy({ truncate: true, cascade: false })
     await Funcionario.destroy({ truncate: true, cascade: false })
   })
 
@@ -126,7 +124,7 @@ describe('Rotas equipamentos', () => {
 
     test('Deve retornar status 200 caso um parametro não cadastrado seja fornecido', async () => {
       await request(app)
-        .get('/equipamento/1301')
+        .get('/equipamento/130100000000000')
         .expect(200)
     })
   })

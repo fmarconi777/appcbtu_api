@@ -13,10 +13,6 @@ describe('Repositorio mariaDB Equipamento', () => {
     console.log('conexão fechada')
   })
 
-  beforeEach(async () => {
-    await Equipamento.destroy({ truncate: true, cascade: false })
-  })
-
   const equipamentoFalso = {
     nome: 'nome_valido',
     tipo: 'tipo_valido',
@@ -50,7 +46,9 @@ describe('Repositorio mariaDB Equipamento', () => {
     test('Deve retornar um equipamento em caso de sucesso se um parametro for fornecido', async () => {
       const sut = new RepositorioEquipamentoMariaDB()
       await sut.inserir(equipamentoFalso)
-      const equipamento: any = await sut.consultar(1)
+      const equipamentos = await Equipamento.findAll({ raw: true })
+      const id = equipamentos[equipamentos.length - 1].id
+      const equipamento: any = await sut.consultar(id)
       expect(equipamento).toBeTruthy()
       expect(equipamento.id).toBeTruthy()
       expect(equipamento).toMatchObject(equipamentoFalso)
