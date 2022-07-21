@@ -1,5 +1,6 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
+import { Falha } from './modelo-falha'
 
 const sequelize = AuxiliaresMariaDB.bd
 
@@ -46,3 +47,14 @@ Equipamento.init(
     timestamps: false
   }
 )
+
+Equipamento.hasMany(Falha, {
+  sourceKey: 'id',
+  foreignKey: 'equipamentoId',
+  as: 'equipamento'
+})
+
+Falha.belongsTo(Equipamento, {
+  foreignKey: 'equipamentoId',
+  as: 'equipamento'
+})
