@@ -56,4 +56,14 @@ describe('CadastroDefalhaBD', () => {
     const resposta = sut.inserir(dados)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar a mensagem "Falha cadastrada com sucesso" em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const dados: any = {
+      numFalha: 'numFalha_qualquer',
+      equipamentoId: 'equipamentoId_qualquer'
+    }
+    const resposta = await sut.inserir(dados)
+    expect(resposta).toEqual('Falha cadastrada com sucesso')
+  })
 })
