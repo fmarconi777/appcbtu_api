@@ -45,4 +45,15 @@ describe('CadastroDefalhaBD', () => {
     await sut.inserir(dados)
     expect(inserirSpy).toHaveBeenCalledWith(dadosFalsos())
   })
+
+  test('Deve retornar um erro caso o repositorioFalha retorne um erro', async () => {
+    const { sut, repositorioCadastroFalhaStub } = makeSut()
+    jest.spyOn(repositorioCadastroFalhaStub, 'inserir').mockReturnValueOnce(Promise.reject(new Error()))
+    const dados: any = {
+      numFalha: 'numFalha_qualquer',
+      equipamentoId: 'equipamentoId_qualquer'
+    }
+    const resposta = sut.inserir(dados)
+    await expect(resposta).rejects.toThrow()
+  })
 })
