@@ -9,7 +9,6 @@ export class CadastroDeFalhaBD implements CadastroDeFalha {
     const data = new Date(Date.now() - 10800000).toISOString()
     const dataCriacao = (data.substring(0, 19) + 'Z')
     const falha = Object.assign({}, dados, { dataCriacao })
-    await this.repositorioCadastroFalha.inserir(falha)
-    return await new Promise(resolve => resolve(''))
+    return await this.repositorioCadastroFalha.inserir(falha)
   }
 }
