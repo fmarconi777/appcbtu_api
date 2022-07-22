@@ -168,6 +168,22 @@ describe('Controlador de equipamentos', () => {
       await sut.tratar(requisicaoHttp)
       expect(inserirSpy).toHaveBeenCalledWith(1)
     })
+
+    test('Deve retornar status 404 caso o parametro estacaoId esteja incorreto', async () => {
+      const { sut, validaEstacaoStub } = makeSut()
+      jest.spyOn(validaEstacaoStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'qualquer_nome',
+          tipo: 'qualquer_tipo',
+          estado: 'estado_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'PUT'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId')))
+    })
   })
 
   describe('Método POST', () => {
