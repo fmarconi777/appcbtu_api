@@ -122,6 +122,20 @@ describe('Controlador de equipamentos', () => {
       expect(respostaHttp.status).toBe(400)
       expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('tipo'))
     })
+    test('Deve retornar codigo 400 se um estado não for fornecido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'qualquer_nome',
+          tipo: 'qualquer_tipo',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'PUT'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp.status).toBe(400)
+      expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('estado'))
+    })
   })
 
   describe('Método POST', () => {
