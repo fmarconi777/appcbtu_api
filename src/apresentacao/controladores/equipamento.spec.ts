@@ -152,6 +152,22 @@ describe('Controlador de equipamentos', () => {
       expect(respostaHttp.status).toBe(400)
       expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('estacaoId'))
     })
+
+    test('Deve chamar o validaEstacao com o valor correto', async () => {
+      const { sut, validaEstacaoStub } = makeSut()
+      const inserirSpy = jest.spyOn(validaEstacaoStub, 'validar')
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'qualquer_nome',
+          tipo: 'qualquer_tipo',
+          estado: 'estado_qualquer',
+          estacaoId: '1'
+        },
+        metodo: 'PUT'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(inserirSpy).toHaveBeenCalledWith(1)
+    })
   })
 
   describe('Método POST', () => {
