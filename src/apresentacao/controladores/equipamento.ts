@@ -58,7 +58,10 @@ export class ControladorDeEquipamento implements Controlador {
             return requisicaoImpropria(new ErroFaltaParametro(campo))
           }
         }
-        await this.validaEstacao.validar(+requisicaoHttp.corpo.estacaoId)
+        const estacaoValida = await this.validaEstacao.validar(+requisicaoHttp.corpo.estacaoId)
+        if (!estacaoValida) {
+          return requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId'))
+        }
         return await new Promise(resolve => resolve(resposta('')))
       }
       default:
