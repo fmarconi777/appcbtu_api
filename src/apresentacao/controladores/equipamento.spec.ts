@@ -7,6 +7,7 @@ import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/cons
 import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ValidadorBD } from '../protocolos/validadorBD'
+import { AlteraCadastroDeEquipamento } from '../../dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
 
 const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
   class CadastroDeEquipamentoStub implements CadastroDeEquipamento {
@@ -54,23 +55,35 @@ const makeValidaEstacao = (): ValidadorBD => {
   return new ValidaEstacaoStub()
 }
 
+const makeAlteraCadastroDeEquipamentoStub = (): AlteraCadastroDeEquipamento => {
+  class AlteraCadastroDeEquipamentoStub implements AlteraCadastroDeEquipamento {
+    async alterar (dadosEquipamento: DadosEquipamento): Promise<string> {
+      return await new Promise(resolve => resolve('Cadastro alterado com sucesso'))
+    }
+  }
+  return new AlteraCadastroDeEquipamentoStub()
+}
+
 interface SutTypes {
   sut: ControladorDeEquipamento
   cadastroDeEquipamentoStub: CadastroDeEquipamento
   consultaEquipamentoStub: ConsultaEquipamento
   validaEstacaoStub: ValidadorBD
+  alteraCadastroDeEquipamentoStub: AlteraCadastroDeEquipamento
 }
 
 const makeSut = (): SutTypes => {
+  const alteraCadastroDeEquipamentoStub = makeAlteraCadastroDeEquipamentoStub()
   const validaEstacaoStub = makeValidaEstacao()
   const consultaEquipamentoStub = makeConsultaEquipamentoStub()
   const cadastroDeEquipamentoStub = makeCadastroDeEquipamento()
-  const sut = new ControladorDeEquipamento(cadastroDeEquipamentoStub, consultaEquipamentoStub, validaEstacaoStub)
+  const sut = new ControladorDeEquipamento(cadastroDeEquipamentoStub, consultaEquipamentoStub, validaEstacaoStub, alteraCadastroDeEquipamentoStub)
   return {
     sut,
     cadastroDeEquipamentoStub,
     consultaEquipamentoStub,
-    validaEstacaoStub
+    validaEstacaoStub,
+    alteraCadastroDeEquipamentoStub
   }
 }
 
@@ -198,6 +211,27 @@ describe('Controlador de equipamentos', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId')))
+    })
+
+    test('Deve chamar o alteraCadastroDeEquipamento com os valores corretos', async () => {
+      const { sut, alteraCadastroDeEquipamentoStub } = makeSut()
+      const inserirSpy = jest.spyOn(alteraCadastroDeEquipamentoStub, 'alterar')
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'qualquer_nome',
+          tipo: 'qualquer_tipo',
+          estado: 'estado_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'PUT'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(inserirSpy).toHaveBeenCalledWith({
+        nome: 'qualquer_nome',
+        tipo: 'qualquer_tipo',
+        estado: 'estado_qualquer',
+        estacaoId: 'estacaoId_qualquer'
+      })
     })
   })
 
