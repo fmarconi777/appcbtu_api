@@ -2,7 +2,6 @@ import { ControladorDeEquipamento } from './equipamento'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { CadastroDeEquipamento, DadosEquipamento } from '../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
 import { ModeloEquipamento } from '../../dominio/modelos/equipamento'
-import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
 import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
@@ -169,6 +168,22 @@ describe('Controlador de equipamentos', () => {
       expect(inserirSpy).toHaveBeenCalledWith(1)
     })
 
+    test('Deve retornar codigo 500 se o validaEstacao retornar um erro', async () => {
+      const { sut, validaEstacaoStub } = makeSut()
+      jest.spyOn(validaEstacaoStub, 'validar').mockImplementationOnce(async () => (await new Promise((resolve, reject) => reject(new Error()))))
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'qualquer_nome',
+          tipo: 'qualquer_tipo',
+          estado: 'estado_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'PUT'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
+
     test('Deve retornar status 404 caso o parametro estacaoId esteja incorreto', async () => {
       const { sut, validaEstacaoStub } = makeSut()
       jest.spyOn(validaEstacaoStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
@@ -293,13 +308,9 @@ describe('Controlador de equipamentos', () => {
         estacaoId: 'estacaoId_qualquer'
       })
     })
-    test('Deve retornar codigoo 500 se o CadastroDeEquipamentos retornar um erro', async () => {
+    test('Deve retornar codigo 500 se o CadastroDeEquipamentos retornar um erro', async () => {
       const { sut, cadastroDeEquipamentoStub } = makeSut()
-      const erroFalso = new Error()
-      erroFalso.stack = 'stack_qualquer'
-      jest.spyOn(cadastroDeEquipamentoStub, 'inserir').mockImplementationOnce(async () => {
-        return await new Promise((resolve, reject) => reject(erroFalso))
-      })
+      jest.spyOn(cadastroDeEquipamentoStub, 'inserir').mockImplementationOnce(async () => (await new Promise((resolve, reject) => reject(new Error()))))
       const requisicaoHttp = {
         corpo: {
           nome: 'qualquer_nome',
@@ -310,8 +321,7 @@ describe('Controlador de equipamentos', () => {
         metodo: 'POST'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp.status).toBe(500)
-      expect(respostaHttp.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
     test('Deve retornar codigoo 200 se dados válidos forem passados', async () => {
       const { sut } = makeSut()
