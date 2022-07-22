@@ -50,6 +50,16 @@ export class ControladorDeEquipamento implements Controlador {
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
+      case 'PUT':
+      {
+        const camposRequeridos = ['nome', 'tipo', 'estado', 'estacaoId']
+        for (const campo of camposRequeridos) {
+          if(!requisicaoHttp.corpo[campo]) { // eslint-disable-line
+            return requisicaoImpropria(new ErroFaltaParametro(campo))
+          }
+        }
+        return await new Promise(resolve => resolve(resposta('')))
+      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
