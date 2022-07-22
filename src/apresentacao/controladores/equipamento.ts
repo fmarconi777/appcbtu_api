@@ -51,19 +51,21 @@ export class ControladorDeEquipamento implements Controlador {
           return erroDeServidor(erro)
         }
       case 'PUT':
-      {
-        const camposRequeridos = ['nome', 'tipo', 'estado', 'estacaoId']
-        for (const campo of camposRequeridos) {
-          if(!requisicaoHttp.corpo[campo]) { // eslint-disable-line
-            return requisicaoImpropria(new ErroFaltaParametro(campo))
+        try {
+          const camposRequeridos = ['nome', 'tipo', 'estado', 'estacaoId']
+          for (const campo of camposRequeridos) {
+            if(!requisicaoHttp.corpo[campo]) { // eslint-disable-line
+              return requisicaoImpropria(new ErroFaltaParametro(campo))
+            }
           }
+          const estacaoValida = await this.validaEstacao.validar(+requisicaoHttp.corpo.estacaoId)
+          if (!estacaoValida) {
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId'))
+          }
+          return await new Promise(resolve => resolve(resposta('')))
+        } catch (erro: any) {
+          return erroDeServidor(erro)
         }
-        const estacaoValida = await this.validaEstacao.validar(+requisicaoHttp.corpo.estacaoId)
-        if (!estacaoValida) {
-          return requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId'))
-        }
-        return await new Promise(resolve => resolve(resposta('')))
-      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
