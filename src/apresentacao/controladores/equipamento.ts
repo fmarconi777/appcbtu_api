@@ -64,8 +64,8 @@ export class ControladorDeEquipamento implements Controlador {
           if (!estacaoValida) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId'))
           }
-          await this.alteraCadastroDeEquipamento.alterar(requisicaoHttp.corpo)
-          return await new Promise(resolve => resolve(resposta('')))
+          const equipamento = await this.alteraCadastroDeEquipamento.alterar(requisicaoHttp.corpo)
+          return resposta(equipamento)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
