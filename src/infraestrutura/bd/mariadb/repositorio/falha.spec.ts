@@ -1,4 +1,5 @@
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
+import { Falha } from '../models/modelo-falha'
 import { RepositorioFalhaMariaDB } from './falha'
 
 describe('RepositorioFalhaMariaDB', () => {
@@ -13,7 +14,7 @@ describe('RepositorioFalhaMariaDB', () => {
   })
 
   beforeEach(async () => {
-    // await Falha.destroy({ truncate: true, cascade: false })
+    await Falha.destroy({ truncate: true, cascade: false })
   })
 
   const dadosFalsos = {
