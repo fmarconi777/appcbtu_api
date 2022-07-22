@@ -249,6 +249,22 @@ describe('Controlador de equipamentos', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
+
+    test('Deve retornar codigo 200 se dados válidos forem passados', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'qualquer_nome',
+          tipo: 'qualquer_tipo',
+          estado: 'estado_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'PUT'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp.status).toBe(200)
+      expect(respostaHttp.corpo).toEqual('Cadastro alterado com sucesso')
+    })
   })
 
   describe('Método POST', () => {
@@ -388,7 +404,7 @@ describe('Controlador de equipamentos', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
-    test('Deve retornar codigoo 200 se dados válidos forem passados', async () => {
+    test('Deve retornar codigo 200 se dados válidos forem passados', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
