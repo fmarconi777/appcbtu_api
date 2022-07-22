@@ -28,5 +28,16 @@ describe('Rotas falha', () => {
         })
         .expect(403)
     })
+
+    test('Deve retornar status 403 ao adicionar uma falha com authorization sem token de acesso', async () => {
+      await request(app)
+        .post('/falha')
+        .set('authorization', 'Bearer ')
+        .send({
+          numFalha: '1234',
+          equipamentoId: '1'
+        })
+        .expect(403)
+    })
   })
 })
