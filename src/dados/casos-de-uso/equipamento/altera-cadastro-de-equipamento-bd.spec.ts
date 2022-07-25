@@ -84,4 +84,10 @@ describe('AlteraCadastroDeEquipamentoBD', () => {
     const resposta = sut.alterar(dadosFalsos)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar a mensagem "Cadastro alterado com sucesso" em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const resposta = await sut.alterar(dadosFalsos)
+    expect(resposta).toEqual('Cadastro alterado com sucesso')
+  })
 })
