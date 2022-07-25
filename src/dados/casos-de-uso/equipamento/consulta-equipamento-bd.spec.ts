@@ -12,7 +12,7 @@ const dadosFalsos = {
 
 const makeRepositorioConsultaEquipamento = (): RepositorioConsultaEquipamento => {
   class RepositorioConsultaEquipamentoStub implements RepositorioConsultaEquipamento {
-    async consultar (id?: number): Promise<ModeloEquipamento | ModeloEquipamento[] | string> {
+    async consultar (id?: number): Promise<ModeloEquipamento | ModeloEquipamento[] | null> {
       if (id) { // eslint-disable-line
         return await new Promise(resolve => resolve(dadosFalsos))
       }
@@ -63,13 +63,11 @@ describe('ConsultaEquipamentoBD', () => {
     expect(resposta).toEqual(dadosFalsos)
   })
 
-  test('Deve retornar a mensagem "Equipamento não cadastrado" caso um parametro não cadastrado seja fornecido', async () => {
+  test('Deve retornar null caso um parametro não cadastrado seja fornecido', async () => {
     const { sut, repositorioConsultaEquipamentoStub } = makeSut()
-    jest.spyOn(repositorioConsultaEquipamentoStub, 'consultar').mockImplementationOnce(async () => {
-      return await new Promise(resolve => resolve('Equipamento não cadastrado'))
-    })
+    jest.spyOn(repositorioConsultaEquipamentoStub, 'consultar').mockReturnValueOnce(Promise.resolve(null))
     const resposta = await sut.consultar(1)
-    expect(resposta).toEqual('Equipamento não cadastrado')
+    expect(resposta).toBeNull()
   })
 
   test('Deve retornar um erro caso RepositorioConsultaEquipamento retorne um erro no método consultar', async () => {

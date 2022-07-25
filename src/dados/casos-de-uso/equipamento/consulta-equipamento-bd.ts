@@ -9,7 +9,7 @@ export class ConsultaEquipamentoBD implements ConsultaEquipamento {
     return await this.repositorioConsultaEquipamento.consultar()
   }
 
-  async consultar (id: number): Promise<string | ModeloEquipamento> {
+  async consultar (id: number): Promise<null | ModeloEquipamento> {
     return await this.repositorioConsultaEquipamento.consultar(id)
   }
 }

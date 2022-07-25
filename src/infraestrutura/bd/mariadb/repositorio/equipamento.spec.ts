@@ -54,11 +54,11 @@ describe('Repositorio mariaDB Equipamento', () => {
       expect(equipamento).toMatchObject(equipamentoFalso)
     })
 
-    test('Deve retornar a mensagem "Equipamento não cadastrado" caso um parametro não cadastrado seja fornecido', async () => {
+    test('Deve retornar null caso um parametro não cadastrado seja fornecido', async () => {
       const sut = new RepositorioEquipamentoMariaDB()
       await sut.inserir(equipamentoFalso)
       const equipamento: any = await sut.consultar(1301)
-      expect(equipamento).toEqual('Equipamento não cadastrado')
+      expect(equipamento).toBeNull()
     })
   })
 })
