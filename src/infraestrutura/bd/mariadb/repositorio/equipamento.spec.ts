@@ -13,6 +13,16 @@ describe('Repositorio mariaDB Equipamento', () => {
     console.log('conexão fechada')
   })
 
+  afterEach(async () => {
+    const equipamentos = await Equipamento.findAll({ raw: true })
+    await Equipamento.destroy({
+      where: {
+        id: equipamentos[equipamentos.length - 1].id
+      },
+      cascade: true
+    })
+  })
+
   const equipamentoFalso = {
     nome: 'nome_valido',
     tipo: 'tipo_valido',
@@ -59,6 +69,23 @@ describe('Repositorio mariaDB Equipamento', () => {
       await sut.inserir(equipamentoFalso)
       const equipamento: any = await sut.consultar(1301)
       expect(equipamento).toBeNull()
+    })
+  })
+
+  describe('Método alterar', () => {
+    test('Deve reotornar a mensagem "Cadastro alterado com sucesso" em caso de sucesso', async () => {
+      const sut = new RepositorioEquipamentoMariaDB()
+      await sut.inserir(equipamentoFalso)
+      const equipamentos = await Equipamento.findAll({ raw: true })
+      const equipamentoAlterado = {
+        id: (equipamentos[equipamentos.length - 1].id).toString(),
+        nome: 'nome_alterado',
+        tipo: 'tipo_alterado',
+        estado: '1',
+        estacaoId: '1'
+      }
+      const resposta = await sut.alterar(equipamentoAlterado)
+      expect(resposta).toEqual('Cadastro alterado com sucesso')
     })
   })
 })
