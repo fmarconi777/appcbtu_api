@@ -1,5 +1,5 @@
-import { DadosEquipamento } from './cadastro-de-equipamento'
+import { ModeloEquipamento } from '../../modelos/equipamento'
 
 export interface AlteraCadastroDeEquipamento {
-  alterar: (dadosEquipamento: DadosEquipamento) => Promise<string>
+  alterar: (dadosEquipamento: ModeloEquipamento) => Promise<string>
 }
