@@ -54,7 +54,7 @@ export class ControladorDeEquipamento implements Controlador {
         }
       case 'PUT':
         try {
-          const camposRequeridos = ['nome', 'tipo', 'estado', 'estacaoId']
+          const camposRequeridos = ['id', 'nome', 'tipo', 'estado', 'estacaoId']
           for (const campo of camposRequeridos) {
             if(!requisicaoHttp.corpo[campo]) { // eslint-disable-line
               return requisicaoImpropria(new ErroFaltaParametro(campo))
