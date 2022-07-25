@@ -73,7 +73,7 @@ describe('Repositorio mariaDB Equipamento', () => {
   })
 
   describe('Método alterar', () => {
-    test('Deve reotornar a mensagem "Cadastro alterado com sucesso" em caso de sucesso', async () => {
+    test('Deve retornar a mensagem "Cadastro alterado com sucesso" em caso de sucesso', async () => {
       const sut = new RepositorioEquipamentoMariaDB()
       await sut.inserir(equipamentoFalso)
       const equipamentos = await Equipamento.findAll({ raw: true })

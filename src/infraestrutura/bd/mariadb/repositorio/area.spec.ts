@@ -89,11 +89,5 @@ describe('RepositorioAreaMariaDB', () => {
       expect(resposta).toBe('Área alterada com sucesso')
       await Area.destroy({ where: { nome: 'AREA_ALTERADA' } })
     })
-
-    test('Deve retornar a mensagem "Erro ao alterar área" em caso de falha', async () => {
-      const sut = makeSut()
-      const resposta = await sut.alterar('AREA_ALTERADA', 'AREA_INEXISTENTE')
-      expect(resposta).toBe('Erro ao alterar área')
-    })
   })
 })

@@ -45,7 +45,7 @@ RepositorioAlteraArea {
 
   async alterar (nome: string, parametro: string): Promise<string> {
     AuxiliaresMariaDB.verificaConexao()
-    const area = await Area.update({ nome }, { where: { nome: parametro } })
-    return area[0] ? 'Área alterada com sucesso' : 'Erro ao alterar área' //eslint-disable-line
+    await Area.update({ nome }, { where: { nome: parametro } })
+    return 'Área alterada com sucesso'
   }
 }
