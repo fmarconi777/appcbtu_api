@@ -10,8 +10,10 @@ export class AlteraCadastroDeEquipamentoBD implements AlteraCadastroDeEquipament
   ) {}
 
   async alterar (dadosEquipamento: ModeloEquipamento): Promise<string | null> {
-    await this.repositorioConsultaEquipamento.consultar(+dadosEquipamento.id)
-    await this.repositorioAlteraCadastroDeEquipamento.alterar(dadosEquipamento)
-    return await new Promise(resolve => resolve(''))
+    const equipamento = await this.repositorioConsultaEquipamento.consultar(+dadosEquipamento.id)
+    if (equipamento) { // eslint-disable-line
+      await this.repositorioAlteraCadastroDeEquipamento.alterar(dadosEquipamento)
+    }
+    return equipamento
   }
 }
