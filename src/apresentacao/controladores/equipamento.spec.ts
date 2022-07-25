@@ -57,7 +57,7 @@ const makeValidaEstacao = (): ValidadorBD => {
 
 const makeAlteraCadastroDeEquipamentoStub = (): AlteraCadastroDeEquipamento => {
   class AlteraCadastroDeEquipamentoStub implements AlteraCadastroDeEquipamento {
-    async alterar (dadosEquipamento: DadosEquipamento): Promise<string> {
+    async alterar (dadosEquipamento: ModeloEquipamento): Promise<string> {
       return await new Promise(resolve => resolve('Cadastro alterado com sucesso'))
     }
   }
@@ -105,10 +105,27 @@ describe('Controlador de equipamentos', () => {
   })
 
   describe('Método PUT', () => {
+    test('Deve retornar codigo 400 se um id não for fornecido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'qualquer_tipo',
+          tipo: 'qualquer_tipo',
+          estado: 'estado_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'PUT'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp.status).toBe(400)
+      expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('id'))
+    })
+
     test('Deve retornar codigo 400 se um nome não for fornecido', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
+          id: 'id_qualquer',
           tipo: 'qualquer_tipo',
           estado: 'estado_qualquer',
           estacaoId: 'estacaoId_qualquer'
@@ -124,6 +141,7 @@ describe('Controlador de equipamentos', () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
+          id: 'id_qualquer',
           nome: 'qualquer_tipo',
           estado: 'estado_qualquer',
           estacaoId: 'estacaoId_qualquer'
@@ -139,6 +157,7 @@ describe('Controlador de equipamentos', () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
+          id: 'id_qualquer',
           nome: 'qualquer_nome',
           tipo: 'qualquer_tipo',
           estacaoId: 'estacaoId_qualquer'
@@ -154,6 +173,7 @@ describe('Controlador de equipamentos', () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
+          id: 'id_qualquer',
           nome: 'qualquer_nome',
           tipo: 'qualquer_tipo',
           estado: 'estado_qualquer'
@@ -170,6 +190,7 @@ describe('Controlador de equipamentos', () => {
       const inserirSpy = jest.spyOn(validaEstacaoStub, 'validar')
       const requisicaoHttp = {
         corpo: {
+          id: 'id_qualquer',
           nome: 'qualquer_nome',
           tipo: 'qualquer_tipo',
           estado: 'estado_qualquer',
@@ -185,12 +206,7 @@ describe('Controlador de equipamentos', () => {
       const { sut, validaEstacaoStub } = makeSut()
       jest.spyOn(validaEstacaoStub, 'validar').mockImplementationOnce(async () => (await new Promise((resolve, reject) => reject(new Error()))))
       const requisicaoHttp = {
-        corpo: {
-          nome: 'qualquer_nome',
-          tipo: 'qualquer_tipo',
-          estado: 'estado_qualquer',
-          estacaoId: 'estacaoId_qualquer'
-        },
+        corpo: dadosFalsos,
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -201,12 +217,7 @@ describe('Controlador de equipamentos', () => {
       const { sut, validaEstacaoStub } = makeSut()
       jest.spyOn(validaEstacaoStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
       const requisicaoHttp = {
-        corpo: {
-          nome: 'qualquer_nome',
-          tipo: 'qualquer_tipo',
-          estado: 'estado_qualquer',
-          estacaoId: 'estacaoId_qualquer'
-        },
+        corpo: dadosFalsos,
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -217,33 +228,18 @@ describe('Controlador de equipamentos', () => {
       const { sut, alteraCadastroDeEquipamentoStub } = makeSut()
       const inserirSpy = jest.spyOn(alteraCadastroDeEquipamentoStub, 'alterar')
       const requisicaoHttp = {
-        corpo: {
-          nome: 'qualquer_nome',
-          tipo: 'qualquer_tipo',
-          estado: 'estado_qualquer',
-          estacaoId: 'estacaoId_qualquer'
-        },
+        corpo: dadosFalsos,
         metodo: 'PUT'
       }
       await sut.tratar(requisicaoHttp)
-      expect(inserirSpy).toHaveBeenCalledWith({
-        nome: 'qualquer_nome',
-        tipo: 'qualquer_tipo',
-        estado: 'estado_qualquer',
-        estacaoId: 'estacaoId_qualquer'
-      })
+      expect(inserirSpy).toHaveBeenCalledWith(dadosFalsos)
     })
 
     test('Deve retornar codigo 500 se o alteraCadastroDeEquipamento retornar um erro', async () => {
       const { sut, alteraCadastroDeEquipamentoStub } = makeSut()
       jest.spyOn(alteraCadastroDeEquipamentoStub, 'alterar').mockImplementationOnce(async () => (await new Promise((resolve, reject) => reject(new Error()))))
       const requisicaoHttp = {
-        corpo: {
-          nome: 'qualquer_nome',
-          tipo: 'qualquer_tipo',
-          estado: 'estado_qualquer',
-          estacaoId: 'estacaoId_qualquer'
-        },
+        corpo: dadosFalsos,
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -253,12 +249,7 @@ describe('Controlador de equipamentos', () => {
     test('Deve retornar codigo 200 se dados válidos forem passados', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
-        corpo: {
-          nome: 'qualquer_nome',
-          tipo: 'qualquer_tipo',
-          estado: 'estado_qualquer',
-          estacaoId: 'estacaoId_qualquer'
-        },
+        corpo: dadosFalsos,
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
