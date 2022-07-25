@@ -57,7 +57,7 @@ const makeValidaEstacao = (): ValidadorBD => {
 
 const makeAlteraCadastroDeEquipamentoStub = (): AlteraCadastroDeEquipamento => {
   class AlteraCadastroDeEquipamentoStub implements AlteraCadastroDeEquipamento {
-    async alterar (dadosEquipamento: ModeloEquipamento): Promise<string> {
+    async alterar (dadosEquipamento: ModeloEquipamento): Promise<string | null> {
       return await new Promise(resolve => resolve('Cadastro alterado com sucesso'))
     }
   }
@@ -244,6 +244,17 @@ describe('Controlador de equipamentos', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
+
+    test('Deve retornar codigo 404 se o alteraCadastroDeEquipamento retornar null', async () => {
+      const { sut, alteraCadastroDeEquipamentoStub } = makeSut()
+      jest.spyOn(alteraCadastroDeEquipamentoStub, 'alterar').mockReturnValueOnce(Promise.resolve(null))
+      const requisicaoHttp = {
+        corpo: dadosFalsos,
+        metodo: 'PUT'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
     })
 
     test('Deve retornar codigo 200 se dados válidos forem passados', async () => {
