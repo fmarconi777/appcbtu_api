@@ -13,7 +13,7 @@ const dadosFalsos = {
 
 const makeRepositorioAlteraCadastroDeEquipamentoStub = (): RepositorioAlteraCadastroDeEquipamento => {
   class RepositorioAlteraCadastroDeEquipamentoStub implements RepositorioAlteraCadastroDeEquipamento {
-    async alterar (dadosEquipamento: ModeloEquipamento): Promise<string | null> {
+    async alterar (dadosEquipamento: ModeloEquipamento): Promise<string> {
       return await new Promise(resolve => resolve('Cadastro alterado com sucesso'))
     }
   }

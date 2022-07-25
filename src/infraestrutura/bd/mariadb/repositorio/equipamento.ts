@@ -3,8 +3,12 @@ import { Equipamento } from '../models/modelo-equipamento'
 import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { RepositorioConsultaEquipamento } from '../../../../dados/protocolos/bd/equipamento/repositorio-consulta-equipamento'
+import { RepositorioAlteraCadastroDeEquipamento } from '../../../../dados/protocolos/bd/equipamento/repositorio-altera-cadastro-de-equipamento'
 
-export class RepositorioEquipamentoMariaDB implements RepositorioEquipamento, RepositorioConsultaEquipamento {
+export class RepositorioEquipamentoMariaDB implements
+RepositorioEquipamento,
+RepositorioConsultaEquipamento,
+RepositorioAlteraCadastroDeEquipamento {
   async inserir (dadosEquipamento: DadosEquipamento): Promise<ModeloEquipamento> {
     AuxiliaresMariaDB.verificaConexao()
     const equipamento = await Equipamento.create(this.transformaDados(dadosEquipamento))
@@ -18,6 +22,12 @@ export class RepositorioEquipamentoMariaDB implements RepositorioEquipamento, Re
       return equipamento ? FuncoesAuxiliares.mapeadorDeDados(equipamento) : null // eslint-disable-line
     }
     return await Equipamento.findAll()
+  }
+
+  async alterar (dadosEquipamento: ModeloEquipamento): Promise<string> {
+    AuxiliaresMariaDB.verificaConexao()
+    await Equipamento.update(this.transformaDados(dadosEquipamento), { where: { id: +dadosEquipamento.id } })
+    return 'Cadastro alterado com sucesso'
   }
 
   private transformaDados (dadosEquipamento: DadosEquipamento): any {
