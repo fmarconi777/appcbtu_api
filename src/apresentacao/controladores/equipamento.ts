@@ -31,6 +31,9 @@ export class ControladorDeEquipamento implements Controlador {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
           const equipamento = await this.consultaEquipamento.consultar(+parametro)
+          if (!equipamento) { // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+          }
           return resposta(equipamento)
         } catch (erro: any) {
           return erroDeServidor(erro)
