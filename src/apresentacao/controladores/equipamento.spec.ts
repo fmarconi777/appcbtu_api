@@ -39,7 +39,7 @@ const makeConsultaEquipamentoStub = (): ConsultaEquipamento => {
       return await new Promise(resolve => resolve([dadosFalsos]))
     }
 
-    async consultar (id: number): Promise<ModeloEquipamento | string> {
+    async consultar (id: number): Promise<ModeloEquipamento | null> {
       return await new Promise(resolve => resolve(dadosFalsos))
     }
   }
@@ -481,16 +481,15 @@ describe('Controlador de equipamentos', () => {
       expect(resposta.corpo).toEqual(dadosFalsos)
     })
 
-    test('Deve retornar a mensagem "Equipamento não cadastrado" caso um parametro não cadastrado seja fornecido', async () => {
+    test('Deve retornar 404 se o método consultar retornar null', async () => {
       const { sut, consultaEquipamentoStub } = makeSut()
-      jest.spyOn(consultaEquipamentoStub, 'consultar').mockReturnValueOnce(new Promise(resolve => resolve('Equipamento não cadastrado')))
+      jest.spyOn(consultaEquipamentoStub, 'consultar').mockReturnValueOnce(Promise.resolve(null))
       const requisicaoHttp = {
         parametro: '1',
         metodo: 'GET'
       }
       const resposta = await sut.tratar(requisicaoHttp)
-      expect(resposta.status).toBe(200)
-      expect(resposta.corpo).toEqual('Equipamento não cadastrado')
+      expect(resposta).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
     })
 
     test('Deve retornar status 500 caso o método consultar retorne um erro', async () => {
