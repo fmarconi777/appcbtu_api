@@ -9,10 +9,10 @@ export class RepositorioEquipamentoMariaDB implements
 RepositorioEquipamento,
 RepositorioConsultaEquipamento,
 RepositorioAlteraCadastroDeEquipamento {
-  async inserir (dadosEquipamento: DadosEquipamento): Promise<ModeloEquipamento> {
+  async inserir (dadosEquipamento: DadosEquipamento): Promise<string> {
     AuxiliaresMariaDB.verificaConexao()
-    const equipamento = await Equipamento.create(this.transformaDados(dadosEquipamento))
-    return FuncoesAuxiliares.mapeadorDeDados(equipamento)
+    await Equipamento.create(this.transformaDados(dadosEquipamento))
+    return 'Equipamento cadastrado com sucesso'
   }
 
   async consultar (id?: number | undefined): Promise<ModeloEquipamento | ModeloEquipamento[] | any> {

@@ -4,5 +4,5 @@ import { ModeloEquipamento } from '../../../../dominio/modelos/equipamento'
 export { DadosEquipamento, ModeloEquipamento }
 
 export interface RepositorioEquipamento {
-  inserir: (inserirModeloEquipamento: DadosEquipamento) => Promise<ModeloEquipamento>
+  inserir: (inserirModeloEquipamento: DadosEquipamento) => Promise<string>
 }

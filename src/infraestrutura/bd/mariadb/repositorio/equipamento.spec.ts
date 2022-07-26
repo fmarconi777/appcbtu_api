@@ -31,15 +31,10 @@ describe('Repositorio mariaDB Equipamento', () => {
   }
 
   describe('Método inserir', () => {
-    test('Deve retornar um equipamento em caso de sucesso', async () => {
+    test('Deve retornar a mensagem "Equipamento cadastrado com sucesso" em caso de sucesso', async () => {
       const sut = new RepositorioEquipamentoMariaDB()
       const equipamento = await sut.inserir(equipamentoFalso)
-      expect(equipamento).toBeTruthy()
-      expect(equipamento.id).toBeTruthy()
-      expect(equipamento.nome).toBe('nome_valido')
-      expect(equipamento.tipo).toBe('tipo_valido')
-      expect(equipamento.estado).toBe('1')
-      expect(equipamento.estacaoId).toBe('1')
+      expect(equipamento).toEqual('Equipamento cadastrado com sucesso')
     })
   })
 
@@ -67,7 +62,7 @@ describe('Repositorio mariaDB Equipamento', () => {
     test('Deve retornar null caso um parametro não cadastrado seja fornecido', async () => {
       const sut = new RepositorioEquipamentoMariaDB()
       await sut.inserir(equipamentoFalso)
-      const equipamento: any = await sut.consultar(1301)
+      const equipamento: any = await sut.consultar(130100000000000)
       expect(equipamento).toBeNull()
     })
   })
