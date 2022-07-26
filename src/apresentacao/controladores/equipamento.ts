@@ -66,7 +66,8 @@ export class ControladorDeEquipamento implements Controlador {
           if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
-          const equipamento = await this.alteraCadastroDeEquipamento.alterar(requisicaoHttp.corpo)
+          const dados = Object.assign({}, { id: parametro }, requisicaoHttp.corpo)
+          const equipamento = await this.alteraCadastroDeEquipamento.alterar(dados)
           if (equipamento.invalido) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido(equipamento.parametro))
           }
