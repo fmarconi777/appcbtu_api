@@ -6,20 +6,12 @@ import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
 import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { ValidadorBD } from '../protocolos/validadorBD'
 import { AlteraCadastroDeEquipamento, EquipamentoValido } from '../../dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
 
 const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
   class CadastroDeEquipamentoStub implements CadastroDeEquipamento {
-    async inserir (dadosEquipamento: DadosEquipamento): Promise<ModeloEquipamento> {
-      const equipamentoFalso = {
-        id: 'qualquer_id',
-        nome: dadosEquipamento.nome,
-        tipo: dadosEquipamento.tipo,
-        estado: dadosEquipamento.estado,
-        estacaoId: dadosEquipamento.estacaoId
-      }
-      return await new Promise(resolve => resolve(equipamentoFalso))
+    async inserir (dadosEquipamento: DadosEquipamento): Promise<string | boolean> {
+      return await new Promise(resolve => resolve('Equipamento cadastrado com sucesso'))
     }
   }
   return new CadastroDeEquipamentoStub()
@@ -46,15 +38,6 @@ const makeConsultaEquipamentoStub = (): ConsultaEquipamento => {
   return new ConsultaEquipamentoStub()
 }
 
-const makeValidaEstacao = (): ValidadorBD => {
-  class ValidaEstacaoStub implements ValidadorBD {
-    async validar (parametro: string): Promise<boolean> {
-      return await new Promise(resolve => resolve(true))
-    }
-  }
-  return new ValidaEstacaoStub()
-}
-
 const makeAlteraCadastroDeEquipamentoStub = (): AlteraCadastroDeEquipamento => {
   class AlteraCadastroDeEquipamentoStub implements AlteraCadastroDeEquipamento {
     async alterar (dadosEquipamento: ModeloEquipamento): Promise<EquipamentoValido> {
@@ -72,21 +55,18 @@ interface SutTypes {
   sut: ControladorDeEquipamento
   cadastroDeEquipamentoStub: CadastroDeEquipamento
   consultaEquipamentoStub: ConsultaEquipamento
-  validaEstacaoStub: ValidadorBD
   alteraCadastroDeEquipamentoStub: AlteraCadastroDeEquipamento
 }
 
 const makeSut = (): SutTypes => {
   const alteraCadastroDeEquipamentoStub = makeAlteraCadastroDeEquipamentoStub()
-  const validaEstacaoStub = makeValidaEstacao()
   const consultaEquipamentoStub = makeConsultaEquipamentoStub()
   const cadastroDeEquipamentoStub = makeCadastroDeEquipamento()
-  const sut = new ControladorDeEquipamento(cadastroDeEquipamentoStub, consultaEquipamentoStub, validaEstacaoStub, alteraCadastroDeEquipamentoStub)
+  const sut = new ControladorDeEquipamento(cadastroDeEquipamentoStub, consultaEquipamentoStub, alteraCadastroDeEquipamentoStub)
   return {
     sut,
     cadastroDeEquipamentoStub,
     consultaEquipamentoStub,
-    validaEstacaoStub,
     alteraCadastroDeEquipamentoStub
   }
 }
@@ -307,51 +287,6 @@ describe('Controlador de equipamentos', () => {
       expect(respostaHttp.status).toBe(400)
       expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('estacaoId'))
     })
-    test('Deve chamar o validaEstacao com o valor correto', async () => {
-      const { sut, validaEstacaoStub } = makeSut()
-      const inserirSpy = jest.spyOn(validaEstacaoStub, 'validar')
-      const requisicaoHttp = {
-        corpo: {
-          nome: 'qualquer_nome',
-          tipo: 'qualquer_tipo',
-          estado: 'estado_qualquer',
-          estacaoId: '1'
-        },
-        metodo: 'POST'
-      }
-      await sut.tratar(requisicaoHttp)
-      expect(inserirSpy).toHaveBeenCalledWith(1)
-    })
-    test('Deve retornar codigo 500 se o validaEstacao retornar um erro', async () => {
-      const { sut, validaEstacaoStub } = makeSut()
-      jest.spyOn(validaEstacaoStub, 'validar').mockImplementationOnce(async () => (await new Promise((resolve, reject) => reject(new Error()))))
-      const requisicaoHttp = {
-        corpo: {
-          nome: 'qualquer_nome',
-          tipo: 'qualquer_tipo',
-          estado: 'estado_qualquer',
-          estacaoId: 'estacaoId_qualquer'
-        },
-        metodo: 'POST'
-      }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
-    })
-    test('Deve retornar status 404 caso o parametro estacaoId esteja incorreto', async () => {
-      const { sut, validaEstacaoStub } = makeSut()
-      jest.spyOn(validaEstacaoStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
-      const requisicaoHttp = {
-        corpo: {
-          nome: 'qualquer_nome',
-          tipo: 'qualquer_tipo',
-          estado: 'estado_qualquer',
-          estacaoId: 'estacaoId_qualquer'
-        },
-        metodo: 'POST'
-      }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId')))
-    })
     test('Deve chamar o CadastroDeEquipamento com os valores corretos', async () => {
       const { sut, cadastroDeEquipamentoStub } = makeSut()
       const inserirSpy = jest.spyOn(cadastroDeEquipamentoStub, 'inserir')
@@ -372,6 +307,21 @@ describe('Controlador de equipamentos', () => {
         estacaoId: 'estacaoId_qualquer'
       })
     })
+    test('Deve retornar status 404 caso o CadastroDeEquipamento retorne false', async () => {
+      const { sut, cadastroDeEquipamentoStub } = makeSut()
+      jest.spyOn(cadastroDeEquipamentoStub, 'inserir').mockReturnValueOnce(Promise.resolve(false))
+      const requisicaoHttp = {
+        corpo: {
+          nome: 'qualquer_nome',
+          tipo: 'qualquer_tipo',
+          estado: 'estado_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId')))
+    })
     test('Deve retornar codigo 500 se o CadastroDeEquipamentos retornar um erro', async () => {
       const { sut, cadastroDeEquipamentoStub } = makeSut()
       jest.spyOn(cadastroDeEquipamentoStub, 'inserir').mockImplementationOnce(async () => (await new Promise((resolve, reject) => reject(new Error()))))
@@ -387,7 +337,7 @@ describe('Controlador de equipamentos', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
-    test('Deve retornar codigo 200 se dados válidos forem passados', async () => {
+    test('Deve retornar codigo 200 e a mensagem  se dados válidos forem passados', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
@@ -400,13 +350,7 @@ describe('Controlador de equipamentos', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(200)
-      expect(respostaHttp.corpo).toEqual({
-        id: 'qualquer_id',
-        nome: 'qualquer_nome',
-        tipo: 'qualquer_tipo',
-        estado: 'estado_qualquer',
-        estacaoId: 'estacaoId_qualquer'
-      })
+      expect(respostaHttp.corpo).toEqual('Equipamento cadastrado com sucesso')
     })
   })
 

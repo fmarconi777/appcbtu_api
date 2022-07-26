@@ -6,14 +6,12 @@ import { CadastroDeEquipamento } from '../../dominio/casos-de-uso/equipamento/ca
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { ValidadorBD } from '../protocolos/validadorBD'
 import { AlteraCadastroDeEquipamento } from '../../dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
 
 export class ControladorDeEquipamento implements Controlador {
   constructor (
     private readonly cadastroDeEquipamento: CadastroDeEquipamento,
     private readonly consultaEquipamento: ConsultaEquipamento,
-    private readonly validaEstacao: ValidadorBD,
     private readonly alteraCadastroDeEquipamento: AlteraCadastroDeEquipamento
   ) {}
 
@@ -46,11 +44,10 @@ export class ControladorDeEquipamento implements Controlador {
               return requisicaoImpropria(new ErroFaltaParametro(campo))
             }
           }
-          const estacaoValida = await this.validaEstacao.validar(+requisicaoHttp.corpo.estacaoId)
-          if (!estacaoValida) {
+          const equipamento = await this.cadastroDeEquipamento.inserir(requisicaoHttp.corpo)
+          if (!equipamento) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId'))
           }
-          const equipamento = await this.cadastroDeEquipamento.inserir(requisicaoHttp.corpo)
           return resposta(equipamento)
         } catch (erro: any) {
           return erroDeServidor(erro)
