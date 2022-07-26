@@ -12,13 +12,13 @@ import { AlteraCadastroDeEquipamentoBD } from '../../dados/casos-de-uso/equipame
 
 export const criaControladorDeEquipamento = (): Controlador => {
   const repositorioEquipamento = new RepositorioEquipamentoMariaDB()
-  const cadastroDeEquipamento = new CadastroDeEquipamentoBd(repositorioEquipamento)
   const consultaEquipamentoBD = new ConsultaEquipamentoBD(repositorioEquipamento)
   const repositorioEstacao = new RepositorioEstacaoMariaDB()
   const consultaEstacao = new ConsultaEstacaoBD(repositorioEstacao)
   const validadorDeEstacao = new ValidadorDeEstacao(consultaEstacao)
+  const cadastroDeEquipamento = new CadastroDeEquipamentoBd(repositorioEquipamento, validadorDeEstacao)
   const alteraCadastroDeEquipamentoBD = new AlteraCadastroDeEquipamentoBD(repositorioEquipamento, repositorioEquipamento, validadorDeEstacao)
-  const controladorDeEquipamento = new ControladorDeEquipamento(cadastroDeEquipamento, consultaEquipamentoBD, validadorDeEstacao, alteraCadastroDeEquipamentoBD)
+  const controladorDeEquipamento = new ControladorDeEquipamento(cadastroDeEquipamento, consultaEquipamentoBD, alteraCadastroDeEquipamentoBD)
   const repositorioLogDeErro = new RepositorioLogDeErroMariaDB()
   return new DecoradorControladorLog(controladorDeEquipamento, repositorioLogDeErro)
 }
