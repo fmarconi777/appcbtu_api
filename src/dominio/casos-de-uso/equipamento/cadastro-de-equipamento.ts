@@ -1,5 +1,3 @@
-import { ModeloEquipamento } from '../../modelos/equipamento'
-
 export interface DadosEquipamento {
   nome: string
   tipo: string
@@ -8,5 +6,5 @@ export interface DadosEquipamento {
 }
 
 export interface CadastroDeEquipamento {
-  inserir: (equipamento: DadosEquipamento) => Promise<ModeloEquipamento>
+  inserir: (equipamento: DadosEquipamento) => Promise<string | boolean>
 }
