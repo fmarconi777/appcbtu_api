@@ -1,3 +1,4 @@
+import { ValidadorBD } from '../../../apresentacao/protocolos/validadorBD'
 import { ModeloEquipamento } from '../../../dominio/modelos/equipamento'
 import { RepositorioAlteraCadastroDeEquipamento } from '../../protocolos/bd/equipamento/repositorio-altera-cadastro-de-equipamento'
 import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
@@ -32,20 +33,32 @@ const makeRepositorioConsultaEquipamento = (): RepositorioConsultaEquipamento =>
   return new RepositorioConsultaEquipamentoStub()
 }
 
+const makeValidaEstacao = (): ValidadorBD => {
+  class ValidaEstacaoStub implements ValidadorBD {
+    async validar (parametro: string): Promise<boolean> {
+      return await new Promise(resolve => resolve(true))
+    }
+  }
+  return new ValidaEstacaoStub()
+}
+
 interface SubTipos {
   sut: AlteraCadastroDeEquipamentoBD
   repositorioAlteraCadastroDeEquipamentoStub: RepositorioAlteraCadastroDeEquipamento
   repositorioConsultaEquipamentoStub: RepositorioConsultaEquipamento
+  validaEstacaoStub: ValidadorBD
 }
 
 const makeSut = (): SubTipos => {
+  const validaEstacaoStub = makeValidaEstacao()
   const repositorioConsultaEquipamentoStub = makeRepositorioConsultaEquipamento()
   const repositorioAlteraCadastroDeEquipamentoStub = makeRepositorioAlteraCadastroDeEquipamentoStub()
-  const sut = new AlteraCadastroDeEquipamentoBD(repositorioAlteraCadastroDeEquipamentoStub, repositorioConsultaEquipamentoStub)
+  const sut = new AlteraCadastroDeEquipamentoBD(repositorioAlteraCadastroDeEquipamentoStub, repositorioConsultaEquipamentoStub, validaEstacaoStub)
   return {
     sut,
     repositorioAlteraCadastroDeEquipamentoStub,
-    repositorioConsultaEquipamentoStub
+    repositorioConsultaEquipamentoStub,
+    validaEstacaoStub
   }
 }
 
@@ -64,11 +77,32 @@ describe('AlteraCadastroDeEquipamentoBD', () => {
     await expect(resposta).rejects.toThrow()
   })
 
-  test('Deve retornar null caso o repositorioConsultaEquipamentoStub retorne null', async () => {
+  test('Deve retornar id inválido caso o repositorioConsultaEquipamentoStub retorne null', async () => {
     const { sut, repositorioConsultaEquipamentoStub } = makeSut()
     jest.spyOn(repositorioConsultaEquipamentoStub, 'consultar').mockReturnValueOnce(Promise.resolve(null))
     const resposta = await sut.alterar(dadosFalsos)
-    expect(resposta).toBeNull()
+    expect(resposta).toEqual({ invalido: true, parametro: 'id' })
+  })
+
+  test('Deve chamar o validaEstacao com o valor correto', async () => {
+    const { sut, validaEstacaoStub } = makeSut()
+    const validarSpy = jest.spyOn(validaEstacaoStub, 'validar')
+    await sut.alterar(dadosFalsos)
+    expect(validarSpy).toHaveBeenCalledWith(1)
+  })
+
+  test('Deve retornar um erro caso o validaEstacao retorne um erro', async () => {
+    const { sut, validaEstacaoStub } = makeSut()
+    jest.spyOn(validaEstacaoStub, 'validar').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.alterar(dadosFalsos)
+    await expect(resposta).rejects.toThrow()
+  })
+
+  test('Deve retornar estacaoId inválido caso o validaEstacao retorne false', async () => {
+    const { sut, validaEstacaoStub } = makeSut()
+    jest.spyOn(validaEstacaoStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
+    const resposta = await sut.alterar(dadosFalsos)
+    expect(resposta).toEqual({ invalido: true, parametro: 'estacaoId' })
   })
 
   test('Deve chamar o repositorioAlteraCadastroDeEquipamentoStub com os valores corretos', async () => {
@@ -85,9 +119,10 @@ describe('AlteraCadastroDeEquipamentoBD', () => {
     await expect(resposta).rejects.toThrow()
   })
 
-  test('Deve retornar a mensagem "Cadastro alterado com sucesso" em caso de sucesso', async () => {
+  test('Deve retornar um objeto com a mensagem "Cadastro alterado com sucesso" em caso de sucesso', async () => {
     const { sut } = makeSut()
     const resposta = await sut.alterar(dadosFalsos)
-    expect(resposta).toEqual('Cadastro alterado com sucesso')
+    expect(resposta.invalido).toBeFalsy()
+    expect(resposta.cadastro).toEqual('Cadastro alterado com sucesso')
   })
 })
