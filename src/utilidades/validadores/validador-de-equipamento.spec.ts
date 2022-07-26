@@ -17,7 +17,7 @@ const makeConsultaEquipamentoStub = (): ConsultaEquipamento => {
       return await new Promise(resolve => resolve([dadosFalsos]))
     }
 
-    async consultar (id: number): Promise<ModeloEquipamento | string> {
+    async consultar (id: number): Promise<ModeloEquipamento | null> {
       return await new Promise(resolve => resolve(dadosFalsos))
     }
   }

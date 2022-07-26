@@ -6,6 +6,7 @@ import { hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import 'dotenv/config'
 import { Falha } from '../../infraestrutura/bd/mariadb/models/modelo-falha'
+import { Equipamento } from '../../infraestrutura/bd/mariadb/models/modelo-equipamento'
 
 describe('Rotas falha', () => {
   beforeAll(async () => {
@@ -56,12 +57,13 @@ describe('Rotas falha', () => {
       })
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      const equipamentos = await Equipamento.findAll({ raw: true })
       await request(app)
         .post('/falha')
         .set('authorization', `Bearer ${tokenDeAcesso}`)
         .send({
           numFalha: '1234',
-          equipamentoId: '1'
+          equipamentoId: equipamentos[equipamentos.length - 1].id
         })
         .expect(200)
     })
