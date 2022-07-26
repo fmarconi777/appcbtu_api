@@ -57,21 +57,20 @@ export class ControladorDeEquipamento implements Controlador {
         }
       case 'PUT':
         try {
-          const camposRequeridos = ['id', 'nome', 'tipo', 'estado', 'estacaoId']
+          const camposRequeridos = ['nome', 'tipo', 'estado', 'estacaoId']
           for (const campo of camposRequeridos) {
             if(!requisicaoHttp.corpo[campo]) { // eslint-disable-line
               return requisicaoImpropria(new ErroFaltaParametro(campo))
             }
           }
-          const estacaoValida = await this.validaEstacao.validar(+requisicaoHttp.corpo.estacaoId)
-          if (!estacaoValida) {
-            return requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId'))
-          }
-          const equipamento = await this.alteraCadastroDeEquipamento.alterar(requisicaoHttp.corpo)
-          if (!equipamento) { // eslint-disable-line
+          if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
-          return resposta(equipamento)
+          const equipamento = await this.alteraCadastroDeEquipamento.alterar(requisicaoHttp.corpo)
+          if (equipamento.invalido) { // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido(equipamento.parametro))
+          }
+          return resposta(equipamento.cadastro)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }

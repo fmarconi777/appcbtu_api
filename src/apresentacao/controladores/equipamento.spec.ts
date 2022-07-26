@@ -7,7 +7,7 @@ import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/cons
 import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ValidadorBD } from '../protocolos/validadorBD'
-import { AlteraCadastroDeEquipamento } from '../../dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
+import { AlteraCadastroDeEquipamento, EquipamentoValido } from '../../dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
 
 const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
   class CadastroDeEquipamentoStub implements CadastroDeEquipamento {
@@ -57,8 +57,12 @@ const makeValidaEstacao = (): ValidadorBD => {
 
 const makeAlteraCadastroDeEquipamentoStub = (): AlteraCadastroDeEquipamento => {
   class AlteraCadastroDeEquipamentoStub implements AlteraCadastroDeEquipamento {
-    async alterar (dadosEquipamento: ModeloEquipamento): Promise<string | null> {
-      return await new Promise(resolve => resolve('Cadastro alterado com sucesso'))
+    async alterar (dadosEquipamento: ModeloEquipamento): Promise<EquipamentoValido> {
+      return await new Promise(resolve => resolve({
+        invalido: false,
+        parametro: '',
+        cadastro: 'Cadastro alterado com sucesso'
+      }))
     }
   }
   return new AlteraCadastroDeEquipamentoStub()
@@ -105,25 +109,10 @@ describe('Controlador de equipamentos', () => {
   })
 
   describe('Método PUT', () => {
-    test('Deve retornar codigo 400 se um id não for fornecido', async () => {
-      const { sut } = makeSut()
-      const requisicaoHttp = {
-        corpo: {
-          nome: 'qualquer_tipo',
-          tipo: 'qualquer_tipo',
-          estado: 'estado_qualquer',
-          estacaoId: 'estacaoId_qualquer'
-        },
-        metodo: 'PUT'
-      }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp.status).toBe(400)
-      expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('id'))
-    })
-
     test('Deve retornar codigo 400 se um nome não for fornecido', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
+        parametro: '1',
         corpo: {
           id: 'id_qualquer',
           tipo: 'qualquer_tipo',
@@ -140,6 +129,7 @@ describe('Controlador de equipamentos', () => {
     test('Deve retornar codigo 400 se um tipo não for fornecido', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
+        parametro: '1',
         corpo: {
           id: 'id_qualquer',
           nome: 'qualquer_tipo',
@@ -156,6 +146,7 @@ describe('Controlador de equipamentos', () => {
     test('Deve retornar codigo 400 se um estado não for fornecido', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
+        parametro: '1',
         corpo: {
           id: 'id_qualquer',
           nome: 'qualquer_nome',
@@ -172,6 +163,7 @@ describe('Controlador de equipamentos', () => {
     test('Deve retornar codigo 400 se um estacaoId não for fornecido', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
+        parametro: '1',
         corpo: {
           id: 'id_qualquer',
           nome: 'qualquer_nome',
@@ -185,49 +177,23 @@ describe('Controlador de equipamentos', () => {
       expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('estacaoId'))
     })
 
-    test('Deve chamar o validaEstacao com o valor correto', async () => {
-      const { sut, validaEstacaoStub } = makeSut()
-      const inserirSpy = jest.spyOn(validaEstacaoStub, 'validar')
+    test('Deve retornar status 404 caso o parametro seja inválido', async () => {
+      const { sut } = makeSut()
       const requisicaoHttp = {
-        corpo: {
-          id: 'id_qualquer',
-          nome: 'qualquer_nome',
-          tipo: 'qualquer_tipo',
-          estado: 'estado_qualquer',
-          estacaoId: '1'
-        },
-        metodo: 'PUT'
-      }
-      await sut.tratar(requisicaoHttp)
-      expect(inserirSpy).toHaveBeenCalledWith(1)
-    })
-
-    test('Deve retornar codigo 500 se o validaEstacao retornar um erro', async () => {
-      const { sut, validaEstacaoStub } = makeSut()
-      jest.spyOn(validaEstacaoStub, 'validar').mockImplementationOnce(async () => (await new Promise((resolve, reject) => reject(new Error()))))
-      const requisicaoHttp = {
+        parametro: 'NaN',
         corpo: dadosFalsos,
         metodo: 'PUT'
       }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
-    })
-
-    test('Deve retornar status 404 caso o parametro estacaoId esteja incorreto', async () => {
-      const { sut, validaEstacaoStub } = makeSut()
-      jest.spyOn(validaEstacaoStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
-      const requisicaoHttp = {
-        corpo: dadosFalsos,
-        metodo: 'PUT'
-      }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId')))
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta.status).toBe(404)
+      expect(resposta.corpo).toEqual(new ErroParametroInvalido('id'))
     })
 
     test('Deve chamar o alteraCadastroDeEquipamento com os valores corretos', async () => {
       const { sut, alteraCadastroDeEquipamentoStub } = makeSut()
       const inserirSpy = jest.spyOn(alteraCadastroDeEquipamentoStub, 'alterar')
       const requisicaoHttp = {
+        parametro: '1',
         corpo: dadosFalsos,
         metodo: 'PUT'
       }
@@ -239,6 +205,7 @@ describe('Controlador de equipamentos', () => {
       const { sut, alteraCadastroDeEquipamentoStub } = makeSut()
       jest.spyOn(alteraCadastroDeEquipamentoStub, 'alterar').mockImplementationOnce(async () => (await new Promise((resolve, reject) => reject(new Error()))))
       const requisicaoHttp = {
+        parametro: '1',
         corpo: dadosFalsos,
         metodo: 'PUT'
       }
@@ -246,10 +213,11 @@ describe('Controlador de equipamentos', () => {
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
 
-    test('Deve retornar codigo 404 se o alteraCadastroDeEquipamento retornar null', async () => {
+    test('Deve retornar status 404 caso o parametro id esteja incorreto', async () => {
       const { sut, alteraCadastroDeEquipamentoStub } = makeSut()
-      jest.spyOn(alteraCadastroDeEquipamentoStub, 'alterar').mockReturnValueOnce(Promise.resolve(null))
+      jest.spyOn(alteraCadastroDeEquipamentoStub, 'alterar').mockReturnValueOnce(Promise.resolve({ invalido: true, parametro: 'id' }))
       const requisicaoHttp = {
+        parametro: '1',
         corpo: dadosFalsos,
         metodo: 'PUT'
       }
@@ -257,9 +225,22 @@ describe('Controlador de equipamentos', () => {
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
     })
 
+    test('Deve retornar status 404 caso o parametro estacaoId esteja incorreto', async () => {
+      const { sut, alteraCadastroDeEquipamentoStub } = makeSut()
+      jest.spyOn(alteraCadastroDeEquipamentoStub, 'alterar').mockReturnValueOnce(Promise.resolve({ invalido: true, parametro: 'estacaoId' }))
+      const requisicaoHttp = {
+        parametro: '1',
+        corpo: dadosFalsos,
+        metodo: 'PUT'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId')))
+    })
+
     test('Deve retornar codigo 200 se dados válidos forem passados', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
+        parametro: '1',
         corpo: dadosFalsos,
         metodo: 'PUT'
       }
