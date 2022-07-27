@@ -88,6 +88,20 @@ describe('Controlador de equipamentos', () => {
     expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
   })
 
+  describe('Método PATCH', () => {
+    test('Deve retornar codigo 400 se um tipo não for fornecido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: '1',
+        corpo: {},
+        metodo: 'PATCH'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp.status).toBe(400)
+      expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('tipo'))
+    })
+  })
+
   describe('Método PUT', () => {
     test('Deve retornar codigo 400 se um nome não for fornecido', async () => {
       const { sut } = makeSut()
