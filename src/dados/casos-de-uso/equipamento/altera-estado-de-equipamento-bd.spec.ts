@@ -83,4 +83,11 @@ describe('AlteraEstadoDeEquipamentoBD', () => {
     await sut.alterar(dadosFalsos)
     expect(alterarSpy).toHaveBeenCalledWith(dadosFalsos)
   })
+
+  test('Deve retornar um erro caso o repositorioAlteraEstadoDeEquipamentoStub retorne um erro', async () => {
+    const { sut, repositorioAlteraEstadoDeEquipamentoStub } = makeSut()
+    jest.spyOn(repositorioAlteraEstadoDeEquipamentoStub, 'alterarEstado').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.alterar(dadosFalsos)
+    await expect(resposta).rejects.toThrow()
+  })
 })
