@@ -40,7 +40,7 @@ export class ControladorDeEquipamento implements Controlador {
         try {
           const camposRequeridos = ['nome', 'tipo', 'estado', 'estacaoId']
           for (const campo of camposRequeridos) {
-            if(!requisicaoHttp.corpo[campo]) { // eslint-disable-line
+            if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
               return requisicaoImpropria(new ErroFaltaParametro(campo))
             }
           }
@@ -56,7 +56,7 @@ export class ControladorDeEquipamento implements Controlador {
         try {
           const camposRequeridos = ['nome', 'tipo', 'estado', 'estacaoId']
           for (const campo of camposRequeridos) {
-            if(!requisicaoHttp.corpo[campo]) { // eslint-disable-line
+            if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
               return requisicaoImpropria(new ErroFaltaParametro(campo))
             }
           }
@@ -72,6 +72,11 @@ export class ControladorDeEquipamento implements Controlador {
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
+      case 'PATCH':
+        if (!requisicaoHttp.corpo.tipo) { // eslint-disable-line
+          return requisicaoImpropria(new ErroFaltaParametro('tipo'))
+        }
+        return resposta('')
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
