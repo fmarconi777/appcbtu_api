@@ -66,26 +66,28 @@ export class ControladorDeEquipamento implements Controlador {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
           const dados = Object.assign({}, { id: parametro }, requisicaoHttp.corpo)
-          const equipamento = await this.alteraCadastroDeEquipamento.alterar(dados)
-          if (equipamento.invalido) { // eslint-disable-line
-            return requisicaoNaoEncontrada(new ErroParametroInvalido(equipamento.parametro))
+          const equipamentoAlterado = await this.alteraCadastroDeEquipamento.alterar(dados)
+          if (equipamentoAlterado.invalido) { // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido(equipamentoAlterado.parametro))
           }
-          return resposta(equipamento.cadastro)
+          return resposta(equipamentoAlterado.cadastro)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
       case 'PATCH':
-      {
-        if (!requisicaoHttp.corpo.estado) { // eslint-disable-line
-          return requisicaoImpropria(new ErroFaltaParametro('estado'))
+        try {
+          if (!requisicaoHttp.corpo.estado) { // eslint-disable-line
+            return requisicaoImpropria(new ErroFaltaParametro('estado'))
+          }
+          if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+          }
+          const dados = Object.assign({}, { id: parametro }, requisicaoHttp.corpo)
+          await this.alteraEstadoDeEquipamento.alterar(dados)
+          return resposta('')
+        } catch (erro: any) {
+          return erroDeServidor(erro)
         }
-        if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
-          return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
-        }
-        const dados = Object.assign({}, { id: parametro }, requisicaoHttp.corpo)
-        await this.alteraEstadoDeEquipamento.alterar(dados)
-        return resposta('')
-      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
