@@ -4,7 +4,7 @@ import { CadastroDeEquipamento, DadosEquipamento } from '../../dominio/casos-de-
 import { ModeloEquipamento } from '../../dominio/modelos/equipamento'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
-import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoNaoEncontrada, resposta } from '../auxiliares/auxiliar-http'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { AlteraCadastroDeEquipamento, EquipamentoValido } from '../../dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
 import { AlteraEstadoDeEquipamento, EstadoEquipamento } from '../../dominio/casos-de-uso/equipamento/altera-estado-de-equipamento'
@@ -162,6 +162,17 @@ describe('Controlador de equipamentos', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
+
+    test('Deve retornar codigo 200 se dados válidos forem passados', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: '1',
+        corpo: { estado: '1' },
+        metodo: 'PATCH'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(resposta('Cadastro alterado com sucesso'))
     })
   })
 
