@@ -83,4 +83,18 @@ describe('Repositorio mariaDB Equipamento', () => {
       expect(resposta).toEqual('Cadastro alterado com sucesso')
     })
   })
+
+  describe('Método alterarEstado', () => {
+    test('Deve retornar a mensagem "Estado alterado com sucesso" em caso de sucesso', async () => {
+      const sut = new RepositorioEquipamentoMariaDB()
+      await sut.inserir(equipamentoFalso)
+      const equipamentos = await Equipamento.findAll({ raw: true })
+      const equipamentoAlterado = {
+        id: (equipamentos[equipamentos.length - 1].id).toString(),
+        estado: '0'
+      }
+      const resposta = await sut.alterarEstado(equipamentoAlterado)
+      expect(resposta).toEqual('Estado alterado com sucesso')
+    })
+  })
 })
