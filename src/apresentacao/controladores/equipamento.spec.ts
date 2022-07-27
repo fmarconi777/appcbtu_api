@@ -7,6 +7,7 @@ import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/cons
 import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { AlteraCadastroDeEquipamento, EquipamentoValido } from '../../dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
+import { AlteraEstadoDeEquipamento, EstadoEquipamento } from '../../dominio/casos-de-uso/equipamento/altera-estado-de-equipamento'
 
 const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
   class CadastroDeEquipamentoStub implements CadastroDeEquipamento {
@@ -51,23 +52,35 @@ const makeAlteraCadastroDeEquipamentoStub = (): AlteraCadastroDeEquipamento => {
   return new AlteraCadastroDeEquipamentoStub()
 }
 
+const makeAlteraEstadoDeEquipamentoStub = (): AlteraEstadoDeEquipamento => {
+  class AlteraEstadoDeEquipamentoStub implements AlteraEstadoDeEquipamento {
+    async alterar (dadosEquipamento: EstadoEquipamento): Promise<string | null> {
+      return await new Promise(resolve => resolve('Cadastro alterado com sucesso'))
+    }
+  }
+  return new AlteraEstadoDeEquipamentoStub()
+}
+
 interface SutTypes {
   sut: ControladorDeEquipamento
   cadastroDeEquipamentoStub: CadastroDeEquipamento
   consultaEquipamentoStub: ConsultaEquipamento
   alteraCadastroDeEquipamentoStub: AlteraCadastroDeEquipamento
+  alteraEstadoDeEquipamentoStub: AlteraEstadoDeEquipamento
 }
 
 const makeSut = (): SutTypes => {
+  const alteraEstadoDeEquipamentoStub = makeAlteraEstadoDeEquipamentoStub()
   const alteraCadastroDeEquipamentoStub = makeAlteraCadastroDeEquipamentoStub()
   const consultaEquipamentoStub = makeConsultaEquipamentoStub()
   const cadastroDeEquipamentoStub = makeCadastroDeEquipamento()
-  const sut = new ControladorDeEquipamento(cadastroDeEquipamentoStub, consultaEquipamentoStub, alteraCadastroDeEquipamentoStub)
+  const sut = new ControladorDeEquipamento(cadastroDeEquipamentoStub, consultaEquipamentoStub, alteraCadastroDeEquipamentoStub, alteraEstadoDeEquipamentoStub)
   return {
     sut,
     cadastroDeEquipamentoStub,
     consultaEquipamentoStub,
-    alteraCadastroDeEquipamentoStub
+    alteraCadastroDeEquipamentoStub,
+    alteraEstadoDeEquipamentoStub
   }
 }
 
@@ -89,7 +102,7 @@ describe('Controlador de equipamentos', () => {
   })
 
   describe('Método PATCH', () => {
-    test('Deve retornar codigo 400 se um tipo não for fornecido', async () => {
+    test('Deve retornar codigo 400 se um estado não for fornecido', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         parametro: '1',
@@ -98,18 +111,33 @@ describe('Controlador de equipamentos', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(400)
-      expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('tipo'))
+      expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('estado'))
     })
 
     test('Deve retornar status 404 caso o parametro seja inválido', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         parametro: 'NaN',
-        corpo: dadosFalsos,
+        corpo: { estado: '1' },
         metodo: 'PATCH'
       }
       const resposta = await sut.tratar(requisicaoHttp)
       expect(resposta).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
+
+    test('Deve chamar o alteraEstadoDeEquipamento com os valores corretos', async () => {
+      const { sut, alteraEstadoDeEquipamentoStub } = makeSut()
+      const alterarSpy = jest.spyOn(alteraEstadoDeEquipamentoStub, 'alterar')
+      const requisicaoHttp = {
+        parametro: '1',
+        corpo: { estado: '1' },
+        metodo: 'PATCH'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(alterarSpy).toHaveBeenCalledWith({
+        id: '1',
+        estado: '1'
+      })
     })
   })
 
