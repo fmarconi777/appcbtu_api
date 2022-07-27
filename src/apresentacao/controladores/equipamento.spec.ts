@@ -139,6 +139,18 @@ describe('Controlador de equipamentos', () => {
         estado: '1'
       })
     })
+
+    test('Deve retornar codigo 500 se o alteraEstadoDeEquipamento retornar um erro', async () => {
+      const { sut, alteraEstadoDeEquipamentoStub } = makeSut()
+      jest.spyOn(alteraEstadoDeEquipamentoStub, 'alterar').mockImplementationOnce(async () => (await new Promise((resolve, reject) => reject(new Error()))))
+      const requisicaoHttp = {
+        parametro: '1',
+        corpo: { estado: '1' },
+        metodo: 'PATCH'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
   })
 
   describe('Método PUT', () => {
