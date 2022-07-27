@@ -11,8 +11,7 @@ export class AlteraEstadoDeEquipamentoBD implements AlteraEstadoDeEquipamento {
   async alterar (dadosEquipamento: EstadoEquipamento): Promise<string | null> {
     const equipamento = await this.repositorioConsultaEquipamento.consultar(+dadosEquipamento.id)
     if (equipamento) { // eslint-disable-line
-      await this.repositorioAlteraEstadoDeEquipamento.alterarEstado(dadosEquipamento)
-      return await new Promise(resolve => resolve(''))
+      return await this.repositorioAlteraEstadoDeEquipamento.alterarEstado(dadosEquipamento)
     }
     return equipamento
   }
