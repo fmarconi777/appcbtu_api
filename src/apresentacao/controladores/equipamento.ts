@@ -7,12 +7,14 @@ import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { AlteraCadastroDeEquipamento } from '../../dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
+import { AlteraEstadoDeEquipamento } from '../../dominio/casos-de-uso/equipamento/altera-estado-de-equipamento'
 
 export class ControladorDeEquipamento implements Controlador {
   constructor (
     private readonly cadastroDeEquipamento: CadastroDeEquipamento,
     private readonly consultaEquipamento: ConsultaEquipamento,
-    private readonly alteraCadastroDeEquipamento: AlteraCadastroDeEquipamento
+    private readonly alteraCadastroDeEquipamento: AlteraCadastroDeEquipamento,
+    private readonly alteraEstadoDeEquipamento: AlteraEstadoDeEquipamento
   ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
@@ -73,13 +75,17 @@ export class ControladorDeEquipamento implements Controlador {
           return erroDeServidor(erro)
         }
       case 'PATCH':
-        if (!requisicaoHttp.corpo.tipo) { // eslint-disable-line
-          return requisicaoImpropria(new ErroFaltaParametro('tipo'))
+      {
+        if (!requisicaoHttp.corpo.estado) { // eslint-disable-line
+          return requisicaoImpropria(new ErroFaltaParametro('estado'))
         }
         if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
           return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
         }
+        const dados = Object.assign({}, { id: parametro }, requisicaoHttp.corpo)
+        await this.alteraEstadoDeEquipamento.alterar(dados)
         return resposta('')
+      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
