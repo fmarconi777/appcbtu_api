@@ -76,6 +76,9 @@ export class ControladorDeEquipamento implements Controlador {
         if (!requisicaoHttp.corpo.tipo) { // eslint-disable-line
           return requisicaoImpropria(new ErroFaltaParametro('tipo'))
         }
+        if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
+          return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+        }
         return resposta('')
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
