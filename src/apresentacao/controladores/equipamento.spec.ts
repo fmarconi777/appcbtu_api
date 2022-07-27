@@ -55,7 +55,7 @@ const makeAlteraCadastroDeEquipamentoStub = (): AlteraCadastroDeEquipamento => {
 const makeAlteraEstadoDeEquipamentoStub = (): AlteraEstadoDeEquipamento => {
   class AlteraEstadoDeEquipamentoStub implements AlteraEstadoDeEquipamento {
     async alterar (dadosEquipamento: EstadoEquipamento): Promise<string | null> {
-      return await new Promise(resolve => resolve('Cadastro alterado com sucesso'))
+      return await new Promise(resolve => resolve('Estado alterado com sucesso'))
     }
   }
   return new AlteraEstadoDeEquipamentoStub()
@@ -172,7 +172,7 @@ describe('Controlador de equipamentos', () => {
         metodo: 'PATCH'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp).toEqual(resposta('Cadastro alterado com sucesso'))
+      expect(respostaHttp).toEqual(resposta('Estado alterado com sucesso'))
     })
   })
 

@@ -32,7 +32,7 @@ const makeRepositorioConsultaEquipamentoStub = (): RepositorioConsultaEquipament
 const makeRepositorioAlteraEstadoDeEquipamentoStub = (): RepositorioAlteraEstadoDeEquipamento => {
   class RepositorioAlteraEstadoDeEquipamentoStub implements RepositorioAlteraEstadoDeEquipamento {
     async alterarEstado (dadosEquipamento: EstadoEquipamento): Promise<string> {
-      return await new Promise(resolve => resolve('Cadastro alterado com sucesso'))
+      return await new Promise(resolve => resolve('Estado alterado com sucesso'))
     }
   }
   return new RepositorioAlteraEstadoDeEquipamentoStub()
@@ -89,5 +89,11 @@ describe('AlteraEstadoDeEquipamentoBD', () => {
     jest.spyOn(repositorioAlteraEstadoDeEquipamentoStub, 'alterarEstado').mockReturnValueOnce(Promise.reject(new Error()))
     const resposta = sut.alterar(dadosFalsos)
     await expect(resposta).rejects.toThrow()
+  })
+
+  test('Deve retornar a mensagem "Cadastro alterado com sucesso" em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const resposta = await sut.alterar(dadosFalsos)
+    expect(resposta).toEqual('Estado alterado com sucesso')
   })
 })
