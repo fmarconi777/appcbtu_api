@@ -1,4 +1,6 @@
+import { EstadoEquipamento } from '../../../dominio/casos-de-uso/equipamento/altera-estado-de-equipamento'
 import { ModeloEquipamento } from '../../../dominio/modelos/equipamento'
+import { RepositorioAlteraEstadoDeEquipamento } from '../../protocolos/bd/equipamento/repositorio-altera-estado-de-equipamento'
 import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
 import { AlteraEstadoDeEquipamentoBD } from './altera-estado-de-equipamento-bd'
 
@@ -27,17 +29,29 @@ const makeRepositorioConsultaEquipamentoStub = (): RepositorioConsultaEquipament
   return new RepositorioConsultaEquipamentoStub()
 }
 
+const makeRepositorioAlteraEstadoDeEquipamentoStub = (): RepositorioAlteraEstadoDeEquipamento => {
+  class RepositorioAlteraEstadoDeEquipamentoStub implements RepositorioAlteraEstadoDeEquipamento {
+    async alterarEstado (dadosEquipamento: EstadoEquipamento): Promise<string> {
+      return await new Promise(resolve => resolve('Cadastro alterado com sucesso'))
+    }
+  }
+  return new RepositorioAlteraEstadoDeEquipamentoStub()
+}
+
 interface SubTipos {
   sut: AlteraEstadoDeEquipamentoBD
   repositorioConsultaEquipamentoStub: RepositorioConsultaEquipamento
+  repositorioAlteraEstadoDeEquipamentoStub: RepositorioAlteraEstadoDeEquipamento
 }
 
 const makeSut = (): SubTipos => {
   const repositorioConsultaEquipamentoStub = makeRepositorioConsultaEquipamentoStub()
-  const sut = new AlteraEstadoDeEquipamentoBD(repositorioConsultaEquipamentoStub)
+  const repositorioAlteraEstadoDeEquipamentoStub = makeRepositorioAlteraEstadoDeEquipamentoStub()
+  const sut = new AlteraEstadoDeEquipamentoBD(repositorioConsultaEquipamentoStub, repositorioAlteraEstadoDeEquipamentoStub)
   return {
     sut,
-    repositorioConsultaEquipamentoStub
+    repositorioConsultaEquipamentoStub,
+    repositorioAlteraEstadoDeEquipamentoStub
   }
 }
 
@@ -61,5 +75,12 @@ describe('AlteraEstadoDeEquipamentoBD', () => {
     jest.spyOn(repositorioConsultaEquipamentoStub, 'consultar').mockReturnValueOnce(Promise.resolve(null))
     const resposta = await sut.alterar(dadosFalsos)
     expect(resposta).toBeNull()
+  })
+
+  test('Deve chamar o repositorioAlteraEstadoDeEquipamentoStub com o valor correto', async () => {
+    const { sut, repositorioAlteraEstadoDeEquipamentoStub } = makeSut()
+    const alterarSpy = jest.spyOn(repositorioAlteraEstadoDeEquipamentoStub, 'alterarEstado')
+    await sut.alterar(dadosFalsos)
+    expect(alterarSpy).toHaveBeenCalledWith(dadosFalsos)
   })
 })
