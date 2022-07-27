@@ -100,6 +100,17 @@ describe('Controlador de equipamentos', () => {
       expect(respostaHttp.status).toBe(400)
       expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('tipo'))
     })
+
+    test('Deve retornar status 404 caso o parametro seja inválido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: 'NaN',
+        corpo: dadosFalsos,
+        metodo: 'PATCH'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
   })
 
   describe('Método PUT', () => {
