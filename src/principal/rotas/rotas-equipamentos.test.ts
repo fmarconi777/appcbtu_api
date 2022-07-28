@@ -22,6 +22,17 @@ describe('Rotas equipamentos', () => {
     await Funcionario.destroy({ truncate: true, cascade: false })
   })
 
+  describe('PATCH', () => {
+    test('Deve retornar um status 403 ao alterar o estado de um equipamento sem autenticação', async () => {
+      await request(app)
+        .patch('/equipamento/1')
+        .send({
+          estado: '0'
+        })
+        .expect(403)
+    })
+  })
+
   describe('POST', () => {
     test('Deve retornar um status 403 ao adicionar um equipamento sem autenticação', async () => {
       await request(app)
