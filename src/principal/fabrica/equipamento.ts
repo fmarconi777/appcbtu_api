@@ -9,6 +9,7 @@ import { ValidadorDeEstacao } from '../../utilidades/validadores/validador-de-es
 import { ConsultaEstacaoBD } from '../../dados/casos-de-uso/estacao/consulta-estacao-bd'
 import { RepositorioEstacaoMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/estacao'
 import { AlteraCadastroDeEquipamentoBD } from '../../dados/casos-de-uso/equipamento/altera-cadastro-de-equipamento-bd'
+import { AlteraEstadoDeEquipamentoBD } from '../../dados/casos-de-uso/equipamento/altera-estado-de-equipamento-bd'
 
 export const criaControladorDeEquipamento = (): Controlador => {
   const repositorioEquipamento = new RepositorioEquipamentoMariaDB()
@@ -18,7 +19,8 @@ export const criaControladorDeEquipamento = (): Controlador => {
   const validadorDeEstacao = new ValidadorDeEstacao(consultaEstacao)
   const cadastroDeEquipamento = new CadastroDeEquipamentoBd(repositorioEquipamento, validadorDeEstacao)
   const alteraCadastroDeEquipamentoBD = new AlteraCadastroDeEquipamentoBD(repositorioEquipamento, repositorioEquipamento, validadorDeEstacao)
-  const controladorDeEquipamento = new ControladorDeEquipamento(cadastroDeEquipamento, consultaEquipamentoBD, alteraCadastroDeEquipamentoBD)
+  const alteraEstadoDeEquipamento = new AlteraEstadoDeEquipamentoBD(repositorioEquipamento, repositorioEquipamento)
+  const controladorDeEquipamento = new ControladorDeEquipamento(cadastroDeEquipamento, consultaEquipamentoBD, alteraCadastroDeEquipamentoBD, alteraEstadoDeEquipamento)
   const repositorioLogDeErro = new RepositorioLogDeErroMariaDB()
   return new DecoradorControladorLog(controladorDeEquipamento, repositorioLogDeErro)
 }
