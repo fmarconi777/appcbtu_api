@@ -31,6 +31,16 @@ describe('Rotas equipamentos', () => {
         })
         .expect(403)
     })
+
+    test('Deve retornar um status 403 ao alterar o estado de um equipamento com authorization sem token de acesso', async () => {
+      await request(app)
+        .patch('/equipamento/1')
+        .set('authorization', 'Bearer ')
+        .send({
+          estado: '0'
+        })
+        .expect(403)
+    })
   })
 
   describe('POST', () => {
