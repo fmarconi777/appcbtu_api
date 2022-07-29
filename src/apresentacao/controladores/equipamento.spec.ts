@@ -101,6 +101,18 @@ describe('Controlador de equipamentos', () => {
     expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
   })
 
+  describe('Método DELETE', () => {
+    test('Deve retornar status 404 caso o parametro seja inválido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: 'NaN',
+        metodo: 'DELETE'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
+  })
+
   describe('Método PATCH', () => {
     test('Deve retornar codigo 400 se um estado não for fornecido', async () => {
       const { sut } = makeSut()
