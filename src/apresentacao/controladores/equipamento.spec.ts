@@ -127,8 +127,8 @@ describe('Controlador de equipamentos', () => {
         parametro: 'NaN',
         metodo: 'DELETE'
       }
-      const resposta = await sut.tratar(requisicaoHttp)
-      expect(resposta).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
     })
 
     test('Deve chamar o deletaEquipamento com o valor correto', async () => {
@@ -149,8 +149,8 @@ describe('Controlador de equipamentos', () => {
         parametro: '1',
         metodo: 'DELETE'
       }
-      const resposta = await sut.tratar(requisicaoHttp)
-      expect(resposta).toEqual(erroDeServidor(new Error()))
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
 
     test('Deve retornar status 404 caso o alteraEstadoDeEquipamento retorne null', async () => {
@@ -160,8 +160,18 @@ describe('Controlador de equipamentos', () => {
         parametro: '1',
         metodo: 'DELETE'
       }
-      const resposta = await sut.tratar(requisicaoHttp)
-      expect(resposta).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
+
+    test('Deve retornar codigo 200 se dados válidos forem passados', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'DELETE'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(resposta('Equipamento deletado com sucesso'))
     })
   })
 
