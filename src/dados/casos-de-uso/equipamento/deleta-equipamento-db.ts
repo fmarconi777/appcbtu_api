@@ -11,8 +11,7 @@ export class DeletaEquipamentoDB implements DeletaEquipamento {
   async deletar (id: number): Promise<string | null> {
     const idValido = await this.repositorioConsultaEquipamento.consultar(id)
     if (idValido) { //eslint-disable-line
-      await this.repositorioDeletaEquipamentoStub.deletar(id)
-      return await new Promise(resolve => resolve(''))
+      return await this.repositorioDeletaEquipamentoStub.deletar(id)
     }
     return idValido
   }
