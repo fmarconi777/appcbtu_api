@@ -1,7 +1,7 @@
 import { ModeloEquipamento } from '../../../dominio/modelos/equipamento'
 import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
 import { RepositorioDeletaEquipamento } from '../../protocolos/bd/equipamento/repositorio-deleta-equipamento'
-import { DeletaEquipamentoDB } from './deleta-equipamento-db'
+import { DeletaEquipamentoBD } from './deleta-equipamento-bd'
 
 const equipamentoFalso = {
   id: '1',
@@ -33,7 +33,7 @@ const makeRepositorioDeletaEquipamentoStub = (): RepositorioDeletaEquipamento =>
 }
 
 interface SubTipos {
-  sut: DeletaEquipamentoDB
+  sut: DeletaEquipamentoBD
   repositorioConsultaEquipamentoStub: RepositorioConsultaEquipamento
   repositorioDeletaEquipamentoStub: RepositorioDeletaEquipamento
 }
@@ -43,7 +43,7 @@ const id = 1
 const makeSut = (): SubTipos => {
   const repositorioDeletaEquipamentoStub = makeRepositorioDeletaEquipamentoStub()
   const repositorioConsultaEquipamentoStub = makeRepositorioConsultaEquipamentoStub()
-  const sut = new DeletaEquipamentoDB(repositorioConsultaEquipamentoStub, repositorioDeletaEquipamentoStub)
+  const sut = new DeletaEquipamentoBD(repositorioConsultaEquipamentoStub, repositorioDeletaEquipamentoStub)
   return {
     sut,
     repositorioConsultaEquipamentoStub,
@@ -51,7 +51,7 @@ const makeSut = (): SubTipos => {
   }
 }
 
-describe('DeletaEquipamentoDB', () => {
+describe('DeletaEquipamentoBD', () => {
   test('Deve chamar o repositorioConsultaEquipamentoStub com o valor correto', async () => {
     const { sut, repositorioConsultaEquipamentoStub } = makeSut()
     const alterarSpy = jest.spyOn(repositorioConsultaEquipamentoStub, 'consultar')

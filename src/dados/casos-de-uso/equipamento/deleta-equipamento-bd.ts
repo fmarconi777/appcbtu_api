@@ -2,7 +2,7 @@ import { DeletaEquipamento } from '../../../dominio/casos-de-uso/equipamento/del
 import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
 import { RepositorioDeletaEquipamento } from '../../protocolos/bd/equipamento/repositorio-deleta-equipamento'
 
-export class DeletaEquipamentoDB implements DeletaEquipamento {
+export class DeletaEquipamentoBD implements DeletaEquipamento {
   constructor (
     private readonly repositorioConsultaEquipamento: RepositorioConsultaEquipamento,
     private readonly repositorioDeletaEquipamentoStub: RepositorioDeletaEquipamento

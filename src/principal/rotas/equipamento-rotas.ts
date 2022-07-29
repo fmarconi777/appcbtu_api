@@ -11,5 +11,6 @@ export default (router: Router): Router => {
   router.get('/equipamento/:parametro?', adaptadorDeRota(criaControladorDeEquipamento())) // eslint-disable-line
   router.put('/equipamento/:parametro', autentificacaoAdmin, adaptadorDeRota(criaControladorDeEquipamento())) // eslint-disable-line
   router.patch('/equipamento/:parametro', autentificacaoArea, adaptadorDeRota(criaControladorDeEquipamento())) // eslint-disable-line
+  router.delete('/equipamento/:parametro', autentificacaoAdmin, adaptadorDeMiddleware(criaControladorDeEquipamento())) // eslint-disable-line
   return router
 }
