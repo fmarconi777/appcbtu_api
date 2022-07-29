@@ -86,4 +86,10 @@ describe('DeletaEquipamentoDB', () => {
     const resposta = sut.deletar(id)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar a mensagem "Equipamento deletado com sucesso" em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const resposta = await sut.deletar(id)
+    expect(resposta).toEqual('Equipamento deletado com sucesso')
+  })
 })
