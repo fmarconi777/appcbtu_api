@@ -13,16 +13,6 @@ describe('Repositorio mariaDB Equipamento', () => {
     console.log('conexão fechada')
   })
 
-  afterEach(async () => {
-    const equipamentos = await Equipamento.findAll({ raw: true })
-    await Equipamento.destroy({
-      where: {
-        id: equipamentos[equipamentos.length - 1].id
-      },
-      cascade: true
-    })
-  })
-
   const equipamentoFalso = {
     nome: 'nome_valido',
     tipo: 'tipo_valido',
@@ -95,6 +85,16 @@ describe('Repositorio mariaDB Equipamento', () => {
       }
       const resposta = await sut.alterarEstado(equipamentoAlterado)
       expect(resposta).toEqual('Estado alterado com sucesso')
+    })
+  })
+
+  describe('Método deletar', () => {
+    test('Deve retornar a mensagem "Equipamento deletado com sucesso" em caso de sucesso', async () => {
+      const sut = new RepositorioEquipamentoMariaDB()
+      await sut.inserir(equipamentoFalso)
+      const equipamentos = await Equipamento.findAll({ raw: true })
+      const resposta = await sut.deletar(equipamentos[equipamentos.length - 1].id)
+      expect(resposta).toEqual('Equipamento deletado com sucesso')
     })
   })
 })
