@@ -28,6 +28,13 @@ describe('Rotas equipamentos', () => {
         .delete('/equipamento/1')
         .expect(403)
     })
+
+    test('Deve retornar um status 403 ao alterar um equipamento com authorization sem token de acesso', async () => {
+      await request(app)
+        .delete('/equipamento/1')
+        .set('authorization', 'Bearer ')
+        .expect(403)
+    })
   })
 
   describe('PATCH', () => {
