@@ -152,6 +152,17 @@ describe('Controlador de equipamentos', () => {
       const resposta = await sut.tratar(requisicaoHttp)
       expect(resposta).toEqual(erroDeServidor(new Error()))
     })
+
+    test('Deve retornar status 404 caso o alteraEstadoDeEquipamento retorne null', async () => {
+      const { sut, deletaEquipamentoStub } = makeSut()
+      jest.spyOn(deletaEquipamentoStub, 'deletar').mockReturnValueOnce(Promise.resolve(null))
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'DELETE'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
   })
 
   describe('Método PATCH', () => {
