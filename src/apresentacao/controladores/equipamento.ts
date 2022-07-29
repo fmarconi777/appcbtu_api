@@ -94,12 +94,14 @@ export class ControladorDeEquipamento implements Controlador {
           return erroDeServidor(erro)
         }
       case 'DELETE':
-      {
+      try {
         if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
           return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
         }
         await this.deletaEquipamento.deletar(+parametro)
         return resposta('')
+      } catch (erro: any) {
+        return erroDeServidor(erro)
       }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
