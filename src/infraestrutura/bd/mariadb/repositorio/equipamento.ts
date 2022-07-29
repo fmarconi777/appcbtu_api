@@ -5,12 +5,14 @@ import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { RepositorioConsultaEquipamento } from '../../../../dados/protocolos/bd/equipamento/repositorio-consulta-equipamento'
 import { RepositorioAlteraCadastroDeEquipamento } from '../../../../dados/protocolos/bd/equipamento/repositorio-altera-cadastro-de-equipamento'
 import { RepositorioAlteraEstadoDeEquipamento, EstadoEquipamento } from '../../../../dados/protocolos/bd/equipamento/repositorio-altera-estado-de-equipamento'
+import { RepositorioDeletaEquipamento } from '../../../../dados/protocolos/bd/equipamento/repositorio-deleta-equipamento'
 
 export class RepositorioEquipamentoMariaDB implements
 RepositorioEquipamento,
 RepositorioConsultaEquipamento,
 RepositorioAlteraCadastroDeEquipamento,
-RepositorioAlteraEstadoDeEquipamento {
+RepositorioAlteraEstadoDeEquipamento,
+RepositorioDeletaEquipamento {
   async inserir (dadosEquipamento: DadosEquipamento): Promise<string> {
     AuxiliaresMariaDB.verificaConexao()
     await Equipamento.create(this.transformaDados(dadosEquipamento))
@@ -36,6 +38,12 @@ RepositorioAlteraEstadoDeEquipamento {
     AuxiliaresMariaDB.verificaConexao()
     await Equipamento.update({ estado: +dadosEquipamento.estado }, { where: { id: +dadosEquipamento.id } })
     return 'Estado alterado com sucesso'
+  }
+
+  async deletar (id: number): Promise<string> {
+    AuxiliaresMariaDB.verificaConexao()
+    await Equipamento.destroy({ where: { id }, cascade: true })
+    return 'Equipamento deletado com sucesso'
   }
 
   private transformaDados (dadosEquipamento: DadosEquipamento): any {
