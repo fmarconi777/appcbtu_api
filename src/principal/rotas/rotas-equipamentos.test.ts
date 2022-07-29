@@ -69,6 +69,24 @@ describe('Rotas equipamentos', () => {
         .set('authorization', `Bearer ${tokenDeAcesso}`)
         .expect(404)
     })
+
+    test('Deve retornar status 200 em caso de sucesso ao deletar um cadastro de equipamento', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      const equipamentos = await Equipamento.findAll({ raw: true })
+      await request(app)
+        .delete(`/equipamento/${equipamentos[equipamentos.length - 1].id}`)
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .expect(200)
+    })
   })
 
   describe('PATCH', () => {
