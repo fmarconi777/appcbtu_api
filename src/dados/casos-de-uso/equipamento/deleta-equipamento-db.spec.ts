@@ -52,4 +52,11 @@ describe('DeletaEquipamentoDB', () => {
     const resposta = sut.deletar(id)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar null caso o repositorioConsultaEquipamentoStub retorne null', async () => {
+    const { sut, repositorioConsultaEquipamentoStub } = makeSut()
+    jest.spyOn(repositorioConsultaEquipamentoStub, 'consultar').mockReturnValueOnce(Promise.resolve(null))
+    const resposta = await sut.deletar(id)
+    expect(resposta).toBeNull()
+  })
 })
