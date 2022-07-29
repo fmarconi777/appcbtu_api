@@ -79,4 +79,11 @@ describe('DeletaEquipamentoDB', () => {
     await sut.deletar(id)
     expect(alterarSpy).toHaveBeenCalledWith(id)
   })
+
+  test('Deve retornar um erro caso o repositorioDeletaEquipamentoStub retorne um erro', async () => {
+    const { sut, repositorioDeletaEquipamentoStub } = makeSut()
+    jest.spyOn(repositorioDeletaEquipamentoStub, 'deletar').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.deletar(id)
+    await expect(resposta).rejects.toThrow()
+  })
 })
