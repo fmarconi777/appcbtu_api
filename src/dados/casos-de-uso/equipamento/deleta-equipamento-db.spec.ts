@@ -1,5 +1,6 @@
 import { ModeloEquipamento } from '../../../dominio/modelos/equipamento'
 import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
+import { RepositorioDeletaEquipamento } from '../../protocolos/bd/equipamento/repositorio-deleta-equipamento'
 import { DeletaEquipamentoDB } from './deleta-equipamento-db'
 
 const equipamentoFalso = {
@@ -22,19 +23,31 @@ const makeRepositorioConsultaEquipamentoStub = (): RepositorioConsultaEquipament
   return new RepositorioConsultaEquipamentoStub()
 }
 
+const makeRepositorioDeletaEquipamentoStub = (): RepositorioDeletaEquipamento => {
+  class RepositorioDeletaEquipamentoStub implements RepositorioDeletaEquipamento {
+    async deletar (id: number): Promise<string> {
+      return await Promise.resolve('Equipamento deletado com sucesso')
+    }
+  }
+  return new RepositorioDeletaEquipamentoStub()
+}
+
 interface SubTipos {
   sut: DeletaEquipamentoDB
   repositorioConsultaEquipamentoStub: RepositorioConsultaEquipamento
+  repositorioDeletaEquipamentoStub: RepositorioDeletaEquipamento
 }
 
 const id = 1
 
 const makeSut = (): SubTipos => {
+  const repositorioDeletaEquipamentoStub = makeRepositorioDeletaEquipamentoStub()
   const repositorioConsultaEquipamentoStub = makeRepositorioConsultaEquipamentoStub()
-  const sut = new DeletaEquipamentoDB(repositorioConsultaEquipamentoStub)
+  const sut = new DeletaEquipamentoDB(repositorioConsultaEquipamentoStub, repositorioDeletaEquipamentoStub)
   return {
     sut,
-    repositorioConsultaEquipamentoStub
+    repositorioConsultaEquipamentoStub,
+    repositorioDeletaEquipamentoStub
   }
 }
 
@@ -58,5 +71,12 @@ describe('DeletaEquipamentoDB', () => {
     jest.spyOn(repositorioConsultaEquipamentoStub, 'consultar').mockReturnValueOnce(Promise.resolve(null))
     const resposta = await sut.deletar(id)
     expect(resposta).toBeNull()
+  })
+
+  test('Deve chamar o repositorioDeletaEquipamentoStub com o valor correto', async () => {
+    const { sut, repositorioDeletaEquipamentoStub } = makeSut()
+    const alterarSpy = jest.spyOn(repositorioDeletaEquipamentoStub, 'deletar')
+    await sut.deletar(id)
+    expect(alterarSpy).toHaveBeenCalledWith(id)
   })
 })
