@@ -141,6 +141,17 @@ describe('Controlador de equipamentos', () => {
       await sut.tratar(requisicaoHttp)
       expect(alterarSpy).toHaveBeenCalledWith(1)
     })
+
+    test('Deve retornar codigo 500 se o deletaEquipamento retornar um erro', async () => {
+      const { sut, deletaEquipamentoStub } = makeSut()
+      jest.spyOn(deletaEquipamentoStub, 'deletar').mockReturnValueOnce(Promise.reject(new Error()))
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'DELETE'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(erroDeServidor(new Error()))
+    })
   })
 
   describe('Método PATCH', () => {
