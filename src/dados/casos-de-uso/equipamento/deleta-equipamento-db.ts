@@ -5,7 +5,10 @@ export class DeletaEquipamentoDB implements DeletaEquipamento {
   constructor (private readonly repositorioConsultaEquipamento: RepositorioConsultaEquipamento) {}
 
   async deletar (id: number): Promise<string | null> {
-    await this.repositorioConsultaEquipamento.consultar(id)
-    return await new Promise(resolve => resolve(null))
+    const idValido = await this.repositorioConsultaEquipamento.consultar(id)
+    if (idValido) { //eslint-disable-line
+      return await new Promise(resolve => resolve(''))
+    }
+    return idValido
   }
 }
