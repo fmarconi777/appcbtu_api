@@ -102,7 +102,7 @@ export class ControladorDeEquipamento implements Controlador {
           if (!equipamentoDeletado) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
-          return resposta('')
+          return resposta(equipamentoDeletado)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
