@@ -8,13 +8,15 @@ import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/cons
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { AlteraCadastroDeEquipamento } from '../../dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
 import { AlteraEstadoDeEquipamento } from '../../dominio/casos-de-uso/equipamento/altera-estado-de-equipamento'
+import { DeletaEquipamento } from '../../dominio/casos-de-uso/equipamento/deleta-equipamento'
 
 export class ControladorDeEquipamento implements Controlador {
   constructor (
     private readonly cadastroDeEquipamento: CadastroDeEquipamento,
     private readonly consultaEquipamento: ConsultaEquipamento,
     private readonly alteraCadastroDeEquipamento: AlteraCadastroDeEquipamento,
-    private readonly alteraEstadoDeEquipamento: AlteraEstadoDeEquipamento
+    private readonly alteraEstadoDeEquipamento: AlteraEstadoDeEquipamento,
+    private readonly deletaEquipamento: DeletaEquipamento
   ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
@@ -96,6 +98,7 @@ export class ControladorDeEquipamento implements Controlador {
         if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
           return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
         }
+        await this.deletaEquipamento.deletar(+parametro)
         return resposta('')
       }
       default:
