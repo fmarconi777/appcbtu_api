@@ -8,6 +8,7 @@ import { erroDeServidor, requisicaoNaoEncontrada, resposta } from '../auxiliares
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { AlteraCadastroDeEquipamento, EquipamentoValido } from '../../dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
 import { AlteraEstadoDeEquipamento, EstadoEquipamento } from '../../dominio/casos-de-uso/equipamento/altera-estado-de-equipamento'
+import { DeletaEquipamento } from '../../dominio/casos-de-uso/equipamento/deleta-equipamento'
 
 const makeCadastroDeEquipamento = (): CadastroDeEquipamento => {
   class CadastroDeEquipamentoStub implements CadastroDeEquipamento {
@@ -61,26 +62,44 @@ const makeAlteraEstadoDeEquipamentoStub = (): AlteraEstadoDeEquipamento => {
   return new AlteraEstadoDeEquipamentoStub()
 }
 
+const makeDeletaEquipamentoStub = (): DeletaEquipamento => {
+  class DeletaEquipamentoStub implements DeletaEquipamento {
+    async deletar (id: number): Promise<string | null> {
+      return await new Promise(resolve => resolve('Equipamento deletado com sucesso'))
+    }
+  }
+  return new DeletaEquipamentoStub()
+}
+
 interface SutTypes {
   sut: ControladorDeEquipamento
   cadastroDeEquipamentoStub: CadastroDeEquipamento
   consultaEquipamentoStub: ConsultaEquipamento
   alteraCadastroDeEquipamentoStub: AlteraCadastroDeEquipamento
   alteraEstadoDeEquipamentoStub: AlteraEstadoDeEquipamento
+  deletaEquipamentoStub: DeletaEquipamento
 }
 
 const makeSut = (): SutTypes => {
+  const deletaEquipamentoStub = makeDeletaEquipamentoStub()
   const alteraEstadoDeEquipamentoStub = makeAlteraEstadoDeEquipamentoStub()
   const alteraCadastroDeEquipamentoStub = makeAlteraCadastroDeEquipamentoStub()
   const consultaEquipamentoStub = makeConsultaEquipamentoStub()
   const cadastroDeEquipamentoStub = makeCadastroDeEquipamento()
-  const sut = new ControladorDeEquipamento(cadastroDeEquipamentoStub, consultaEquipamentoStub, alteraCadastroDeEquipamentoStub, alteraEstadoDeEquipamentoStub)
+  const sut = new ControladorDeEquipamento(
+    cadastroDeEquipamentoStub,
+    consultaEquipamentoStub,
+    alteraCadastroDeEquipamentoStub,
+    alteraEstadoDeEquipamentoStub,
+    deletaEquipamentoStub
+  )
   return {
     sut,
     cadastroDeEquipamentoStub,
     consultaEquipamentoStub,
     alteraCadastroDeEquipamentoStub,
-    alteraEstadoDeEquipamentoStub
+    alteraEstadoDeEquipamentoStub,
+    deletaEquipamentoStub
   }
 }
 
@@ -110,6 +129,17 @@ describe('Controlador de equipamentos', () => {
       }
       const resposta = await sut.tratar(requisicaoHttp)
       expect(resposta).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
+
+    test('Deve chamar o deletaEquipamento com o valor correto', async () => {
+      const { sut, deletaEquipamentoStub } = makeSut()
+      const alterarSpy = jest.spyOn(deletaEquipamentoStub, 'deletar')
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'DELETE'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(alterarSpy).toHaveBeenCalledWith(1)
     })
   })
 
