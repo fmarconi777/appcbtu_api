@@ -6,18 +6,18 @@ import { CadastroAlerta } from '../../dominio/casos-de-uso/alerta/cadastro-de-al
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alerta'
+import { Validador } from '../protocolos/validador'
 
 export class ControladorDeAlerta implements Controlador {
-  private readonly cadastroDeAlerta: CadastroAlerta
-  private readonly consultaAlerta: ConsultaAlerta
-
-  constructor (cadastroDeAlerta: CadastroAlerta, consultaAlerta: ConsultaAlerta) {
-    this.cadastroDeAlerta = cadastroDeAlerta
-    this.consultaAlerta = consultaAlerta
-  }
+  constructor (
+    private readonly cadastroDeAlerta: CadastroAlerta,
+    private readonly consultaAlerta: ConsultaAlerta,
+    private readonly validadorDeSiglaStub: Validador
+  ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
     const metodo = requisicaoHttp.metodo
+    const parametro = requisicaoHttp.parametro
     switch (metodo) {
       case 'POST':
         try {
@@ -37,11 +37,11 @@ export class ControladorDeAlerta implements Controlador {
         }
       case 'GET':
         try {
-          const parametro = requisicaoHttp.parametro
           if (!parametro) {// eslint-disable-line
             const todosAlertas = await this.consultaAlerta.consultaalertaTodas()
             return resposta(todosAlertas)
           }
+          this.validadorDeSiglaStub.validar(parametro)
           const alerta = await this.consultaAlerta.consultaalerta(parametro)
           if (!alerta || !Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
