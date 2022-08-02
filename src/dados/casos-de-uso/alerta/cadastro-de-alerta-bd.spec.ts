@@ -1,7 +1,17 @@
+import { ValidadorBD } from '../../../apresentacao/protocolos/validadorBD'
 import { DadosAlerta } from '../../../dominio/casos-de-uso/alerta/cadastro-de-alerta'
 import { ModeloAlerta } from '../../../dominio/modelos/alerta'
 import { RepositorioAlerta } from '../../protocolos/bd/alerta/repositorio-alerta'
 import { CadastroDeAlerta } from './cadastro-de-alerta-bd'
+
+const alertaFalso = {
+  descricao: 'descricao_valido',
+  prioridade: 'prioridade_valido',
+  dataInicio: 'datainicio_valido',
+  dataFim: 'datafim_valido',
+  ativo: 'ativo_valido',
+  estacaoId: '1'
+}
 
 const makeRepositorioAlerta = (): RepositorioAlerta => {
   class RepositorioAlertaStub implements RepositorioAlerta {
@@ -13,66 +23,63 @@ const makeRepositorioAlerta = (): RepositorioAlerta => {
         dataInicio: 'datainicio_valido',
         dataFim: 'datafim_valido',
         ativo: 'ativo_valido',
-        estacaoId: 'estacaoid_valido'
+        estacaoId: '1'
       }))
     }
   }
   return new RepositorioAlertaStub()
 }
 
+const makeValidadorDeEstacaoStub = (): ValidadorBD => {
+  class ValidaEstacaoStub implements ValidadorBD {
+    async validar (parametro: string): Promise<boolean> {
+      return await new Promise(resolve => resolve(true))
+    }
+  }
+  return new ValidaEstacaoStub()
+}
+
 interface SutTypes {
   sut: CadastroDeAlerta
   repositorioAlertaStub: RepositorioAlerta
+  validadorDeEstacaoStub: ValidadorBD
 }
 
 const makeStu = (): SutTypes => {
+  const validadorDeEstacaoStub = makeValidadorDeEstacaoStub()
   const repositorioAlertaStub = makeRepositorioAlerta()
-  const sut = new CadastroDeAlerta(repositorioAlertaStub)
+  const sut = new CadastroDeAlerta(repositorioAlertaStub, validadorDeEstacaoStub)
   return {
     sut,
-    repositorioAlertaStub
+    repositorioAlertaStub,
+    validadorDeEstacaoStub
   }
 }
 
 describe('Caso de uso CadastroDeAlerta', () => {
+  test('Deve chamar o validadorDeEstacao com o valor correto', async () => {
+    const { sut, validadorDeEstacaoStub } = makeStu()
+    const validarSpy = jest.spyOn(validadorDeEstacaoStub, 'validar')
+    await sut.inserir(alertaFalso)
+    expect(validarSpy).toHaveBeenCalledWith(+alertaFalso.estacaoId)
+  })
+
   test('Deve chamar o RepositorioAlerta com os valores corretos', async () => {
     const { sut, repositorioAlertaStub } = makeStu()
     const inserirSpy = jest.spyOn(repositorioAlertaStub, 'inserir')
-    const alertaFalso = {
-      descricao: 'descricao_valido',
-      prioridade: 'prioridade_valido',
-      dataInicio: 'datainicio_valido',
-      dataFim: 'datafim_valido',
-      ativo: 'ativo_valido',
-      estacaoId: 'estacaoid_valido'
-    }
     await sut.inserir(alertaFalso)
     expect(inserirSpy).toHaveBeenCalledWith(alertaFalso)
   })
+
   test('Deve retornar um erro se o RepositorioAlerta retornar um erro', async () => {
     const { sut, repositorioAlertaStub } = makeStu()
     jest.spyOn(repositorioAlertaStub, 'inserir').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const alertaFalso = {
-      descricao: 'descricao_valido',
-      prioridade: 'prioridade_valido',
-      dataInicio: 'datainicio_valido',
-      dataFim: 'datafim_valido',
-      ativo: 'ativo_valido',
-      estacaoId: 'estacaoid_valido'
-    }
     const inserir = sut.inserir(alertaFalso)
     await expect(inserir).rejects.toThrow()
   })
+
   test('Deve retornar um alerta em caso de sucesso', async () => {
     const { sut } = makeStu()
-    const alertaFalso = {
-      descricao: 'descricao_valido',
-      prioridade: 'prioridade_valido',
-      dataInicio: 'datainicio_valido',
-      dataFim: 'datafim_valido',
-      ativo: 'ativo_valido',
-      estacaoId: 'estacaoid_valido'
-    }
     const inserir = await sut.inserir(alertaFalso)
     expect(inserir).toEqual({
       id: 'id_valido',
@@ -81,7 +88,7 @@ describe('Caso de uso CadastroDeAlerta', () => {
       dataInicio: 'datainicio_valido',
       dataFim: 'datafim_valido',
       ativo: 'ativo_valido',
-      estacaoId: 'estacaoid_valido'
+      estacaoId: '1'
     })
   })
 })
