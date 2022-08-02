@@ -2,7 +2,6 @@ import { ControladorDeAlerta } from './alerta'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { CadastroAlerta, DadosAlerta } from '../../dominio/casos-de-uso/alerta/cadastro-de-alerta'
 import { ModeloAlerta } from '../../dominio/modelos/alerta'
-import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alerta'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
@@ -289,12 +288,20 @@ describe('Controlador de Alerta', () => {
       expect(spyValidar).toHaveBeenCalledWith('sigla_qualquer')
     })
 
+    test('Deve retornar status 500 caso validadorDeSigla retorne um erro', async () => {
+      const { sut, validadorDeSiglaStub } = makeSut()
+      jest.spyOn(validadorDeSiglaStub, 'validar').mockImplementationOnce(() => { throw new Error() })
+      const requisicaoHttp = { parametro: 'sigla_qualquer', metodo: 'GET' }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
+
     test('Deve chamar ConsultaAlerta com o valor correto', async () => {
       const { sut, consultaAlertaStub } = makeSut()
       const spyConsula = jest.spyOn(consultaAlertaStub, 'consultaalerta')
-      const requisicaoHttp = { parametro: 'alerta_qualquer', metodo: 'GET' }
+      const requisicaoHttp = { parametro: 'sigla_qualquer', metodo: 'GET' }
       await sut.tratar(requisicaoHttp)
-      expect(spyConsula).toHaveBeenCalledWith('alerta_qualquer')
+      expect(spyConsula).toHaveBeenCalledWith('sigla_qualquer')
     })
 
     test('Deve retornar codigo 200 e um alerta se o parâmetro estiver correto', async () => {
@@ -316,7 +323,7 @@ describe('Controlador de Alerta', () => {
     test('Deve retornar codigo 404 se o ConsultaAlerta retornar null', async () => {
       const { sut, consultaAlertaStub } = makeSut()
       jest.spyOn(consultaAlertaStub, 'consultaalerta').mockReturnValueOnce(new Promise(resolve => resolve(null)))
-      const requisicaoHttp = { parametro: 'alerta_invalido', metodo: 'GET' }
+      const requisicaoHttp = { parametro: 'sigla_invalida', metodo: 'GET' }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(404)
       expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('id'))
@@ -324,23 +331,14 @@ describe('Controlador de Alerta', () => {
 
     test('Deve retornar codigo 500 se o ConsultaAlerta retornar um erro', async () => {
       const { sut, consultaAlertaStub } = makeSut()
-      const erroFalso = new Error()
-      erroFalso.stack = 'stack_qualquer'
-      const erro = erroDeServidor(erroFalso)
-      jest.spyOn(consultaAlertaStub, 'consultaalertaTodas').mockImplementationOnce(async () => {
-        return await new Promise((resolve, reject) => reject(erro))
-      })
-      jest.spyOn(consultaAlertaStub, 'consultaalerta').mockImplementationOnce(async () => {
-        return await new Promise((resolve, reject) => reject(erro))
-      })
+      jest.spyOn(consultaAlertaStub, 'consultaalertaTodas').mockReturnValueOnce(Promise.reject(new Error()))
+      jest.spyOn(consultaAlertaStub, 'consultaalerta').mockReturnValueOnce(Promise.reject(new Error()))
       const requisicaoHttpSemAlerta = { parametro: '', metodo: 'GET' }
-      const requisicaoHttpComAlerta = { parametro: 'alerta_qualquer', metodo: 'GET' }
+      const requisicaoHttpComAlerta = { parametro: 'sigla_qualquer', metodo: 'GET' }
       const respostaHttpSemAlerta = await sut.tratar(requisicaoHttpSemAlerta)
       const respostaHttpComAlerta = await sut.tratar(requisicaoHttpComAlerta)
-      expect(respostaHttpSemAlerta.status).toBe(500)
-      expect(respostaHttpSemAlerta.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
-      expect(respostaHttpComAlerta.status).toBe(500)
-      expect(respostaHttpComAlerta.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
+      expect(respostaHttpSemAlerta).toEqual(erroDeServidor(new Error()))
+      expect(respostaHttpComAlerta).toEqual(erroDeServidor(new Error()))
     })
   })
 })
