@@ -1,4 +1,4 @@
-import { ConsultaAlertaBD } from './consulta-alerta'
+import { ConsultaAlertaBD } from './consulta-alerta-bd'
 import { RepositorioConsultaAlerta, ModelosAlertas } from '../../protocolos/bd/alerta/repositorio-consulta-alerta-todas'
 import { ModeloAlerta } from '../../../dominio/modelos/alerta'
 
