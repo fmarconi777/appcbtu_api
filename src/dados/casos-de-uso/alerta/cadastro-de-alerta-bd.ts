@@ -10,7 +10,10 @@ export class CadastroDeAlerta implements CadastroAlerta {
   ) {}
 
   async inserir (dadosAlerta: DadosAlerta): Promise<ModeloAlerta | null> {
-    await this.validadorDeEstacao.validar(+dadosAlerta.estacaoId)
-    return await this.inserirRepositorioAlerta.inserir(dadosAlerta)
+    const estacaoValida = await this.validadorDeEstacao.validar(+dadosAlerta.estacaoId)
+    if (estacaoValida) {
+      return await this.inserirRepositorioAlerta.inserir(dadosAlerta)
+    }
+    return null
   }
 }
