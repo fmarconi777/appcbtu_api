@@ -28,6 +28,9 @@ export class ControladorDeAlerta implements Controlador {
             }
           }
           const alerta = await this.cadastroDeAlerta.inserir(requisicaoHttp.corpo)
+          if (!alerta) {  // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId'))
+          }
           return resposta(alerta)
         } catch (erro: any) {
           return erroDeServidor(erro)
