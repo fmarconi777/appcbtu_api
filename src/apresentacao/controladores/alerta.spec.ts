@@ -7,6 +7,7 @@ import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alerta'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
+import { Validador } from '../protocolos/validador'
 
 const alertaFalso = {
   descricao: 'qualquer_descricao',
@@ -66,20 +67,32 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
   return new ConsultaAlertaStub()
 }
 
+const makeValidadorDeSiglaStub = (): Validador => {
+  class ValidadorDeSiglaStub implements Validador {
+    validar (parametro: string): boolean {
+      return true
+    }
+  }
+  return new ValidadorDeSiglaStub()
+}
+
 interface SutTypes {
   sut: ControladorDeAlerta
   cadastroDeAlertaStub: CadastroAlerta
   consultaAlertaStub: ConsultaAlerta
+  validadorDeSiglaStub: Validador
 }
 
 const makeSut = (): SutTypes => {
+  const validadorDeSiglaStub = makeValidadorDeSiglaStub()
   const cadastroDeAlertaStub = makeCadastroAlerta()
   const consultaAlertaStub = makeConsultaAlerta()
-  const sut = new ControladorDeAlerta(cadastroDeAlertaStub, consultaAlertaStub)
+  const sut = new ControladorDeAlerta(cadastroDeAlertaStub, consultaAlertaStub, validadorDeSiglaStub)
   return {
     sut,
     cadastroDeAlertaStub,
-    consultaAlertaStub
+    consultaAlertaStub,
+    validadorDeSiglaStub
   }
 }
 
@@ -95,7 +108,7 @@ describe('Controlador de Alerta', () => {
     expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
   })
 
-  describe('Método Post', () => {
+  describe('Método POST', () => {
     test('Deve retornar codigo 400 se uma descrição não for fornecida', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
@@ -251,7 +264,7 @@ describe('Controlador de Alerta', () => {
     })
   })
 
-  describe('Método Get', () => {
+  describe('Método GET', () => {
     test('Deve retornar codigo 200 e todas os alertas se um parâmetro não for fornecido', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = { corpo: '', metodo: 'GET' }
@@ -267,6 +280,15 @@ describe('Controlador de Alerta', () => {
         estacaoId: 'estacaoid_qualquer'
       }])
     })
+
+    test('Deve chamar validadorDeSigla com o valor correto', async () => {
+      const { sut, validadorDeSiglaStub } = makeSut()
+      const spyValidar = jest.spyOn(validadorDeSiglaStub, 'validar')
+      const requisicaoHttp = { parametro: 'sigla_qualquer', metodo: 'GET' }
+      await sut.tratar(requisicaoHttp)
+      expect(spyValidar).toHaveBeenCalledWith('sigla_qualquer')
+    })
+
     test('Deve chamar ConsultaAlerta com o valor correto', async () => {
       const { sut, consultaAlertaStub } = makeSut()
       const spyConsula = jest.spyOn(consultaAlertaStub, 'consultaalerta')
@@ -274,6 +296,7 @@ describe('Controlador de Alerta', () => {
       await sut.tratar(requisicaoHttp)
       expect(spyConsula).toHaveBeenCalledWith('alerta_qualquer')
     })
+
     test('Deve retornar codigo 200 e um alerta se o parâmetro estiver correto', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = { parametro: '1', metodo: 'GET' }
