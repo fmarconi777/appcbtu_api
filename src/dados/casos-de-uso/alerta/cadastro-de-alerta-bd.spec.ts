@@ -64,6 +64,13 @@ describe('Caso de uso CadastroDeAlerta', () => {
     expect(validarSpy).toHaveBeenCalledWith(+alertaFalso.estacaoId)
   })
 
+  test('Deve retornar um erro caso o validadorDeEstacao retorne um erro', async () => {
+    const { sut, validadorDeEstacaoStub } = makeStu()
+    jest.spyOn(validadorDeEstacaoStub, 'validar').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.inserir(alertaFalso)
+    await expect(resposta).rejects.toThrow()
+  })
+
   test('Deve chamar o RepositorioAlerta com os valores corretos', async () => {
     const { sut, repositorioAlertaStub } = makeStu()
     const inserirSpy = jest.spyOn(repositorioAlertaStub, 'inserir')
