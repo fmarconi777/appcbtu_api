@@ -334,7 +334,7 @@ describe('Controlador de Alerta', () => {
 
     test('Deve retornar codigo 200 e uma lista de alertas da estação se o parâmetro estiver correto', async () => {
       const { sut } = makeSut()
-      const requisicaoHttp = { parametro: '1', metodo: 'GET' }
+      const requisicaoHttp = { parametro: 'sigla_qualquer', metodo: 'GET' }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(200)
       expect(respostaHttp.corpo).toEqual([{
@@ -346,6 +346,22 @@ describe('Controlador de Alerta', () => {
         ativo: 'ativo_valida',
         estacaoId: 'estacaoid_valida'
       }])
+    })
+
+    test('Deve retornar codigo 200 e um alerta se o parâmetro2 estiver correto', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = { parametro: 'sigla_qualquer', parametro2: '1', metodo: 'GET' }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp.status).toBe(200)
+      expect(respostaHttp.corpo).toEqual({
+        id: 'id_valida',
+        descricao: 'descricao_valida',
+        prioridade: 'prioridade_valida',
+        dataInicio: 'datainicio_valida',
+        dataFim: 'datafim_valida',
+        ativo: 'ativo_valida',
+        estacaoId: 'estacaoid_valida'
+      })
     })
 
     test('Deve retornar codigo 500 se o ConsultaAlerta retornar um erro', async () => {
