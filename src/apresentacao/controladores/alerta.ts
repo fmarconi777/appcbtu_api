@@ -49,7 +49,10 @@ export class ControladorDeAlerta implements Controlador {
           if (parametro2 && (+parametro2 !== Math.abs(+parametro2) || !Number.isInteger(+parametro2))) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
-          const alerta = await this.consultaAlerta.consultaalerta(parametro)
+          const alerta = await this.consultaAlerta.consultaalerta(parametro, parametro2)
+          if (!alerta) {  // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+          }
           return resposta(alerta)
         } catch (erro: any) {
           return erroDeServidor(erro)
