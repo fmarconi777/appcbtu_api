@@ -33,11 +33,11 @@ export class ControladorDeEstacao implements Controlador {
             const todasEstacoes = await this.consultaEstacao.consultarTodas()
             return resposta(todasEstacoes)
           }
-          const parametroValido = this.validaParametro.validar(parametro)
+          const parametroValido = this.validaParametro.validar(parametro.toLowerCase())
           if (!parametroValido) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('sigla'))
           }
-          const estacao = await this.consultaEstacao.consultar(parametro)
+          const estacao = await this.consultaEstacao.consultar(parametro.toLowerCase())
           return resposta(estacao)
         } catch (erro: any) {
           return erroDeServidor(erro)
