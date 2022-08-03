@@ -37,8 +37,8 @@ const makeCadastroAlerta = (): CadastroAlerta => {
 
 const makeConsultaAlerta = (): ConsultaAlerta => {
   class ConsultaAlertaStub implements ConsultaAlerta {
-    async consultaalerta (): Promise<ModeloAlerta | null> {
-      const listaFalsa = {
+    async consultaalerta (parametro?: string, parametro2?: number): Promise<ModeloAlerta | ModeloAlerta[] | null> {
+      const alertaFalsa = {
         id: 'id_valida',
         descricao: 'descricao_valida',
         prioridade: 'prioridade_valida',
@@ -47,11 +47,14 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
         ativo: 'ativo_valida',
         estacaoId: 'estacaoid_valida'
       }
-      return await new Promise(resolve => resolve(listaFalsa))
+      if (parametro2) { // eslint-disable-line
+        return await Promise.resolve(alertaFalsa)
+      }
+      return await new Promise(resolve => resolve([alertaFalsa]))
     }
 
     async consultaalertaTodas (): Promise<ModeloAlerta[]> {
-      const alertaFalsa = [{
+      const listaFalsa = [{
         id: 'id_qualquer',
         descricao: 'descricao_qualquer',
         prioridade: 'prioridade_qualquer',
@@ -60,7 +63,7 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
         ativo: 'ativo_qualquer',
         estacaoId: 'estacaoid_qualquer'
       }]
-      return await new Promise(resolve => resolve(alertaFalsa))
+      return await new Promise(resolve => resolve(listaFalsa))
     }
   }
   return new ConsultaAlertaStub()
@@ -329,12 +332,12 @@ describe('Controlador de Alerta', () => {
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
     })
 
-    test('Deve retornar codigo 200 e um alerta se o parâmetro estiver correto', async () => {
+    test('Deve retornar codigo 200 e uma lista de alertas da estação se o parâmetro estiver correto', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = { parametro: '1', metodo: 'GET' }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(200)
-      expect(respostaHttp.corpo).toEqual({
+      expect(respostaHttp.corpo).toEqual([{
         id: 'id_valida',
         descricao: 'descricao_valida',
         prioridade: 'prioridade_valida',
@@ -342,7 +345,7 @@ describe('Controlador de Alerta', () => {
         dataFim: 'datafim_valida',
         ativo: 'ativo_valida',
         estacaoId: 'estacaoid_valida'
-      })
+      }])
     })
 
     test('Deve retornar codigo 500 se o ConsultaAlerta retornar um erro', async () => {
