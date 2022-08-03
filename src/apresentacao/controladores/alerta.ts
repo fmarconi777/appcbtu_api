@@ -18,6 +18,7 @@ export class ControladorDeAlerta implements Controlador {
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
     const metodo = requisicaoHttp.metodo
     const parametro = requisicaoHttp.parametro
+    const parametro2 = requisicaoHttp.parametro2
     switch (metodo) {
       case 'POST':
         try {
@@ -44,6 +45,9 @@ export class ControladorDeAlerta implements Controlador {
           const parametroValido = this.validadorDeSiglaStub.validar(parametro)
           if (!parametroValido) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('sigla'))
+          }
+          if (parametro2 && (+parametro2 !== Math.abs(+parametro2) || !Number.isInteger(+parametro2))) { // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
           const alerta = await this.consultaAlerta.consultaalerta(parametro)
           return resposta(alerta)

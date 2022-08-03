@@ -12,6 +12,7 @@ export interface RespostaHttp {
 export interface RequisicaoHttp {
   corpo?: any
   parametro?: any
+  parametro2?: any
   metodo?: any
   cabecalho?: any
 }

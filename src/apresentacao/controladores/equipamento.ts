@@ -29,7 +29,7 @@ export class ControladorDeEquipamento implements Controlador {
             const todosEquipamentos = await this.consultaEquipamento.consultarTodos()
             return resposta(todosEquipamentos)
           }
-          if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
+          if (+parametro !== Math.abs(+parametro) || !Number.isInteger(+parametro)) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
           const equipamento = await this.consultaEquipamento.consultar(+parametro)
@@ -64,7 +64,7 @@ export class ControladorDeEquipamento implements Controlador {
               return requisicaoImpropria(new ErroFaltaParametro(campo))
             }
           }
-          if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
+          if (+parametro !== Math.abs(+parametro) || !Number.isInteger(+parametro)) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
           const dados = Object.assign({}, { id: parametro }, requisicaoHttp.corpo)
@@ -81,7 +81,7 @@ export class ControladorDeEquipamento implements Controlador {
           if (!requisicaoHttp.corpo.estado) { // eslint-disable-line
             return requisicaoImpropria(new ErroFaltaParametro('estado'))
           }
-          if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
+          if (+parametro !== Math.abs(+parametro) || !Number.isInteger(+parametro)) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
           const dados = Object.assign({}, { id: parametro }, requisicaoHttp.corpo)
@@ -95,7 +95,7 @@ export class ControladorDeEquipamento implements Controlador {
         }
       case 'DELETE':
         try {
-          if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
+          if (+parametro !== Math.abs(+parametro) || !Number.isInteger(+parametro)) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
           const equipamentoDeletado = await this.deletaEquipamento.deletar(+parametro)
