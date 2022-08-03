@@ -41,11 +41,11 @@ export class ControladorDeAlerta implements Controlador {
             const todosAlertas = await this.consultaAlerta.consultaalertaTodas()
             return resposta(todosAlertas)
           }
-          this.validadorDeSiglaStub.validar(parametro)
-          const alerta = await this.consultaAlerta.consultaalerta(parametro)
-          if (!alerta || !Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) { // eslint-disable-line
-            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+          const parametroValido = this.validadorDeSiglaStub.validar(parametro)
+          if (!parametroValido) { // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('sigla'))
           }
+          const alerta = await this.consultaAlerta.consultaalerta(parametro)
           return resposta(alerta)
         } catch (erro: any) {
           return erroDeServidor(erro)
