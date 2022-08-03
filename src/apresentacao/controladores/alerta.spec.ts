@@ -305,6 +305,14 @@ describe('Controlador de Alerta', () => {
       expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('sigla'))
     })
 
+    test('Deve retornar codigo 404 se o for fornecido parametro2 inválido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = { parametro: 'sigla_valida', parametro2: 'NaN', metodo: 'GET' }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp.status).toBe(404)
+      expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('id'))
+    })
+
     test('Deve chamar ConsultaAlerta com o valor correto', async () => {
       const { sut, consultaAlertaStub } = makeSut()
       const spyConsula = jest.spyOn(consultaAlertaStub, 'consultaalerta')
