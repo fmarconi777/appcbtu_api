@@ -296,6 +296,15 @@ describe('Controlador de Alerta', () => {
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
 
+    test('Deve retornar codigo 404 se o validadorDeSigla retornar false', async () => {
+      const { sut, validadorDeSiglaStub } = makeSut()
+      jest.spyOn(validadorDeSiglaStub, 'validar').mockReturnValueOnce(false)
+      const requisicaoHttp = { parametro: 'sigla_invalida', metodo: 'GET' }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp.status).toBe(404)
+      expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('sigla'))
+    })
+
     test('Deve chamar ConsultaAlerta com o valor correto', async () => {
       const { sut, consultaAlertaStub } = makeSut()
       const spyConsula = jest.spyOn(consultaAlertaStub, 'consultaalerta')
@@ -318,15 +327,6 @@ describe('Controlador de Alerta', () => {
         ativo: 'ativo_valida',
         estacaoId: 'estacaoid_valida'
       })
-    })
-
-    test('Deve retornar codigo 404 se o ConsultaAlerta retornar null', async () => {
-      const { sut, consultaAlertaStub } = makeSut()
-      jest.spyOn(consultaAlertaStub, 'consultaalerta').mockReturnValueOnce(new Promise(resolve => resolve(null)))
-      const requisicaoHttp = { parametro: 'sigla_invalida', metodo: 'GET' }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp.status).toBe(404)
-      expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('id'))
     })
 
     test('Deve retornar codigo 500 se o ConsultaAlerta retornar um erro', async () => {
