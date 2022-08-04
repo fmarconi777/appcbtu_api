@@ -19,7 +19,7 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
       const resposta = await this.repositorioConsultaAlerta.consultar(sigla)
       return resposta
     }
-    await this.repositorioAlertaConsultaPorIdStub.consultarPorId(id)
-    return null
+    const idValido = await this.repositorioAlertaConsultaPorIdStub.consultarPorId(+id)
+    return idValido
   }
 }
