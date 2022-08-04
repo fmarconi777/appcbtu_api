@@ -105,6 +105,15 @@ describe('ConsultaAlerta', () => {
     await expect(resposta).rejects.toThrow()
   })
 
+  test('Deve chamar o RepositorioConsultaAlerta com os valores corretos caso uma sigla e um id sejam fornecidos', async () => {
+    const { sut, repositorioAlertaConsultaStub } = makeSut()
+    const consultarSpy = jest.spyOn(repositorioAlertaConsultaStub, 'consultar')
+    const sigla = 'sigla_qualquer'
+    const id = '1'
+    await sut.consultar(sigla, +id)
+    expect(consultarSpy).toHaveBeenCalledWith(sigla, +id)
+  })
+
   test('Método consultaAlertaTodas deve retornar um erro caso o RepositorioConsultaAlerta retorne um erro', async () => {
     const { sut, repositorioAlertaConsultaStub } = makeSut()
     jest.spyOn(repositorioAlertaConsultaStub, 'consultar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
