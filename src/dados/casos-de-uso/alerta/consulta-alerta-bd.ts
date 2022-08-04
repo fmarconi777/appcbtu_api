@@ -20,6 +20,9 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
       return resposta
     }
     const idValido = await this.repositorioAlertaConsultaPorIdStub.consultarPorId(+id)
+    if (idValido) { //eslint-disable-line
+      await this.repositorioConsultaAlerta.consultar(sigla, +id)
+    }
     return idValido
   }
 }
