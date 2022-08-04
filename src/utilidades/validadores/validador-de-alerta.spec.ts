@@ -5,7 +5,7 @@ import { ModeloAlerta } from '../../dominio/modelos/alerta'
 
 const makeConsultaAlerta = (): ConsultaAlerta => {
   class ConsultaAlertaStub implements ConsultaAlerta {
-    async consultaalerta (): Promise<ModeloAlerta> {
+    async consultar (): Promise<ModeloAlerta> {
       const listaFalsa = {
         id: 'id_valida',
         descricao: 'descricao_valida',
@@ -18,7 +18,7 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
       return await new Promise(resolve => resolve(listaFalsa))
     }
 
-    async consultaalertaTodas (): Promise<ModeloAlerta[]> {
+    async consultarTodas (): Promise<ModeloAlerta[]> {
       const alertaFalsa = [{
         id: 'id_qualquer',
         descricao: 'descricao_qualquer',
@@ -55,7 +55,7 @@ describe('Validador de parametro', () => {
 
   test('Deve retornar um erro caso o consultaAlerta retorne um erro', async () => {
     const { sut, consultaAlertaStub } = makeSut()
-    jest.spyOn(consultaAlertaStub, 'consultaalertaTodas').mockImplementationOnce(async () => await Promise.reject(new Error()))
+    jest.spyOn(consultaAlertaStub, 'consultarTodas').mockImplementationOnce(async () => await Promise.reject(new Error()))
     const resposta = sut.validar('alerta_qualquer')
     await expect(resposta).rejects.toThrow()
   })

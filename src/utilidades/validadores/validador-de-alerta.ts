@@ -3,7 +3,7 @@ import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alert
 export class ValidadorDeAlerta implements ValidadorBD {
   constructor (private readonly consultaAlerta: ConsultaAlerta) {}
   async validar (parametro: string): Promise<boolean> {
-    const listaAlertas = await this.consultaAlerta.consultaalertaTodas()
+    const listaAlertas = await this.consultaAlerta.consultarTodas()
     return listaAlertas.some(alerta => alerta.id === parametro)
   }
 }

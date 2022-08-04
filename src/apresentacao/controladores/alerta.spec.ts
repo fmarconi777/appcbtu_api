@@ -37,7 +37,7 @@ const makeCadastroAlerta = (): CadastroAlerta => {
 
 const makeConsultaAlerta = (): ConsultaAlerta => {
   class ConsultaAlertaStub implements ConsultaAlerta {
-    async consultaalerta (parametro?: string, parametro2?: number): Promise<ModeloAlerta | ModeloAlerta[] | null> {
+    async consultar (parametro?: string, parametro2?: number): Promise<ModeloAlerta | ModeloAlerta[] | null> {
       const alertaFalsa = {
         id: 'id_valida',
         descricao: 'descricao_valida',
@@ -53,7 +53,7 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
       return await new Promise(resolve => resolve([alertaFalsa]))
     }
 
-    async consultaalertaTodas (): Promise<ModeloAlerta[]> {
+    async consultarTodas (): Promise<ModeloAlerta[]> {
       const listaFalsa = [{
         id: 'id_qualquer',
         descricao: 'descricao_qualquer',
@@ -318,7 +318,7 @@ describe('Controlador de Alerta', () => {
 
     test('Deve chamar ConsultaAlerta com os valores corretos', async () => {
       const { sut, consultaAlertaStub } = makeSut()
-      const spyConsula = jest.spyOn(consultaAlertaStub, 'consultaalerta')
+      const spyConsula = jest.spyOn(consultaAlertaStub, 'consultar')
       const requisicaoHttp = { parametro: 'sigla_qualquer', metodo: 'GET' }
       await sut.tratar(requisicaoHttp)
       expect(spyConsula).toHaveBeenCalledWith('sigla_qualquer', undefined)
@@ -326,7 +326,7 @@ describe('Controlador de Alerta', () => {
 
     test('Deve retornar codigo 404 se o consultaAlerta retornar null quando o parametro2 não estiver cadastrado', async () => {
       const { sut, consultaAlertaStub } = makeSut()
-      jest.spyOn(consultaAlertaStub, 'consultaalerta').mockReturnValueOnce(Promise.resolve(null))
+      jest.spyOn(consultaAlertaStub, 'consultar').mockReturnValueOnce(Promise.resolve(null))
       const requisicaoHttp = { parametro: 'sigla_qualquer', parametro2: '13958674000', metodo: 'GET' }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
@@ -366,8 +366,8 @@ describe('Controlador de Alerta', () => {
 
     test('Deve retornar codigo 500 se o ConsultaAlerta retornar um erro', async () => {
       const { sut, consultaAlertaStub } = makeSut()
-      jest.spyOn(consultaAlertaStub, 'consultaalertaTodas').mockReturnValueOnce(Promise.reject(new Error()))
-      jest.spyOn(consultaAlertaStub, 'consultaalerta').mockReturnValueOnce(Promise.reject(new Error()))
+      jest.spyOn(consultaAlertaStub, 'consultarTodas').mockReturnValueOnce(Promise.reject(new Error()))
+      jest.spyOn(consultaAlertaStub, 'consultar').mockReturnValueOnce(Promise.reject(new Error()))
       const requisicaoHttpSemAlerta = { parametro: '', metodo: 'GET' }
       const requisicaoHttpComAlerta = { parametro: 'sigla_qualquer', metodo: 'GET' }
       const respostaHttpSemAlerta = await sut.tratar(requisicaoHttpSemAlerta)

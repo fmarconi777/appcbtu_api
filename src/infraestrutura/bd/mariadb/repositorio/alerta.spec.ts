@@ -54,7 +54,7 @@ describe('Repositorio mariaDB Alerta', () => {
         ativo: 'false',
         estacaoId: '1'
       })
-      const resposta = await sut.consultaalerta('1')
+      const resposta = await sut.consultar('1')
       expect(resposta).toBeTruthy()
       expect(resposta.id).toBeTruthy()
       expect(resposta).toMatchObject(resultadoEsperado)
@@ -70,7 +70,7 @@ describe('Repositorio mariaDB Alerta', () => {
       ativo: 'false',
       estacaoId: '1'
     })
-    const resposta = await sut.consultaalerta()
+    const resposta = await sut.consultar()
     expect(resposta).toBeTruthy()
     expect(Array.isArray(resposta)).toBeTruthy()
     expect(resposta.length).toBeGreaterThan(0)

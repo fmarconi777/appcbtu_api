@@ -39,7 +39,7 @@ export class ControladorDeAlerta implements Controlador {
       case 'GET':
         try {
           if (!parametro) {// eslint-disable-line
-            const todosAlertas = await this.consultaAlerta.consultaalertaTodas()
+            const todosAlertas = await this.consultaAlerta.consultarTodas()
             return resposta(todosAlertas)
           }
           const parametroValido = this.validadorDeSiglaStub.validar(parametro.toLowerCase())
@@ -49,7 +49,7 @@ export class ControladorDeAlerta implements Controlador {
           if (parametro2 && (+parametro2 !== Math.abs(+parametro2) || !Number.isInteger(+parametro2))) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
-          const alerta = await this.consultaAlerta.consultaalerta(parametro.toLowerCase(), parametro2)
+          const alerta = await this.consultaAlerta.consultar(parametro.toLowerCase(), parametro2)
           if (!alerta) {  // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
