@@ -2,14 +2,15 @@ import { ConsultaAlertaBD } from './consulta-alerta-bd'
 import { RepositorioConsultaAlerta, ModelosAlertas } from '../../protocolos/bd/alerta/repositorio-consulta-alerta-todas'
 import { ModeloAlerta } from '../../../dominio/modelos/alerta'
 import { RepositorioAlertaConsultaPorId } from '../../protocolos/bd/alerta/repositorio-consulta-alerta-por-id'
+import { RepositorioAlteraAlertaAtivo } from '../../protocolos/bd/alerta/repositorio-altera-alerta-ativo'
 
 const makeAlertaFalsa = (): ModeloAlerta => ({
-  id: 'id_qualquer',
+  id: '1',
   descricao: 'descricao_qualquer',
   prioridade: 'prioridade_qualquer',
-  ativo: 'ativo_qualquer',
+  ativo: 'true',
   dataInicio: 'dataInicio_qualquer',
-  dataFim: 'dataFim_qualquer',
+  dataFim: '2022-01-01T00:00:00.000Z',
   estacaoId: 'estacaoId_qualquer'
 })
 
@@ -20,9 +21,9 @@ const makeRepositorioAlerta = (): RepositorioConsultaAlerta => {
         if (id) { //eslint-disable-line
           return await new Promise(resolve => resolve(makeAlertaFalsa()))
         }
-        return await new Promise(resolve => resolve([makeAlertaFalsa()]))
+        return await new Promise(resolve => resolve([makeAlertaFalsa(), makeAlertaFalsa()]))
       }
-      return await new Promise(resolve => resolve([makeAlertaFalsa()]))
+      return await new Promise(resolve => resolve([makeAlertaFalsa(), makeAlertaFalsa()]))
     }
   }
   return new RepositorioConsultaAlertaStub()
@@ -37,20 +38,32 @@ const makeRepositorioAlertaConsultaPorIdStub = (): RepositorioAlertaConsultaPorI
   return new RepositorioAlertaConsultaPorIdStub()
 }
 
+const makeRepositorioAlteraAlertaAtivoStub = (): RepositorioAlteraAlertaAtivo => {
+  class RepositorioAlteraAlertaAtivoStub implements RepositorioAlteraAlertaAtivo {
+    async alterarAtivo (ativo: string, id: number): Promise<string> {
+      return 'Alerta inativo'
+    }
+  }
+  return new RepositorioAlteraAlertaAtivoStub()
+}
+
 interface SubTipo {
   sut: ConsultaAlertaBD
   repositorioAlertaConsultaStub: RepositorioConsultaAlerta
   repositorioAlertaConsultaPorIdStub: RepositorioAlertaConsultaPorId
+  repositorioAlteraAlertaAtivoStub: RepositorioAlteraAlertaAtivo
 }
 
 const makeSut = (): SubTipo => {
+  const repositorioAlteraAlertaAtivoStub = makeRepositorioAlteraAlertaAtivoStub()
   const repositorioAlertaConsultaPorIdStub = makeRepositorioAlertaConsultaPorIdStub()
   const repositorioAlertaConsultaStub = makeRepositorioAlerta()
-  const sut = new ConsultaAlertaBD(repositorioAlertaConsultaStub, repositorioAlertaConsultaPorIdStub)
+  const sut = new ConsultaAlertaBD(repositorioAlertaConsultaStub, repositorioAlertaConsultaPorIdStub, repositorioAlteraAlertaAtivoStub)
   return {
     sut,
     repositorioAlertaConsultaStub,
-    repositorioAlertaConsultaPorIdStub
+    repositorioAlertaConsultaPorIdStub,
+    repositorioAlteraAlertaAtivoStub
   }
 }
 
@@ -71,11 +84,11 @@ describe('ConsultaAlerta', () => {
     await expect(respostaConsultar).rejects.toThrow()
   })
 
-  test('Deve retornar um array de alertas caso somente a sigla seja fornecida', async () => {
+  test('Deve retornar um array de alertas ativos caso somente a sigla seja fornecida', async () => {
     const { sut } = makeSut()
     const alerta = 'sigla_qualquer'
     const resposta = await sut.consultar(alerta)
-    expect(resposta).toEqual([makeAlertaFalsa()])
+    expect(resposta).toEqual([makeAlertaFalsa(), makeAlertaFalsa()])
   })
 
   test('Deve chamar o RepositorioConsultaAlertaPorId com o valor correto caso um id seja fornecido', async () => {
@@ -114,6 +127,15 @@ describe('ConsultaAlerta', () => {
     expect(consultarSpy).toHaveBeenCalledWith(sigla, +id)
   })
 
+  test('Deve chamar o RepositorioAlteraAlertaAtivo com os valores corretos caso a dataFim seja menor que a data atual', async () => {
+    const { sut, repositorioAlteraAlertaAtivoStub } = makeSut()
+    const alterarAtivoSpy = jest.spyOn(repositorioAlteraAlertaAtivoStub, 'alterarAtivo')
+    const sigla = 'sigla_qualquer'
+    const id = '1'
+    await sut.consultar(sigla, +id)
+    expect(alterarAtivoSpy).toHaveBeenCalledWith('inativo', +id)
+  })
+
   test('Método consultaAlertaTodas deve retornar um erro caso o RepositorioConsultaAlerta retorne um erro', async () => {
     const { sut, repositorioAlertaConsultaStub } = makeSut()
     jest.spyOn(repositorioAlertaConsultaStub, 'consultar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
@@ -124,7 +146,7 @@ describe('ConsultaAlerta', () => {
   test('Deve Retornar um array com todos os alertas caso um parâmetro não seja fornecido', async () => {
     const { sut } = makeSut()
     const resposta = await sut.consultarTodas()
-    expect(resposta).toEqual([makeAlertaFalsa()])
+    expect(resposta).toEqual([makeAlertaFalsa(), makeAlertaFalsa()])
   })
 
   test('Método consultaralerta deve retornar null caso o RepositorioConsultaAlerta não encontre um alerta para o parametro', async () => {
