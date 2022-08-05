@@ -27,7 +27,7 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
       const dataAtual = (new Date(Date.now() - 10800000).toISOString()).substring(0, 10)
       const dataAlerta = (new Date(alerta.dataFim).toISOString()).substring(0, 10)
       if (new Date(dataAlerta).getTime() < new Date(dataAtual).getTime()) {
-        await this.repositorioAlteraAlertaAtivo.alterarAtivo('inativo', +alerta.id)
+        await this.repositorioAlteraAlertaAtivo.alterarAtivo(false, +alerta.id)
       }
     }
     return idValido

@@ -1,3 +1,3 @@
 export interface RepositorioAlteraAlertaAtivo {
-  alterarAtivo: (ativo: string, id: number) => Promise<string>
+  alterarAtivo: (ativo: boolean, id: number) => Promise<string>
 }

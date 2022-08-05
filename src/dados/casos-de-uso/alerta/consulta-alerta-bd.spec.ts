@@ -40,7 +40,7 @@ const makeRepositorioAlertaConsultaPorIdStub = (): RepositorioAlertaConsultaPorI
 
 const makeRepositorioAlteraAlertaAtivoStub = (): RepositorioAlteraAlertaAtivo => {
   class RepositorioAlteraAlertaAtivoStub implements RepositorioAlteraAlertaAtivo {
-    async alterarAtivo (ativo: string, id: number): Promise<string> {
+    async alterarAtivo (ativo: boolean, id: number): Promise<string> {
       return 'Alerta inativo'
     }
   }
@@ -133,7 +133,7 @@ describe('ConsultaAlerta', () => {
     const sigla = 'sigla_qualquer'
     const id = '1'
     await sut.consultar(sigla, +id)
-    expect(alterarAtivoSpy).toHaveBeenCalledWith('inativo', +id)
+    expect(alterarAtivoSpy).toHaveBeenCalledWith(false, +id)
   })
 
   test('Método consultaAlertaTodas deve retornar um erro caso o RepositorioConsultaAlerta retorne um erro', async () => {
