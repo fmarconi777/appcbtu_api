@@ -16,7 +16,7 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
     return resposta
   }
 
-  async consultar (sigla: string, id?: number): Promise<ModeloAlerta | ModeloAlerta[] | null> {
+  async consultar (sigla: string, id?: number): Promise<ModeloAlerta | ModeloAlerta[] | null | string> {
     if (!id) { //eslint-disable-line
       const resposta = await this.repositorioConsultaAlerta.consultar(sigla)
       return resposta
@@ -24,11 +24,14 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
     const idValido = await this.repositorioAlertaConsultaPorId.consultarPorId(+id)
     if (idValido) { //eslint-disable-line
       const alerta = await this.repositorioConsultaAlerta.consultar(sigla, +id) // pode me retornar null, tratar retorno caso seja null
-      const dataAtual = (new Date(Date.now() - 10800000).toISOString()).substring(0, 10)
-      const dataAlerta = (new Date(alerta.dataFim).toISOString()).substring(0, 10)
-      if (new Date(dataAlerta).getTime() < new Date(dataAtual).getTime()) {
-        await this.repositorioAlteraAlertaAtivo.alterarAtivo(false, +alerta.id)
+      if (alerta) { //eslint-disable-line
+        const dataAtual = (new Date(Date.now() - 10800000).toISOString()).substring(0, 10)
+        const dataAlerta = (new Date(alerta.dataFim).toISOString()).substring(0, 10)
+        if (new Date(dataAlerta).getTime() < new Date(dataAtual).getTime()) {
+          await this.repositorioAlteraAlertaAtivo.alterarAtivo(false, +alerta.id)
+        }
       }
+      return 'Alerta inativo'
     }
     return idValido
   }
