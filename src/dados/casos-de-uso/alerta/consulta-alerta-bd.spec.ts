@@ -127,6 +127,15 @@ describe('ConsultaAlerta', () => {
     expect(consultarSpy).toHaveBeenCalledWith(sigla, +id)
   })
 
+  test('Deve retornar a mensagem "Alerta inativo" caso o RepositorioConsultaAlerta retorne null', async () => {
+    const { sut, repositorioAlertaConsultaStub } = makeSut()
+    jest.spyOn(repositorioAlertaConsultaStub, 'consultar').mockReturnValueOnce(Promise.resolve(null))
+    const sigla = 'sigla_qualquer'
+    const id = '1'
+    const resposta = await sut.consultar(sigla, +id)
+    expect(resposta).toEqual('Alerta inativo')
+  })
+
   test('Deve chamar o RepositorioAlteraAlertaAtivo com os valores corretos caso a dataFim seja menor que a data atual', async () => {
     const { sut, repositorioAlteraAlertaAtivoStub } = makeSut()
     const alterarAtivoSpy = jest.spyOn(repositorioAlteraAlertaAtivoStub, 'alterarAtivo')
