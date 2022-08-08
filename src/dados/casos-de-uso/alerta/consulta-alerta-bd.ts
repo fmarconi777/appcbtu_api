@@ -25,11 +25,12 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
     }
     const idValido = await this.repositorioAlertaConsultaPorId.consultarPorId(+id)
     if (idValido) { //eslint-disable-line
-      const alerta = await this.repositorioConsultaAlerta.consultar(sigla, +id) // pode me retornar null, tratar retorno caso seja null
+      const alerta = await this.repositorioConsultaAlerta.consultar(sigla, +id)
       if (alerta) { //eslint-disable-line
         if (this.comparadorDeDatas.compararDatas(alerta.dataFim)) {
-          await this.repositorioAlteraAlertaAtivo.alterarAtivo(false, +alerta.id)
+          return await this.repositorioAlteraAlertaAtivo.alterarAtivo(false, +alerta.id)
         }
+        return ''
       }
       return 'Alerta inativo'
     }
