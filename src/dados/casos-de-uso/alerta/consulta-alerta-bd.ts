@@ -30,7 +30,7 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
         if (this.comparadorDeDatas.compararDatas(alerta.dataFim)) {
           return await this.repositorioAlteraAlertaAtivo.alterarAtivo(false, +alerta.id)
         }
-        return ''
+        return alerta
       }
       return 'Alerta inativo'
     }
