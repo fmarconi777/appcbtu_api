@@ -3,6 +3,7 @@ import { RepositorioConsultaAlerta, ModelosAlertas } from '../../protocolos/bd/a
 import { ModeloAlerta } from '../../../dominio/modelos/alerta'
 import { RepositorioAlertaConsultaPorId } from '../../protocolos/bd/alerta/repositorio-consulta-alerta-por-id'
 import { RepositorioAlteraAlertaAtivo } from '../../protocolos/bd/alerta/repositorio-altera-alerta-ativo'
+import { ComparadorDeDatas } from '../../protocolos/utilidades/comparador-de-datas'
 
 const makeAlertaFalsa = (): ModeloAlerta => ({
   id: '1',
@@ -47,23 +48,35 @@ const makeRepositorioAlteraAlertaAtivoStub = (): RepositorioAlteraAlertaAtivo =>
   return new RepositorioAlteraAlertaAtivoStub()
 }
 
+const makeComparadorDeDatasStub = (): ComparadorDeDatas => {
+  class ComparadorDeDatasStub implements ComparadorDeDatas {
+    compararDatas (data: string): boolean {
+      return false
+    }
+  }
+  return new ComparadorDeDatasStub()
+}
+
 interface SubTipo {
   sut: ConsultaAlertaBD
   repositorioAlertaConsultaStub: RepositorioConsultaAlerta
   repositorioAlertaConsultaPorIdStub: RepositorioAlertaConsultaPorId
   repositorioAlteraAlertaAtivoStub: RepositorioAlteraAlertaAtivo
+  comparadorDeDatasStub: ComparadorDeDatas
 }
 
 const makeSut = (): SubTipo => {
+  const comparadorDeDatasStub = makeComparadorDeDatasStub()
   const repositorioAlteraAlertaAtivoStub = makeRepositorioAlteraAlertaAtivoStub()
   const repositorioAlertaConsultaPorIdStub = makeRepositorioAlertaConsultaPorIdStub()
   const repositorioAlertaConsultaStub = makeRepositorioAlerta()
-  const sut = new ConsultaAlertaBD(repositorioAlertaConsultaStub, repositorioAlertaConsultaPorIdStub, repositorioAlteraAlertaAtivoStub)
+  const sut = new ConsultaAlertaBD(repositorioAlertaConsultaStub, repositorioAlertaConsultaPorIdStub, repositorioAlteraAlertaAtivoStub, comparadorDeDatasStub)
   return {
     sut,
     repositorioAlertaConsultaStub,
     repositorioAlertaConsultaPorIdStub,
-    repositorioAlteraAlertaAtivoStub
+    repositorioAlteraAlertaAtivoStub,
+    comparadorDeDatasStub
   }
 }
 
@@ -136,8 +149,18 @@ describe('ConsultaAlerta', () => {
     expect(resposta).toEqual('Alerta inativo')
   })
 
+  test('Deve chamar o comparadorDeDatas com o valor correto caso RepositorioConsultaAlerta retorne um alerta', async () => {
+    const { sut, comparadorDeDatasStub } = makeSut()
+    const compararDatasSpy = jest.spyOn(comparadorDeDatasStub, 'compararDatas')
+    const sigla = 'sigla_qualquer'
+    const id = '1'
+    await sut.consultar(sigla, +id)
+    expect(compararDatasSpy).toHaveBeenCalledWith('2022-01-01T00:00:00.000Z')
+  })
+
   test('Deve chamar o RepositorioAlteraAlertaAtivo com os valores corretos caso a dataFim seja menor que a data atual', async () => {
-    const { sut, repositorioAlteraAlertaAtivoStub } = makeSut()
+    const { sut, repositorioAlteraAlertaAtivoStub, comparadorDeDatasStub } = makeSut()
+    jest.spyOn(comparadorDeDatasStub, 'compararDatas').mockReturnValueOnce(true)
     const alterarAtivoSpy = jest.spyOn(repositorioAlteraAlertaAtivoStub, 'alterarAtivo')
     const sigla = 'sigla_qualquer'
     const id = '1'
