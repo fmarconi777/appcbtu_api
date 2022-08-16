@@ -20,8 +20,11 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
 
   async consultar (sigla: string, id?: number): Promise<ModeloAlerta | ModeloAlerta[] | null | string> {
     if (!id) { //eslint-disable-line
-      const resposta = await this.repositorioConsultaAlerta.consultar(sigla)
-      return resposta
+      const alertas = await this.repositorioConsultaAlerta.consultar(sigla)
+      if (alertas) { //eslint-disable-line
+        return alertas
+      }
+      return 'Alerta inativo'
     }
     const idValido = await this.repositorioAlertaConsultaPorId.consultarPorId(+id)
     if (idValido) { //eslint-disable-line
