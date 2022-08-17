@@ -22,8 +22,12 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
     if (!id) { //eslint-disable-line
       const alertas = await this.repositorioConsultaAlerta.consultar(sigla)
       if (alertas) { //eslint-disable-line
-        alertas.forEach((alerta: { dataFim: string }) => {
-          this.comparadorDeDatas.compararDatas(alerta.dataFim)
+        alertas.filter(async (alerta: { dataFim: string, id: string }) => {
+          const dataFimMenor = this.comparadorDeDatas.compararDatas(alerta.dataFim)
+          if (dataFimMenor) {
+            await this.repositorioAlteraAlertaAtivo.alterarAtivo(false, +alerta.id)
+          }
+          return !dataFimMenor
         })
         return alertas
       }
