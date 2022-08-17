@@ -202,6 +202,16 @@ describe('ConsultaAlerta', () => {
     expect(compararDatasSpy).toHaveBeenCalledTimes(2)
   })
 
+  test('Deve chamar o RepositorioAlteraAlertaAtivo para cada alerta com os valores corretos caso a dataFim seja menor que a data atual', async () => {
+    const { sut, repositorioAlteraAlertaAtivoStub, comparadorDeDatasStub } = makeSut()
+    jest.spyOn(comparadorDeDatasStub, 'compararDatas').mockReturnValue(true)
+    const alterarAtivoSpy = jest.spyOn(repositorioAlteraAlertaAtivoStub, 'alterarAtivo')
+    const sigla = 'sigla_qualquer'
+    await sut.consultar(sigla)
+    expect(alterarAtivoSpy).toHaveBeenCalledWith(false, 1)
+    expect(alterarAtivoSpy).toHaveBeenCalledTimes(2)
+  })
+
   test('Método consultaAlertaTodas deve retornar um erro caso o RepositorioConsultaAlerta retorne um erro', async () => {
     const { sut, repositorioAlertaConsultaStub } = makeSut()
     jest.spyOn(repositorioAlertaConsultaStub, 'consultar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
