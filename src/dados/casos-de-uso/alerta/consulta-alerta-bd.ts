@@ -18,18 +18,26 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
     return resposta
   }
 
+  async asyncFilter (vetor: any[], condicional: CallableFunction): Promise<[]> {
+    return vetor.reduce(async (acumulador, elemento) => await condicional(elemento) ? [...await acumulador, elemento] : acumulador, []) //eslint-disable-line
+  }
+
   async consultar (sigla: string, id?: number): Promise<ModeloAlerta | ModeloAlerta[] | null | string> {
     if (!id) { //eslint-disable-line
-      const alertas = await this.repositorioConsultaAlerta.consultar(sigla)
+      const alertas: [] = await this.repositorioConsultaAlerta.consultar(sigla)
       if (alertas) { //eslint-disable-line
-        alertas.filter(async (alerta: { dataFim: string, id: string }) => {
+        const alertasAtivos = await this.asyncFilter(alertas, async (alerta: { dataFim: string, id: string }) => {
           const dataFimMenor = this.comparadorDeDatas.compararDatas(alerta.dataFim)
           if (dataFimMenor) {
             await this.repositorioAlteraAlertaAtivo.alterarAtivo(false, +alerta.id)
+            return !dataFimMenor
           }
-          return !dataFimMenor
+          return dataFimMenor
         })
-        return alertas
+        if (alertasAtivos.length === 0) {
+          return 'Alerta inativo'
+        }
+        return alertasAtivos
       }
       return 'Alerta inativo'
     }
