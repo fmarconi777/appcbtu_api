@@ -97,13 +97,6 @@ describe('ConsultaAlerta', () => {
     await expect(respostaConsultar).rejects.toThrow()
   })
 
-  test('Deve retornar um array de alertas ativos caso somente a sigla seja fornecida', async () => {
-    const { sut } = makeSut()
-    const alerta = 'sigla_qualquer'
-    const resposta = await sut.consultar(alerta)
-    expect(resposta).toEqual([makeAlertaFalsa(), makeAlertaFalsa()])
-  })
-
   test('Deve chamar o RepositorioConsultaAlertaPorId com o valor correto caso um id seja fornecido', async () => {
     const { sut, repositorioAlertaConsultaPorIdStub } = makeSut()
     const consultarSpy = jest.spyOn(repositorioAlertaConsultaPorIdStub, 'consultarPorId')
@@ -204,13 +197,30 @@ describe('ConsultaAlerta', () => {
 
   test('Deve chamar o RepositorioAlteraAlertaAtivo para cada alerta com os valores corretos caso a dataFim seja menor que a data atual', async () => {
     const { sut, repositorioAlteraAlertaAtivoStub, comparadorDeDatasStub } = makeSut()
-    jest.spyOn(comparadorDeDatasStub, 'compararDatas').mockReturnValue(true)
+    const compararDatasSpy = jest.spyOn(comparadorDeDatasStub, 'compararDatas').mockReturnValue(true)
     const alterarAtivoSpy = jest.spyOn(repositorioAlteraAlertaAtivoStub, 'alterarAtivo')
     const sigla = 'sigla_qualquer'
     await sut.consultar(sigla)
     expect(alterarAtivoSpy).toHaveBeenCalledWith(false, 1)
     expect(alterarAtivoSpy).toHaveBeenCalledTimes(2)
+    compararDatasSpy.mockRestore()
   })
+
+  test('Deve retornar a mensagem "Alerta inativo" caso a dataFim seja menor que a data atual para todos alertas', async () => {
+    const { sut, comparadorDeDatasStub } = makeSut()
+    const compararDatasSpy = jest.spyOn(comparadorDeDatasStub, 'compararDatas').mockReturnValue(true)
+    const sigla = 'sigla_qualquer'
+    const resposta = await sut.consultar(sigla)
+    expect(resposta).toEqual('Alerta inativo')
+    compararDatasSpy.mockRestore()
+  })
+
+  // test('Deve retornar um array de alertas ativos caso somente a sigla seja fornecida', async () => {
+  //   const { sut } = makeSut()
+  //   const alerta = 'sigla_qualquer'
+  //   const resposta = await sut.consultar(alerta)
+  //   expect(resposta).toEqual([makeAlertaFalsa(), makeAlertaFalsa()])
+  // })
 
   test('Método consultaAlertaTodas deve retornar um erro caso o RepositorioConsultaAlerta retorne um erro', async () => {
     const { sut, repositorioAlertaConsultaStub } = makeSut()
