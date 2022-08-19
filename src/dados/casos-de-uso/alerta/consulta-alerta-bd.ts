@@ -3,14 +3,14 @@ import { ModeloAlerta } from '../../../dominio/modelos/alerta'
 import { RepositorioAlteraAlertaAtivo } from '../../protocolos/bd/alerta/repositorio-altera-alerta-ativo'
 import { RepositorioAlertaConsultaPorId } from '../../protocolos/bd/alerta/repositorio-consulta-alerta-por-id'
 import { RepositorioConsultaAlerta } from '../../protocolos/bd/alerta/repositorio-consulta-alerta-todas'
-import { ComparadorDeDatas } from '../../protocolos/utilidades/comparador-de-datas'
+import { AuxiliarAlerta } from '../../protocolos/utilidades/auxiliar-alerta'
 
 export class ConsultaAlertaBD implements ConsultaAlerta {
   constructor (
     private readonly repositorioConsultaAlerta: RepositorioConsultaAlerta,
     private readonly repositorioAlertaConsultaPorId: RepositorioAlertaConsultaPorId,
     private readonly repositorioAlteraAlertaAtivo: RepositorioAlteraAlertaAtivo,
-    private readonly comparadorDeDatas: ComparadorDeDatas
+    private readonly auxiliarAlerta: AuxiliarAlerta
   ) {}
 
   async consultarTodas (): Promise<ModeloAlerta[]> {
@@ -18,22 +18,11 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
     return resposta
   }
 
-  async asyncFilter (vetor: any[], condicional: CallableFunction): Promise<[]> {
-    return vetor.reduce(async (acumulador, elemento) => await condicional(elemento) ? [...await acumulador, elemento] : acumulador, []) //eslint-disable-line
-  }
-
   async consultar (sigla: string, id?: number): Promise<ModeloAlerta | ModeloAlerta[] | null | string> {
     if (!id) { //eslint-disable-line
       const alertas: [] = await this.repositorioConsultaAlerta.consultar(sigla)
       if (alertas) { //eslint-disable-line
-        const alertasAtivos = await this.asyncFilter(alertas, async (alerta: { dataFim: string, id: string }) => {
-          const dataFimMenor = this.comparadorDeDatas.compararDatas(alerta.dataFim)
-          if (dataFimMenor) {
-            await this.repositorioAlteraAlertaAtivo.alterarAtivo(false, +alerta.id)
-            return !dataFimMenor
-          }
-          return dataFimMenor
-        })
+        const alertasAtivos = await this.auxiliarAlerta.asyncFilter(alertas, this.auxiliarAlerta.condicional)
         if (alertasAtivos.length === 0) {
           return 'Alerta inativo'
         }
@@ -45,7 +34,7 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
     if (idValido) { //eslint-disable-line
       const alerta = await this.repositorioConsultaAlerta.consultar(sigla, +id)
       if (alerta) { //eslint-disable-line
-        if (this.comparadorDeDatas.compararDatas(alerta.dataFim)) {
+        if (this.auxiliarAlerta.compararDatas(alerta.dataFim)) {
           return await this.repositorioAlteraAlertaAtivo.alterarAtivo(false, +alerta.id)
         }
         return alerta
