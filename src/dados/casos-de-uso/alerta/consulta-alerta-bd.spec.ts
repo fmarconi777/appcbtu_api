@@ -140,6 +140,13 @@ describe('ConsultaAlerta', () => {
       await expect(resposta).rejects.toThrow()
     })
 
+    test('Deve retornar um array vazio caso a dataFim seja menor que a data atual para todos os alertas', async () => {
+      const { sut, auxiliarAlertaStub } = makeSut()
+      jest.spyOn(auxiliarAlertaStub, 'asyncFilter').mockReturnValueOnce(Promise.resolve([]))
+      const resposta = await sut.consultarTodas()
+      expect(resposta).toEqual([])
+    })
+
     test('Deve Retornar um array com todos os alertas ativos em caso de sucesso', async () => {
       const { sut } = makeSut()
       const resposta = await sut.consultarTodas()
