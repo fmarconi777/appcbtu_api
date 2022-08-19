@@ -16,8 +16,8 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
   async consultarTodas (): Promise<ModeloAlerta[]> {
     const alertas: [] = await this.repositorioConsultaAlerta.consultar()
     if (alertas) { //eslint-disable-line
-      await this.auxiliarAlerta.asyncFilter(alertas, this.auxiliarAlerta.condicional)
-      return alertas
+      const alertasAtivos = await this.auxiliarAlerta.asyncFilter(alertas, this.auxiliarAlerta.condicional)
+      return alertasAtivos
     }
     return []
   }
