@@ -126,6 +126,13 @@ describe('ConsultaAlerta', () => {
       expect(respostaConsultar).toEqual([])
     })
 
+    test('Deve chamar o asyncFilter com o valor correto caso hajam alertas', async () => {
+      const { sut, auxiliarAlertaStub } = makeSut()
+      const asyncFilterSpy = jest.spyOn(auxiliarAlertaStub, 'asyncFilter')
+      await sut.consultarTodas()
+      expect(asyncFilterSpy).toHaveBeenCalledWith([makeAlertaFalsa(), makeAlertaFalsa()], expect.any(Function))
+    })
+
     test('Deve Retornar um array com todos os alertas ativos em caso de sucesso', async () => {
       const { sut } = makeSut()
       const resposta = await sut.consultarTodas()
