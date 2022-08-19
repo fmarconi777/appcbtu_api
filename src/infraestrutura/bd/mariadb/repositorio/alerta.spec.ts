@@ -21,24 +21,27 @@ describe('Repositorio mariaDB Alerta', () => {
     return new RepositorioAlertaMariaDB()
   }
 
-  test('Deve retornar um alerta em caso de sucesso', async () => {
-    const sut = new RepositorioAlertaMariaDB()
-    const alerta = await sut.inserir({
-      descricao: 'descricao_valido',
-      prioridade: 'pri_valido',
-      dataInicio: '2022-01-01 00:00:00z',
-      dataFim: '2022-02-01 00:00:00z',
-      ativo: 'false',
-      estacaoId: '1'
+  describe('Método inserir', () => {
+    test('Deve retornar um alerta em caso de sucesso', async () => {
+      const sut = new RepositorioAlertaMariaDB()
+      const alerta = await sut.inserir({
+        descricao: 'descricao_valido',
+        prioridade: 'pri_valido',
+        dataInicio: '2022-01-01 00:00:00z',
+        dataFim: '2022-02-01 00:00:00z',
+        ativo: 'false',
+        estacaoId: '1'
+      })
+      expect(alerta).toBeTruthy()
+      expect(alerta.id).toBeTruthy()
+      expect(alerta.descricao).toBe('descricao_valido')
+      expect(alerta.dataInicio).toBe('2022-01-01T00:00:00.000Z')
+      expect(alerta.dataFim).toBe('2022-02-01T00:00:00.000Z')
+      expect(alerta.ativo).toBe('false')
+      expect(alerta.estacaoId).toBe('1')
     })
-    expect(alerta).toBeTruthy()
-    expect(alerta.id).toBeTruthy()
-    expect(alerta.descricao).toBe('descricao_valido')
-    expect(alerta.dataInicio).toBe('2022-01-01T00:00:00.000Z')
-    expect(alerta.dataFim).toBe('2022-02-01T00:00:00.000Z')
-    expect(alerta.ativo).toBe('false')
-    expect(alerta.estacaoId).toBe('1')
   })
+
   describe('Metodo Consultar', () => {
     test('Deve retornar um alerta se um parametro for fornecido', async () => {
       const sut = makeSut()
@@ -59,20 +62,21 @@ describe('Repositorio mariaDB Alerta', () => {
       expect(resposta.id).toBeTruthy()
       expect(resposta).toMatchObject(resultadoEsperado)
     })
-  })
-  test('Deve retonar todos os alertas se um parametro não for fornecido', async () => {
-    const sut = makeSut()
-    await sut.inserir({
-      descricao: 'descricao_valido',
-      prioridade: 'pri_valido',
-      dataInicio: '2022-01-01 00:00:00z',
-      dataFim: '2022-02-01 00:00:00z',
-      ativo: 'false',
-      estacaoId: '1'
+
+    test('Deve retonar todos os alertas se um parametro não for fornecido', async () => {
+      const sut = makeSut()
+      await sut.inserir({
+        descricao: 'descricao_valido',
+        prioridade: 'pri_valido',
+        dataInicio: '2022-01-01 00:00:00z',
+        dataFim: '2022-02-01 00:00:00z',
+        ativo: 'false',
+        estacaoId: '1'
+      })
+      const resposta = await sut.consultar()
+      expect(resposta).toBeTruthy()
+      expect(Array.isArray(resposta)).toBeTruthy()
+      expect(resposta.length).toBeGreaterThan(0)
     })
-    const resposta = await sut.consultar()
-    expect(resposta).toBeTruthy()
-    expect(Array.isArray(resposta)).toBeTruthy()
-    expect(resposta.length).toBeGreaterThan(0)
   })
 })

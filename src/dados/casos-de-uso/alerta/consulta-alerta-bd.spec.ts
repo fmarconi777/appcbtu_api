@@ -65,24 +65,6 @@ const makeAuxiliarAlertaStub = (): AuxiliarAlerta => {
   return new AuxiliarAlertaStub()
 }
 
-// const makeComparadorDeDatasStub = (): ComparadorDeDatas => {
-//   class ComparadorDeDatasStub implements ComparadorDeDatas {
-//     compararDatas (data: string): boolean {
-//       return false
-//     }
-//   }
-//   return new ComparadorDeDatasStub()
-// }
-
-// const makeAsyncFilterStub = (): AsyncFilter => {
-//   class AsyncFilterStub implements AsyncFilter {
-//     async asyncFilter (vetor: any[], condicional: CallableFunction): Promise<any[]> {
-//       return await new Promise(resolve => resolve(vetor))
-//     }
-//   }
-//   return new AsyncFilterStub()
-// }
-
 interface SubTipo {
   sut: ConsultaAlertaBD
   repositorioConsultaAlertaStub: RepositorioConsultaAlerta
@@ -203,7 +185,7 @@ describe('ConsultaAlerta', () => {
       expect(resposta).toEqual([])
     })
 
-    test('Deve retornar um array de alertas ativosem caso de sucesso quando somente a sigla seja fornecida', async () => {
+    test('Deve retornar um array de alertas ativos em caso de sucesso quando somente a sigla seja fornecida', async () => {
       const { sut } = makeSut()
       const alerta = 'sigla_qualquer'
       const resposta = await sut.consultar(alerta)
