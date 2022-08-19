@@ -14,8 +14,11 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
   ) {}
 
   async consultarTodas (): Promise<ModeloAlerta[]> {
-    const resposta = await this.repositorioConsultaAlerta.consultar()
-    return resposta
+    const alertas: [] = await this.repositorioConsultaAlerta.consultar()
+    if (alertas) { //eslint-disable-line
+      return alertas
+    }
+    return []
   }
 
   async consultar (sigla: string, id?: number): Promise<ModeloAlerta | ModeloAlerta[] | null | string> {
@@ -23,12 +26,9 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
       const alertas: [] = await this.repositorioConsultaAlerta.consultar(sigla)
       if (alertas) { //eslint-disable-line
         const alertasAtivos = await this.auxiliarAlerta.asyncFilter(alertas, this.auxiliarAlerta.condicional)
-        if (alertasAtivos.length === 0) {
-          return 'Alerta inativo'
-        }
         return alertasAtivos
       }
-      return 'Alerta inativo'
+      return []
     }
     const idValido = await this.repositorioAlertaConsultaPorId.consultarPorId(+id)
     if (idValido) { //eslint-disable-line
