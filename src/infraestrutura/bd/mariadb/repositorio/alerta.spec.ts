@@ -42,7 +42,7 @@ describe('Repositorio mariaDB Alerta', () => {
     })
   })
 
-  describe('Metodo Consultar', () => {
+  describe('Metodo consultar', () => {
     test('Deve retornar um alerta se um parametro for fornecido', async () => {
       const sut = makeSut()
       const resultadoEsperado = {
@@ -77,6 +77,23 @@ describe('Repositorio mariaDB Alerta', () => {
       expect(resposta).toBeTruthy()
       expect(Array.isArray(resposta)).toBeTruthy()
       expect(resposta.length).toBeGreaterThan(0)
+    })
+  })
+
+  describe('Método alterarAtivo', () => {
+    test('Deve retornar a mensagem "Alerta inativo" em caso de sucesso', async () => {
+      const sut = makeSut()
+      await sut.inserir({
+        descricao: 'descricao_valido',
+        prioridade: 'pri_valido',
+        dataInicio: '2022-01-01 00:00:00z',
+        dataFim: '2022-02-01 00:00:00z',
+        ativo: 'ativo',
+        estacaoId: '1'
+      })
+      const alertas = await Alerta.findAll({ raw: true })
+      const resposta = await sut.alterarAtivo(false, +alertas[alertas.length - 1].id)
+      expect(resposta).toEqual('Alerta inativo')
     })
   })
 })
