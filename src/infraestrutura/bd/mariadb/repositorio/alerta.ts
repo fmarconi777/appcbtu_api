@@ -1,9 +1,12 @@
 import { RepositorioAlerta, DadosAlerta, ModeloAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-alerta'
+import { RepositorioAlteraAlertaAtivo } from '../../../../dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
 import { ModelosAlertas, RepositorioConsultaAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-consulta-alerta-todas'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { Alerta } from '../models/modelo-alerta'
 
-export class RepositorioAlertaMariaDB implements RepositorioAlerta, RepositorioConsultaAlerta {
+export class RepositorioAlertaMariaDB implements RepositorioAlerta,
+RepositorioConsultaAlerta,
+RepositorioAlteraAlertaAtivo {
   async inserir (dadosAlerta: DadosAlerta): Promise<ModeloAlerta> {
     AuxiliaresMariaDB.verificaConexao()
     const alerta = await Alerta.create(this.transformaDados(dadosAlerta))
@@ -26,6 +29,12 @@ export class RepositorioAlertaMariaDB implements RepositorioAlerta, RepositorioC
       return await Alerta.findOne({ where: { id: parametro } })
     }
     return await Alerta.findAll()
+  }
+
+  async alterarAtivo (ativo: boolean, id: number): Promise<string> {
+    AuxiliaresMariaDB.verificaConexao()
+    await Alerta.update({ ativo }, { where: { id } })
+    return 'Alerta inativo'
   }
 
   private transformaDados (dadosAlerta: DadosAlerta): any {
