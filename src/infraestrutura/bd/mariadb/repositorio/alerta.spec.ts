@@ -139,7 +139,7 @@ describe('Repositorio mariaDB Alerta', () => {
   })
 
   describe('Método alterarAtivo', () => {
-    test('Deve retornar a mensagem "Alerta inativo" em caso de sucesso', async () => {
+    test('Deve retornar null em caso de sucesso', async () => {
       const sut = makeSut()
       await sut.inserir({
         descricao: 'descricao_valido',
@@ -151,7 +151,7 @@ describe('Repositorio mariaDB Alerta', () => {
       })
       const alertas = await Alerta.findAll({ raw: true })
       const resposta = await sut.alterarAtivo(false, +alertas[alertas.length - 1].id)
-      expect(resposta).toEqual('Alerta inativo')
+      expect(resposta).toBeNull()
     })
   })
 })
