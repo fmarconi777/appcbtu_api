@@ -279,7 +279,7 @@ describe('Controlador de Alerta', () => {
         dataInicio: 'datainicio_qualquer',
         dataFim: 'datafim_qualquer',
         ativo: 'ativo_qualquer',
-        estacaoId: 'estacaoid_qualquer'
+        sigla: 'sigla_qualquer'
       }])
     })
 
@@ -344,7 +344,7 @@ describe('Controlador de Alerta', () => {
         dataInicio: 'datainicio_valida',
         dataFim: 'datafim_valida',
         ativo: 'ativo_valida',
-        estacaoId: 'estacaoid_valida'
+        sigla: 'sigla_valida'
       }])
     })
 
@@ -360,7 +360,7 @@ describe('Controlador de Alerta', () => {
         dataInicio: 'datainicio_valida',
         dataFim: 'datafim_valida',
         ativo: 'ativo_valida',
-        estacaoId: 'estacaoid_valida'
+        sigla: 'sigla_valida'
       })
     })
 

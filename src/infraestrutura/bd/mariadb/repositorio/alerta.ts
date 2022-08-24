@@ -1,3 +1,4 @@
+import { QueryTypes } from 'sequelize'
 import { RepositorioAlerta, DadosAlerta, ModeloAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-alerta'
 import { RepositorioAlteraAlertaAtivo } from '../../../../dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
 import { ModelosAlertas, RepositorioConsultaAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-consulta-alerta-todas'
@@ -23,12 +24,27 @@ RepositorioAlteraAlertaAtivo {
     }
   }
 
-  async consultar (parametro?: string): Promise<ModelosAlertas> {
+  async consultar (sigla?: string, idAlerta?: number): Promise<ModelosAlertas> { // refatorar consulta conforme o select do mysql
     AuxiliaresMariaDB.verificaConexao()
-    if (parametro) { //eslint-disable-line
-      return await Alerta.findOne({ where: { id: parametro } })
+    if (sigla) { //eslint-disable-line
+      if(idAlerta) { //eslint-disable-line
+        const alerta: any = await Alerta.sequelize?.query('select a.id, a.descricao, a.prioridade, a.dataInicio, a.dataFim, a.ativo, e.sigla from Alerta as a ' +
+                                             'left join Estacao as e ' +
+                                               'on a.estacaoId = e.id ' +
+                                             'where e.sigla = :sigla and a.id = :idAlerta and a.ativo = true;', { replacements: { sigla, idAlerta }, type: QueryTypes.SELECT, raw: true })
+        return alerta[0] ? alerta[0] : null //eslint-disable-line
+      }
+      const alerta: any = await Alerta.sequelize?.query('select a.id, a.descricao, a.prioridade, a.dataInicio, a.dataFim, a.ativo, e.sigla from Alerta as a ' +
+                                                      'left join Estacao as e ' +
+                                                        'on a.estacaoId = e.id ' +
+                                                      'where e.sigla = :sigla and a.ativo = true;', { replacements: { sigla }, type: QueryTypes.SELECT, raw: true })
+      return alerta[0] ? alerta : null //eslint-disable-line
     }
-    return await Alerta.findAll()
+    const alerta: any = await Alerta.sequelize?.query('select a.id, a.descricao, a.prioridade, a.dataInicio, a.dataFim, a.ativo, e.sigla from Alerta as a ' +
+                                         'left join Estacao as e ' +
+                                           'on a.estacaoId = e.id ' +
+                                         'where a.ativo = true;', { replacements: { sigla }, type: QueryTypes.SELECT, raw: true })
+    return alerta[0] ? alerta : null //eslint-disable-line
   }
 
   async alterarAtivo (ativo: boolean, id: number): Promise<string> {
