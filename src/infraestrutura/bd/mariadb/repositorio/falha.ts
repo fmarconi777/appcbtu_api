@@ -6,8 +6,8 @@ import { Falha } from '../models/modelo-falha'
 export class RepositorioFalhaMariaDB implements RepositorioCadastroFalha {
   async inserir (dados: ModeloFalha): Promise<string> {
     AuxiliaresMariaDB.verificaConexao()
-    const falha = await Falha.create(this.transformaDados(dados))
-    return falha ? 'Falha cadastrada com sucesso' : 'Erro ao cadastrar' // eslint-disable-line
+    await Falha.create(this.transformaDados(dados))
+    return 'Falha cadastrada com sucesso'
   }
 
   private transformaDados (dadosFalha: ModeloFalha): any {
