@@ -38,6 +38,7 @@ create table if not exists Equipamento(
 create table if not exists Falha(
 	id int auto_increment primary key,
     numFalha int not null,
+    dataCriacao datetime not null,
     equipamentoId int not null,
     constraint fk_Falha_Equipamento
     foreign key (equipamentoId)
