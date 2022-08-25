@@ -71,8 +71,13 @@ Um usuário administrador é criado automaticamente ao iniciar o servidor, login
 
 * `http://10.10.20.202:5000/api/estacao` - Métodos: GET
 * `http://10.10.20.202:5000/api/estacao/(sigla da estação)` - Métodos: GET
-* `http://10.10.20.202:5000/api/equipamento` - Métodos: POST
+* `http://10.10.20.202:5000/api/equipamento` - Métodos: POST, GET
+* `http://10.10.20.202:5000/api/equipamento/(id do equipamento)` - Métodos: GET, PUT, PATCH, DELETE
 * `http://10.10.20.202:5000/api/funcionario` - Métodos: POST
 * `http://10.10.20.202:5000/api/login` - Método: POST
 * `http://10.10.20.202:5000/api/area` - Métodos: POST, GET
 * `http://10.10.20.202:5000/api/area/(nome da área)` - Métodos: GET, DELETE, PATCH
+* `http://10.10.20.202:5000/api/alerta` - Métodos: POST
+* `http://10.10.20.202:5000/api/alerta/(sigla da estação)` - Métodos: GET
+* `http://10.10.20.202:5000/api/alerta/(sigla da estação)/(id do alerta)` - Métodos: GET
+* `http://10.10.20.202:5000/api/falha` - Métodos: POST
