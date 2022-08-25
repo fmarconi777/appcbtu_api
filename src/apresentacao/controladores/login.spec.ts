@@ -6,6 +6,7 @@ import { ControladorDeLogin } from './login'
 import { Autenticador, ModeloAutenticacao } from '../../dominio/casos-de-uso/autenticador/autenticador'
 import { ErroDeAutorizacao } from '../erros/erro-nao-autorizado'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
+import { requisicaoNaoAutorizada } from '../auxiliares/auxiliar-http'
 
 const makeValidadorDeEmail = (): Validador => {
   class ValidadorDeEmailStub implements Validador {
@@ -145,8 +146,7 @@ describe('Controlador de login', () => {
       metodo: 'POST'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
-    expect(respostaHttp.status).toBe(401)
-    expect(respostaHttp.corpo).toEqual(new ErroDeAutorizacao())
+    expect(respostaHttp).toEqual(requisicaoNaoAutorizada(new ErroDeAutorizacao()))
   })
 
   test('Deve retornar erro 500 se o autenticador retornar um erro', async () => {

@@ -7,6 +7,7 @@ export const adaptadorDeRota = (controlador: Controlador) => {
     const requisicaoHttp: RequisicaoHttp = {
       corpo: req.body,
       parametro: req.params.parametro,
+      parametro2: req.params.parametro2,
       metodo: req.method
     }
     const respostaHttp = await controlador.tratar(requisicaoHttp)

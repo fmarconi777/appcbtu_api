@@ -12,7 +12,7 @@ export class ControladorDeAlerta implements Controlador {
   constructor (
     private readonly cadastroDeAlerta: CadastroAlerta,
     private readonly consultaAlerta: ConsultaAlerta,
-    private readonly validadorDeSiglaStub: Validador
+    private readonly validadorDeSigla: Validador
   ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
@@ -42,7 +42,7 @@ export class ControladorDeAlerta implements Controlador {
             const todosAlertas = await this.consultaAlerta.consultarTodas()
             return resposta(todosAlertas)
           }
-          const parametroValido = this.validadorDeSiglaStub.validar(parametro.toLowerCase())
+          const parametroValido = this.validadorDeSigla.validar(parametro.toLowerCase())
           if (!parametroValido) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('sigla'))
           }

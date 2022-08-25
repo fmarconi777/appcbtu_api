@@ -1,5 +1,5 @@
 import { RepositorioAlteraAlertaAtivo } from '../../dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
-import { AuxiliarAlerta } from './auxiliar-dados-alerta'
+import { AuxiliarDadosAlerta } from './auxiliar-dados-alerta'
 
 const makeRepositorioAlteraAlertaAtivoStub = (): RepositorioAlteraAlertaAtivo => {
   class RepositorioAlteraAlertaAtivoStub implements RepositorioAlteraAlertaAtivo {
@@ -11,13 +11,13 @@ const makeRepositorioAlteraAlertaAtivoStub = (): RepositorioAlteraAlertaAtivo =>
 }
 
 interface SubTipos {
-  sut: AuxiliarAlerta
+  sut: AuxiliarDadosAlerta
   repositorioAlteraAlertaAtivoStub: RepositorioAlteraAlertaAtivo
 }
 
 const makeSut = (): SubTipos => {
   const repositorioAlteraAlertaAtivoStub = makeRepositorioAlteraAlertaAtivoStub()
-  const sut = new AuxiliarAlerta(repositorioAlteraAlertaAtivoStub)
+  const sut = new AuxiliarDadosAlerta(repositorioAlteraAlertaAtivoStub)
   return {
     sut,
     repositorioAlteraAlertaAtivoStub
@@ -44,7 +44,7 @@ describe('Auxiliar Alerta', () => {
   describe('Método condicional', () => {
     test('Deve chamar o compararDatas com o valor correto', async () => {
       const { sut } = makeSut()
-      const compararDatasSpy = jest.spyOn(sut, 'compararDatas')
+      const compararDatasSpy = jest.spyOn(AuxiliarDadosAlerta, 'compararDatas')
       const alerta = { dataFim: new Date('12/31/2022').toString(), id: '1' }
       await sut.condicional(alerta)
       expect(compararDatasSpy).toHaveBeenCalledWith(alerta.dataFim)

@@ -76,43 +76,98 @@ describe('Rotas Alerta', () => {
         })
         .expect(200)
     })
+  })
 
-    describe('Método GET', () => {
-      test('Deve retornar status 200 ao consultar a rota alerta sem parametro', async () => {
-        await request(app)
-          .get('/alerta')
-          .expect(200)
+  describe('Método GET', () => {
+    test('Deve retornar status 200 ao consultar a rota alerta sem parametro', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
       })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app).post('/alerta').set('authorization', `Bearer ${tokenDeAcesso}`).send({
+        descricao: 'Estação Parada!',
+        prioridade: 'Altissima',
+        dataInicio: '02-05-2022',
+        dataFim: '12-31-2022',
+        ativo: 'true',
+        estacaoId: '1'
+      })
+      await request(app)
+        .get('/alerta')
+        .expect(200)
+    })
 
-      test('Deve retornar status 200 ao consultar a rota alerta com parametro válido', async () => {
-        const senha = await hash('123', 12)
-        const resposta = await Funcionario.create({
-          nome: 'alguém',
-          email: 'email@email.com',
-          senha,
-          administrador: true,
-          areaId: 3
-        })
-        const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
-        const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
-        await request(app).post('/alerta').set('authorization', `Bearer ${tokenDeAcesso}`).send({
-          descricao: 'Estação Parada!',
-          prioridade: 'Altissima',
-          dataInicio: '2022-02-05',
-          dataFim: '2022-02-05',
-          ativo: 'true',
-          estacaoId: '1'
-        })
-        await request(app)
-          .get('/alerta/1')
-          .expect(200)
+    test('Deve retornar status 200 ao consultar a rota alerta com sigla válida', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
       })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app).post('/alerta').set('authorization', `Bearer ${tokenDeAcesso}`).send({
+        descricao: 'Estação Parada!',
+        prioridade: 'Altissima',
+        dataInicio: '02-05-2022',
+        dataFim: '12-31-2022',
+        ativo: 'true',
+        estacaoId: '1'
+      })
+      await request(app)
+        .get('/alerta/usg')
+        .expect(200)
+    })
 
-      test('Deve retornar status 404 ao consultar a rota alerta com parametro inválido', async () => {
-        await request(app)
-          .get('/alerta/NaN')
-          .expect(404)
+    test('Deve retornar status 404 ao consultar a rota alerta com sigla inválida', async () => {
+      await request(app)
+        .get('/alerta/sigla-invalida')
+        .expect(404)
+    })
+
+    test('Deve retornar status 200 ao consultar a rota alerta com sigla e id válidos', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
       })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app).post('/alerta').set('authorization', `Bearer ${tokenDeAcesso}`).send({
+        descricao: 'Estação Parada!',
+        prioridade: 'Altissima',
+        dataInicio: '02-05-2022',
+        dataFim: '12-31-2022',
+        ativo: 'true',
+        estacaoId: '1'
+      })
+      const alertas = await Alerta.findAll({ raw: true })
+      await request(app)
+        .get(`/alerta/usg/${+alertas[alertas.length - 1].id}`)
+        .expect(200)
+    })
+
+    test('Deve retornar status 404 ao consultar a rota alerta com id inválido', async () => {
+      await request(app)
+        .get('/alerta/usg/NaN')
+        .expect(404)
+    })
+
+    test('Deve retornar status 404 ao consultar a rota alerta com id não cadastrado ou inativo', async () => {
+      await request(app)
+        .get('/alerta/usg/13999999999')
+        .expect(404)
     })
   })
 })

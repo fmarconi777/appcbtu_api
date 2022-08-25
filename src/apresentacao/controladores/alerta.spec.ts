@@ -37,7 +37,7 @@ const makeCadastroAlerta = (): CadastroAlerta => {
 
 const makeConsultaAlerta = (): ConsultaAlerta => {
   class ConsultaAlertaStub implements ConsultaAlerta {
-    async consultar (parametro?: string, parametro2?: number): Promise<ModeloAlerta | ModeloAlerta[] | null> {
+    async consultar (parametro?: string, parametro2?: number): Promise<any> {
       const alertaFalsa = {
         id: 'id_valida',
         descricao: 'descricao_valida',
@@ -45,7 +45,7 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
         dataInicio: 'datainicio_valida',
         dataFim: 'datafim_valida',
         ativo: 'ativo_valida',
-        estacaoId: 'estacaoid_valida'
+        sigla: 'sigla_valida'
       }
       if (parametro2) { // eslint-disable-line
         return await Promise.resolve(alertaFalsa)
@@ -53,7 +53,7 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
       return await new Promise(resolve => resolve([alertaFalsa]))
     }
 
-    async consultarTodas (): Promise<ModeloAlerta[]> {
+    async consultarTodas (): Promise<any> {
       const listaFalsa = [{
         id: 'id_qualquer',
         descricao: 'descricao_qualquer',
@@ -61,7 +61,7 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
         dataInicio: 'datainicio_qualquer',
         dataFim: 'datafim_qualquer',
         ativo: 'ativo_qualquer',
-        estacaoId: 'estacaoid_qualquer'
+        sigla: 'sigla_qualquer'
       }]
       return await new Promise(resolve => resolve(listaFalsa))
     }

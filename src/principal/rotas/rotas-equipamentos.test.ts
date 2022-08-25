@@ -13,11 +13,6 @@ describe('Rotas equipamentos', () => {
     console.log('conexão aberta')
   })
 
-  afterAll(async () => {
-    await AuxiliaresMariaDB.desconectar()
-    console.log('conexão fechada')
-  })
-
   beforeEach(async () => {
     await Funcionario.destroy({ truncate: true, cascade: false })
   })
