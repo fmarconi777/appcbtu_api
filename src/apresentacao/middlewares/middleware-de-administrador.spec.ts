@@ -27,8 +27,9 @@ const makeSut = (): SubTipos => {
 describe('Middleware de criação de conta de administrador', () => {
   test('Deve retornar um erro caso o consultaAdministrador retorne um erro', async () => {
     const { sut, consultaAdministradorStub } = makeSut()
-    jest.spyOn(consultaAdministradorStub, 'consultar').mockReturnValueOnce(Promise.reject(new Error()))
+    const consultarSpy = jest.spyOn(consultaAdministradorStub, 'consultar').mockReturnValueOnce(Promise.reject(new Error()))
     const resposta = await sut.tratarInput()
-    expect(resposta).toEqual(console.log(new Error()))
+    expect(resposta).toBeUndefined()
+    expect(consultarSpy).toHaveBeenCalled()
   })
 })
