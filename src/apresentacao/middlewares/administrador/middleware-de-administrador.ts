@@ -1,7 +1,7 @@
-import { Administrador } from '../protocolos/administrador'
+import { Administrador } from '../../protocolos/administrador'
 import ReadLine from 'node:readline'
-import { CadastroAdministrador } from '../../dominio/casos-de-uso/middleware/cadastro-de-adminstrador'
-import { ConsultaAdministrador } from '../../dominio/casos-de-uso/middleware/consulta-administrador'
+import { CadastroAdministrador } from '../../../dominio/casos-de-uso/middleware/administrador/cadastro-de-adminstrador'
+import { ConsultaAdministrador } from '../../../dominio/casos-de-uso/middleware/administrador/consulta-administrador'
 
 export class MiddlewareDeAdministrador implements Administrador {
   constructor (
