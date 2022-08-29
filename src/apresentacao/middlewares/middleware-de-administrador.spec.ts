@@ -57,4 +57,12 @@ describe('Middleware de criação de conta de administrador', () => {
     await sut.tratarInput()
     expect(cadastrarSpy).toHaveBeenCalledWith('123')
   })
+
+  test('Deve retornar um erro caso o cadastroAdministrador retorne um erro', async () => {
+    const { sut, cadastroAdministradorStub } = makeSut()
+    const cadastrarSpy = jest.spyOn(cadastroAdministradorStub, 'cadastrar').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = await sut.tratarInput()
+    expect(resposta).toBeUndefined()
+    expect(cadastrarSpy).toHaveBeenCalled()
+  })
 })
