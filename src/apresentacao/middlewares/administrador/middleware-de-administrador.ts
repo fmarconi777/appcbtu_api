@@ -17,13 +17,19 @@ export class MiddlewareDeAdministrador implements Administrador {
           output: process.stdout
         })
         let senha: string = ''
+        let email: string = ''
 
         leitor.question('Insira uma senha para a conta admin: ', (input) => {
           senha = input
           leitor.close()
         })
 
-        console.log(await this.cadastroAdministrador.cadastrar(senha))
+        leitor.question('Insira um e-mail (ex: admin@admin.com.br) para a conta admin: ', (input) => {
+          email = input
+          leitor.close()
+        })
+
+        console.log(await this.cadastroAdministrador.cadastrar(senha, email))
         console.log('Conta admin cadastrada com sucesso')
       }
     } catch (erro: any) {

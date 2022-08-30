@@ -1,3 +1,3 @@
 export interface CadastroAdministrador {
-  cadastrar: (senha: string) => Promise<string>
+  cadastrar: (senha: string, email: string) => Promise<string>
 }

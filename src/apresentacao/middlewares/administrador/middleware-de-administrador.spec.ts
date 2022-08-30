@@ -14,7 +14,7 @@ const makeConsultaAdministradorStub = (): ConsultaAdministrador => {
 
 const makeCadastroAdministradorStub = (): CadastroAdministrador => {
   class CadastroAdministradorStub implements CadastroAdministrador {
-    async cadastrar (senha: string): Promise<string> {
+    async cadastrar (senha: string, email: string): Promise<string> {
       return await Promise.resolve('Administrador cadastrado com sucesso!')
     }
   }
@@ -51,11 +51,11 @@ describe('Middleware de criação de conta de administrador', () => {
     const { sut, cadastroAdministradorStub } = makeSut()
     const cadastrarSpy = jest.spyOn(cadastroAdministradorStub, 'cadastrar')
     jest.spyOn(ReadLine, 'createInterface').mockReturnValueOnce({
-      question: jest.fn().mockImplementationOnce((texto, input) => input('123')),
+      question: jest.fn().mockImplementationOnce((texto, input) => input('senha')).mockImplementationOnce((texto, input) => input('email')),
       close: jest.fn().mockImplementationOnce(() => undefined)
     } as any)
     await sut.tratarInput()
-    expect(cadastrarSpy).toHaveBeenCalledWith('123')
+    expect(cadastrarSpy).toHaveBeenCalledWith('senha', 'email')
   })
 
   test('Deve retornar um erro caso o cadastroAdministrador retorne um erro', async () => {
