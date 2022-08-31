@@ -39,4 +39,11 @@ describe('Consulta Administrador', () => {
     await sut.consultar()
     expect(consultaPorNomeSpy).toHaveBeenCalledWith('admin')
   })
+
+  test('Deve retornar um erro caso o repositorioConsultaFuncionarioPorNome retorne um erro', async () => {
+    const { sut, repositorioConsultaFuncionarioPorNomeStub } = makeSut()
+    jest.spyOn(repositorioConsultaFuncionarioPorNomeStub, 'consultarPorNome').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.consultar()
+    await expect(resposta).rejects.toThrow()
+  })
 })
