@@ -46,4 +46,11 @@ describe('Consulta Administrador', () => {
     const resposta = sut.consultar()
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar false caso o repositorioConsultaFuncionarioPorNome retorne null', async () => {
+    const { sut, repositorioConsultaFuncionarioPorNomeStub } = makeSut()
+    jest.spyOn(repositorioConsultaFuncionarioPorNomeStub, 'consultarPorNome').mockReturnValueOnce(Promise.resolve(null))
+    const resposta = await sut.consultar()
+    expect(resposta).toBeFalsy()
+  })
 })
