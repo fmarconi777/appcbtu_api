@@ -5,7 +5,9 @@ export class ConsultaAdministradorBD implements ConsultaAdministrador {
   constructor (private readonly repositorioConsultaFuncionarioPorNome: ConsultaFuncionarioPorNome) {}
 
   async consultar (): Promise<boolean> {
-    await this.repositorioConsultaFuncionarioPorNome.consultarPorNome('admin')
-    return await Promise.resolve(false)
+    if (await this.repositorioConsultaFuncionarioPorNome.consultarPorNome('admin')) { //eslint-disable-line
+      return true
+    }
+    return false
   }
 }
