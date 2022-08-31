@@ -53,4 +53,10 @@ describe('Consulta Administrador', () => {
     const resposta = await sut.consultar()
     expect(resposta).toBeFalsy()
   })
+
+  test('Deve retornar true em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const resposta = await sut.consultar()
+    expect(resposta).toBeTruthy()
+  })
 })
