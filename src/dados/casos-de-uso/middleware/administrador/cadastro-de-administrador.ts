@@ -18,7 +18,7 @@ export class CadastroAdministradorBD implements CadastroAdministrador {
       areaId: '9'
     }
     if (await this.repositorioCadastroFuncionario.adicionar(contaAdministrador)) { // eslint-disable-line
-      return ''
+      return 'Conta admin cadastrada com sucesso'
     }
     return 'Erro ao cadastrar a conta admin'
   }
