@@ -99,4 +99,12 @@ describe('Cadastro de administrador', () => {
     const resposta = await sut.cadastrar(senha, email)
     expect(resposta).toEqual('Erro ao cadastrar a conta admin')
   })
+
+  test('Deve retornar a mensagem "Conta admin cadastrada com sucesso" em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const senha = 'senha_qualquer'
+    const email = 'email_valido@mail.com'
+    const resposta = await sut.cadastrar(senha, email)
+    expect(resposta).toEqual('Conta admin cadastrada com sucesso')
+  })
 })
