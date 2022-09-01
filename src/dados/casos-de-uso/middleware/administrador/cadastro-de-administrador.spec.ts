@@ -33,4 +33,13 @@ describe('Cadastro de administrador', () => {
     await sut.cadastrar(senha, email)
     expect(gerarSpy).toHaveBeenCalledWith(senha)
   })
+
+  test('Deve retornar um erro caso o geradorDeHash retorne um erro', async () => {
+    const { sut, geradorDeHashStub } = makeSut()
+    jest.spyOn(geradorDeHashStub, 'gerar').mockReturnValueOnce(Promise.reject(new Error()))
+    const senha = 'senha_qualquer'
+    const email = 'email_qualquer'
+    const resposta = sut.cadastrar(senha, email)
+    await expect(resposta).rejects.toThrow()
+  })
 })
