@@ -4,8 +4,12 @@ import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
 import { RepositorioConsultaFuncionarioPorEmail } from '../../../../dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-email'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { RepositorioConsultaFuncionarioPorId } from '../../../../dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-id'
+import { ConsultaFuncionarioPorNome } from '../../../../dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-nome'
 
-export class RepositorioFuncionarioMariaDB implements RepositorioFuncionario, RepositorioConsultaFuncionarioPorEmail, RepositorioConsultaFuncionarioPorId {
+export class RepositorioFuncionarioMariaDB implements RepositorioFuncionario,
+RepositorioConsultaFuncionarioPorEmail,
+RepositorioConsultaFuncionarioPorId,
+ConsultaFuncionarioPorNome {
   async adicionar (dadosFuncionario: InserirModeloFuncionario): Promise<ModeloFuncionario> {
     AuxiliaresMariaDB.verificaConexao()
     const funcionario = await Funcionario.create(this.transformaDados(dadosFuncionario))
@@ -25,6 +29,12 @@ export class RepositorioFuncionarioMariaDB implements RepositorioFuncionario, Re
       return funcionario ? FuncoesAuxiliares.mapeadorDeDados(funcionario) : null // eslint-disable-line
     }
     const funcionario = nivel === undefined ? await Funcionario.findOne({ where: { id } }) : await Funcionario.findOne({ where: { id, [Op.or]: { areaId: nivel, administrador: true } } })
+    return funcionario ? FuncoesAuxiliares.mapeadorDeDados(funcionario) : null // eslint-disable-line
+  }
+
+  async consultarPorNome (nome: string): Promise<ModeloFuncionario | null> {
+    AuxiliaresMariaDB.verificaConexao()
+    const funcionario = await Funcionario.findOne({ where: { nome } })
     return funcionario ? FuncoesAuxiliares.mapeadorDeDados(funcionario) : null // eslint-disable-line
   }
 
