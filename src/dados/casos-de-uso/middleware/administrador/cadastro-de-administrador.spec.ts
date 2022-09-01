@@ -21,7 +21,7 @@ const makeGeradorDeHashStub = (): GeradorDeHash => {
 
 const makeRepositorioCadastroFuncionarioStub = (): RepositorioFuncionario => {
   class RepositorioFuncionarioStub implements RepositorioFuncionario {
-    async adicionar (contaData: InserirModeloFuncionario): Promise<ModeloFuncionario> {
+    async adicionar (contaData: InserirModeloFuncionario): Promise<ModeloFuncionario | null> {
       const contafalsa = {
         id: 'id_valido',
         nome: 'nome_valido',
@@ -89,5 +89,14 @@ describe('Cadastro de administrador', () => {
     const email = 'email_valido@mail.com'
     const resposta = sut.cadastrar(senha, email)
     await expect(resposta).rejects.toThrow()
+  })
+
+  test('Deve retornar a mensagem "Erro ao cadastrar a conta admin" em caso de falha', async () => {
+    const { sut, repositorioCadastroFuncionarioStub } = makeSut()
+    jest.spyOn(repositorioCadastroFuncionarioStub, 'adicionar').mockReturnValueOnce(Promise.resolve(null))
+    const senha = 'senha_qualquer'
+    const email = 'email_valido@mail.com'
+    const resposta = await sut.cadastrar(senha, email)
+    expect(resposta).toEqual('Erro ao cadastrar a conta admin')
   })
 })
