@@ -81,4 +81,13 @@ describe('Cadastro de administrador', () => {
     await sut.cadastrar(senha, email)
     expect(adicionarSpy).toHaveBeenCalledWith(administradorFalso)
   })
+
+  test('Deve retornar um erro caso o repositorioCadastroFuncionario retorne um erro', async () => {
+    const { sut, repositorioCadastroFuncionarioStub } = makeSut()
+    jest.spyOn(repositorioCadastroFuncionarioStub, 'adicionar').mockReturnValueOnce(Promise.reject(new Error()))
+    const senha = 'senha_qualquer'
+    const email = 'email_valido@mail.com'
+    const resposta = sut.cadastrar(senha, email)
+    await expect(resposta).rejects.toThrow()
+  })
 })
