@@ -183,4 +183,35 @@ describe('Repositorio mariaDB Funcionario', () => {
       expect(funcionario).toBeNull()
     })
   })
+
+  describe('Método consultaPorNome', () => {
+    test('Deve retornar um funcionario em caso de sucesso ao consultar por nome', async () => {
+      const sut = new RepositorioFuncionarioMariaDB()
+      const contaFalsa = {
+        nome: 'nome_valido',
+        email: 'email_valido',
+        senha: 'hash_senha',
+        administrador: 'false',
+        areaId: '1'
+      }
+      const resutadoEsperado = {
+        nome: 'nome_valido',
+        email: 'email_valido',
+        senha: 'hash_senha',
+        administrador: 'false',
+        areaId: '1'
+      }
+      await sut.adicionar(contaFalsa)
+      const funcionario = await sut.consultarPorNome('nome_valido')
+      expect(funcionario).toBeTruthy()
+      expect(funcionario?.id).toBeTruthy()
+      expect(funcionario).toMatchObject(resutadoEsperado)
+    })
+
+    test('Deve retornar null caso a consulta por nome falhar', async () => {
+      const sut = new RepositorioFuncionarioMariaDB()
+      const funcionario = await sut.consultarPorId('nome_qualquer')
+      expect(funcionario).toBeNull()
+    })
+  })
 })
