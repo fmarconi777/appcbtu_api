@@ -4,5 +4,5 @@ import { ModeloFuncionario } from '../../../../dominio/modelos/funcionario'
 export { InserirModeloFuncionario, ModeloFuncionario }
 
 export interface RepositorioFuncionario {
-  adicionar: (contaData: InserirModeloFuncionario) => Promise<ModeloFuncionario>
+  adicionar: (contaData: InserirModeloFuncionario) => Promise<ModeloFuncionario | null>
 }

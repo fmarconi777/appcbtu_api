@@ -17,7 +17,9 @@ export class CadastroAdministradorBD implements CadastroAdministrador {
       administrador: 'true',
       areaId: '9'
     }
-    await this.repositorioCadastroFuncionario.adicionar(contaAdministrador)
-    return await Promise.resolve('')
+    if (await this.repositorioCadastroFuncionario.adicionar(contaAdministrador)) { // eslint-disable-line
+      return ''
+    }
+    return 'Erro ao cadastrar a conta admin'
   }
 }
