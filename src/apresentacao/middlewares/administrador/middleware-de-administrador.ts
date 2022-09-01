@@ -2,10 +2,12 @@ import { Administrador } from '../../protocolos/administrador'
 import ReadLine from 'node:readline'
 import { CadastroAdministrador } from '../../../dominio/casos-de-uso/middleware/administrador/cadastro-de-adminstrador'
 import { ConsultaAdministrador } from '../../../dominio/casos-de-uso/middleware/administrador/consulta-administrador'
+import { Validador } from '../../protocolos/validador'
 
 export class MiddlewareDeAdministrador implements Administrador {
   constructor (
     private readonly consultaAdministrador: ConsultaAdministrador,
+    private readonly validadorDeEmail: Validador,
     private readonly cadastroAdministrador: CadastroAdministrador
   ) {}
 
@@ -29,8 +31,10 @@ export class MiddlewareDeAdministrador implements Administrador {
           leitor.close()
         })
 
-        console.log(await this.cadastroAdministrador.cadastrar(senha, email))
-        console.log('Conta admin cadastrada com sucesso')
+        if (this.validadorDeEmail.validar(email)) {
+          console.log(await this.cadastroAdministrador.cadastrar(senha, email))
+        }
+        console.log('E-mail inválido')
       }
     } catch (erro: any) {
       console.error(erro)
