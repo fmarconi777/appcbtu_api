@@ -3,7 +3,7 @@ import readlineSync from 'readline-sync'
 
 export class AdaptadorDoReadlineSync implements LeitorDeTerminal {
   perguntar (pergunta: any): string {
-    readlineSync.question(pergunta)
-    return 'input'
+    const input = readlineSync.question(pergunta)
+    return input
   }
 }
