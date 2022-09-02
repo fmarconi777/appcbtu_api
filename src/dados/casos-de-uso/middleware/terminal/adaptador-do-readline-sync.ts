@@ -9,7 +9,7 @@ export class AdaptadorDoReadlineSync implements LeitorDeTerminal, LeitorDeSenhaT
   }
 
   perguntarSenha (pergunta: any): string {
-    readlineSync.questionNewPassword(pergunta)
-    return ''
+    const senha = readlineSync.questionNewPassword(pergunta)
+    return senha
   }
 }
