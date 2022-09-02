@@ -1,14 +1,17 @@
 import readlineSync from 'readline-sync'
-import { LeitorDeTerminal } from '../../../../dominio/casos-de-uso/middleware/terminal/leitor-de-terminal'
 import { AdaptadorDoReadlineSync } from './adaptador-do-readline-sync'
 
 jest.mock('readline-sync', () => ({
   question (): string {
     return 'Input_qualquer'
+  },
+
+  questionNewPassword (): string {
+    return 'senha'
   }
 }))
 
-const makeSut = (): LeitorDeTerminal => {
+const makeSut = (): AdaptadorDoReadlineSync => {
   return new AdaptadorDoReadlineSync()
 }
 
@@ -25,6 +28,15 @@ describe('AdaptadorDoReadlineSync', () => {
       const sut = makeSut()
       const input = sut.perguntar('Instrução qualquer')
       expect(input).toBe('Input_qualquer')
+    })
+  })
+
+  describe('Método perguntarSenha', () => {
+    test('Deve chamar o método perguntarSenha com os valores corretos', () => {
+      const sut = makeSut()
+      const questionSpy = jest.spyOn(readlineSync, 'questionNewPassword')
+      sut.perguntarSenha('Instrução qualquer')
+      expect(questionSpy).toHaveBeenCalledWith('Instrução qualquer')
     })
   })
 })
