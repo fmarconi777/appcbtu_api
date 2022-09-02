@@ -38,5 +38,11 @@ describe('AdaptadorDoReadlineSync', () => {
       sut.perguntarSenha('Instrução qualquer')
       expect(questionSpy).toHaveBeenCalledWith('Instrução qualquer')
     })
+
+    test('O método perguntarSenha deve retornar os dados digitados pelo usuário', () => {
+      const sut = makeSut()
+      const input = sut.perguntarSenha('Instrução qualquer')
+      expect(input).toBe('senha')
+    })
   })
 })
