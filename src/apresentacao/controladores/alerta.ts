@@ -67,7 +67,10 @@ export class ControladorDeAlerta implements Controlador {
               return requisicaoImpropria(new ErroFaltaParametro(campo))
             }
           }
-          await this.alteraAlerta.alterar(requisicaoHttp.corpo)
+          const alerta = await this.alteraAlerta.alterar(requisicaoHttp.corpo)
+          if (!alerta) {  // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+          }
           return resposta('')
         } catch (erro: any) {
           return erroDeServidor(erro)
