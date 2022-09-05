@@ -412,7 +412,7 @@ describe('Controlador de Alerta', () => {
       expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('prioridade'))
     })
 
-    test('Deve retornar codigo 400 se um Inicio de Data não for fornecido', async () => {
+    test('Deve retornar código 400 se um Inicio de Data não for fornecido', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
@@ -427,6 +427,23 @@ describe('Controlador de Alerta', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(400)
       expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('dataInicio'))
+    })
+
+    test('Deve retornar código 400 se um Fim de Data não for fornecido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: {
+          descricao: 'qualquer_descricao',
+          prioridade: 'qualquer_prioridade',
+          dataInicio: 'iniciodata_qualquer',
+          ativo: 'ativo_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'PUT'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp.status).toBe(400)
+      expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('dataFim'))
     })
   })
 })
