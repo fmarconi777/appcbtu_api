@@ -57,6 +57,18 @@ export class ControladorDeAlerta implements Controlador {
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
+      case 'PUT':
+        try {
+          const camposRequeridos = ['descricao']
+          for (const campo of camposRequeridos) {
+            if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
+              return requisicaoImpropria(new ErroFaltaParametro(campo))
+            }
+          }
+          return resposta('')
+        } catch (erro: any) {
+          return erroDeServidor(erro)
+        }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
