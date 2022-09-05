@@ -259,7 +259,7 @@ describe('Controlador de Alerta', () => {
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('estacaoId')))
     })
 
-    test('Deve retornar codigoo 200 se dados válidos forem passados', async () => {
+    test('Deve retornar código 200 se dados válidos forem passados', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: alertaFalso,
@@ -579,6 +579,25 @@ describe('Controlador de Alerta', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
+
+    test('Deve retornar código 200 se dados válidos forem passados', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: {
+          id: 'id_qualquer',
+          descricao: 'qualquer_descricao',
+          prioridade: 'qualquer_prioridade',
+          dataInicio: 'iniciodata_qualquer',
+          dataFim: 'fimdata_qualquer',
+          ativo: 'ativo_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'PUT'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp.status).toBe(200)
+      expect(respostaHttp.corpo).toBe('Alerta alterado com sucesso')
     })
   })
 })
