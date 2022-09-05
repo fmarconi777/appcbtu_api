@@ -1,11 +1,20 @@
-import { AuxiliaresMariaDB } from '../../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { MiddlewareDeAdministrador } from '../../apresentacao/middlewares/administrador/middleware-de-administrador'
+import { Administrador } from '../../apresentacao/protocolos/administrador'
+import { CadastroAdministradorBD } from '../../dados/casos-de-uso/middleware/administrador/cadastro-de-administrador'
+import { ConsultaAdministradorBD } from '../../dados/casos-de-uso/middleware/administrador/consulta-administrador'
+import { AdaptadorDoReadlineSync } from '../../dados/casos-de-uso/middleware/terminal/adaptador-do-readline-sync'
+import { RepositorioFuncionarioMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/funcionario'
 import { BcryptAdaptador } from '../../infraestrutura/criptografia/bcrypt-adaptador/bcrypt-adaptador'
+import { ValidadorDeEmailAdaptador } from '../../utilidades/validadores/validador-de-email'
 
-export default async function admin (): Promise<void> {
-  const bcryptAdaptador = new BcryptAdaptador()
-  const senha = await bcryptAdaptador.gerar('123')
-  const query = `insert into Funcionario (nome, email, senha, administrador, areaId)
-  select * from (select 'admin' as nome, 'admin@email.com' as email, '${senha}' as senha, true as administrador, 9 as areaId) as admin
-  where not exists (select nome from Funcionario where nome = 'admin') limit 1;`
-  await AuxiliaresMariaDB.cliente?.query(query)
+const criaContaAdministrador = (): Administrador => {
+  const geradorDeHash = new BcryptAdaptador()
+  const repositorioFuncionario = new RepositorioFuncionarioMariaDB()
+  const consultaAdministrador = new ConsultaAdministradorBD(repositorioFuncionario)
+  const validadorDeEmail = new ValidadorDeEmailAdaptador()
+  const adaptadorDoReadlineSync = new AdaptadorDoReadlineSync()
+  const cadastroAdministrador = new CadastroAdministradorBD(geradorDeHash, repositorioFuncionario)
+  return new MiddlewareDeAdministrador(consultaAdministrador, adaptadorDoReadlineSync, adaptadorDoReadlineSync, validadorDeEmail, cadastroAdministrador)
 }
+
+export const middlewareDeAdministrador = criaContaAdministrador()
