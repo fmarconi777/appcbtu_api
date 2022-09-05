@@ -59,7 +59,7 @@ export class ControladorDeAlerta implements Controlador {
         }
       case 'PUT':
         try {
-          const camposRequeridos = ['descricao', 'prioridade']
+          const camposRequeridos = ['descricao', 'prioridade', 'dataInicio']
           for (const campo of camposRequeridos) {
             if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
               return requisicaoImpropria(new ErroFaltaParametro(campo))
