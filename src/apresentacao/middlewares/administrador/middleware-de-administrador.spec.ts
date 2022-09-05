@@ -14,13 +14,13 @@ const makeConsultaAdministradorStub = (): ConsultaAdministrador => {
   return new ConsultaAdministradorStub()
 }
 
-const makeCapturaInputNoTerminalStub = (): LeitorDeTerminal => {
-  class CapturaInputNoTerminalStub implements LeitorDeTerminal {
-    perguntar (pergunta: any): string {
+const makeCapturaEmailNoTerminalStub = (): LeitorDeTerminal => {
+  class CapturaEmailNoTerminalStub implements LeitorDeTerminal {
+    perguntarEmail (pergunta: any): string {
       return 'email_qualquer@mail.com'
     }
   }
-  return new CapturaInputNoTerminalStub()
+  return new CapturaEmailNoTerminalStub()
 }
 
 const makeCapturaSenhaNoTerminalStub = (): LeitorDeSenhaTerminal => {
@@ -53,7 +53,7 @@ const makeCadastroAdministradorStub = (): CadastroAdministrador => {
 interface SubTipos {
   sut: MiddlewareDeAdministrador
   consultaAdministradorStub: ConsultaAdministrador
-  capturaInputNoTerminalStub: LeitorDeTerminal
+  capturaEmailNoTerminalStub: LeitorDeTerminal
   capturaSenhaNoTerminalStub: LeitorDeSenhaTerminal
   validadorDeEmailStub: Validador
   cadastroAdministradorStub: CadastroAdministrador
@@ -63,13 +63,13 @@ const makeSut = (): SubTipos => {
   const validadorDeEmailStub = makeValidadorDeEmailStub()
   const cadastroAdministradorStub = makeCadastroAdministradorStub()
   const capturaSenhaNoTerminalStub = makeCapturaSenhaNoTerminalStub()
-  const capturaInputNoTerminalStub = makeCapturaInputNoTerminalStub()
+  const capturaEmailNoTerminalStub = makeCapturaEmailNoTerminalStub()
   const consultaAdministradorStub = makeConsultaAdministradorStub()
-  const sut = new MiddlewareDeAdministrador(consultaAdministradorStub, capturaInputNoTerminalStub, capturaSenhaNoTerminalStub, validadorDeEmailStub, cadastroAdministradorStub)
+  const sut = new MiddlewareDeAdministrador(consultaAdministradorStub, capturaEmailNoTerminalStub, capturaSenhaNoTerminalStub, validadorDeEmailStub, cadastroAdministradorStub)
   return {
     sut,
     consultaAdministradorStub,
-    capturaInputNoTerminalStub,
+    capturaEmailNoTerminalStub,
     capturaSenhaNoTerminalStub,
     validadorDeEmailStub,
     cadastroAdministradorStub
@@ -93,34 +93,19 @@ describe('Middleware de criação de conta de administrador', () => {
     expect(consultarSpy).toHaveBeenCalled()
   })
 
-  test('Deve chamar o capturaInputNoTerminalStub com o valor correto', async () => {
-    const { sut, capturaInputNoTerminalStub } = makeSut()
-    const perguntarSpy = jest.spyOn(capturaInputNoTerminalStub, 'perguntar')
+  test('Deve chamar o capturaEmailNoTerminalStub com o valor correto', async () => {
+    const { sut, capturaEmailNoTerminalStub } = makeSut()
+    const perguntarEmailSpy = jest.spyOn(capturaEmailNoTerminalStub, 'perguntarEmail')
     await sut.tratarInput()
-    expect(perguntarSpy).toHaveBeenCalledWith('Insira um e-mail (ex: admin@admin.com.br) para a conta admin: ')
+    expect(perguntarEmailSpy).toHaveBeenCalledWith('Insira um e-mail (ex: admin@admin.com.br) para a conta admin: ')
   })
 
   test('Deve retornar um erro caso o capturaInputNoTerminalStub retorne um erro', async () => {
-    const { sut, capturaInputNoTerminalStub } = makeSut()
-    const perguntarSpy = jest.spyOn(capturaInputNoTerminalStub, 'perguntar').mockImplementationOnce(() => { throw new Error() })
+    const { sut, capturaEmailNoTerminalStub } = makeSut()
+    const perguntarEmailSpy = jest.spyOn(capturaEmailNoTerminalStub, 'perguntarEmail').mockImplementationOnce(() => { throw new Error() })
     const resposta = await sut.tratarInput()
     expect(resposta).toBeUndefined()
-    expect(perguntarSpy).toHaveBeenCalled()
-  })
-
-  test('Deve chamar o capturaSenhaNoTerminalStub com o valor correto', async () => {
-    const { sut, capturaSenhaNoTerminalStub } = makeSut()
-    const perguntarSpy = jest.spyOn(capturaSenhaNoTerminalStub, 'perguntarSenha')
-    await sut.tratarInput()
-    expect(perguntarSpy).toHaveBeenCalledWith('Insira uma senha para a conta admin: ')
-  })
-
-  test('Deve retornar um erro caso o capturaSenhaNoTerminalStub retorne um erro', async () => {
-    const { sut, capturaSenhaNoTerminalStub } = makeSut()
-    const perguntarSpy = jest.spyOn(capturaSenhaNoTerminalStub, 'perguntarSenha').mockImplementationOnce(() => { throw new Error() })
-    const resposta = await sut.tratarInput()
-    expect(resposta).toBeUndefined()
-    expect(perguntarSpy).toHaveBeenCalled()
+    expect(perguntarEmailSpy).toHaveBeenCalled()
   })
 
   test('Deve chamar o ValidadorDeEmail com o parametro correto', async () => {
@@ -143,6 +128,21 @@ describe('Middleware de criação de conta de administrador', () => {
     const resposta = await sut.tratarInput()
     expect(resposta).toBeUndefined()
     expect(validadorSpy).toHaveBeenCalled()
+  })
+
+  test('Deve chamar o capturaSenhaNoTerminalStub com o valor correto caso o e-mail esteja correto', async () => {
+    const { sut, capturaSenhaNoTerminalStub } = makeSut()
+    const perguntarSpy = jest.spyOn(capturaSenhaNoTerminalStub, 'perguntarSenha')
+    await sut.tratarInput()
+    expect(perguntarSpy).toHaveBeenCalledWith('Insira uma senha para a conta admin: ')
+  })
+
+  test('Deve retornar um erro caso o capturaSenhaNoTerminalStub retorne um erro', async () => {
+    const { sut, capturaSenhaNoTerminalStub } = makeSut()
+    const perguntarSpy = jest.spyOn(capturaSenhaNoTerminalStub, 'perguntarSenha').mockImplementationOnce(() => { throw new Error() })
+    const resposta = await sut.tratarInput()
+    expect(resposta).toBeUndefined()
+    expect(perguntarSpy).toHaveBeenCalled()
   })
 
   test('Deve chamar o cadastroAdministrador com o valor correto depois que o usuário inserir um valor', async () => {

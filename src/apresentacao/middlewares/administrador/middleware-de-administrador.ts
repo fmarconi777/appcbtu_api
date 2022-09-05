@@ -8,7 +8,7 @@ import { LeitorDeSenhaTerminal } from '../../../dominio/casos-de-uso/middleware/
 export class MiddlewareDeAdministrador implements Administrador {
   constructor (
     private readonly consultaAdministrador: ConsultaAdministrador,
-    private readonly capturaInputNoTerminal: LeitorDeTerminal,
+    private readonly capturaEmailNoTerminal: LeitorDeTerminal,
     private readonly capturaSenhaNoTerminal: LeitorDeSenhaTerminal,
     private readonly validadorDeEmail: Validador,
     private readonly cadastroAdministrador: CadastroAdministrador
@@ -17,19 +17,18 @@ export class MiddlewareDeAdministrador implements Administrador {
   async tratarInput (): Promise<void> {
     try {
       if (!await this.consultaAdministrador.consultar()) {
-        const email = this.capturaInputNoTerminal.perguntar('Insira um e-mail (ex: admin@admin.com.br) para a conta admin: ')
-        const senha = this.capturaSenhaNoTerminal.perguntarSenha('Insira uma senha para a conta admin: ')
+        const email = this.capturaEmailNoTerminal.perguntarEmail('Insira um e-mail (ex: admin@admin.com.br) para a conta admin: ')
 
-        if (senha && email) { // eslint-disable-line
-          if (this.validadorDeEmail.validar(email)) {
-            console.log(await this.cadastroAdministrador.cadastrar(senha, email))
-            return
-          }
-          console.log('E-mail inválido!')
-          console.log()
-          console.log('Execução finalizada')
-          process.exitCode = 0
+        if (this.validadorDeEmail.validar(email)) {
+          const senha = this.capturaSenhaNoTerminal.perguntarSenha('Insira uma senha para a conta admin: ')
+          console.log(await this.cadastroAdministrador.cadastrar(senha, email))
+          return
         }
+        console.log()
+        console.log('E-mail inválido!')
+        console.log('Conta admin não foi cadastrada!')
+        console.log()
+        process.exitCode = 0
       }
       return
     } catch (erro: any) {

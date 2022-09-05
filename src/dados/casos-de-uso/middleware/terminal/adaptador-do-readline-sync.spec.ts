@@ -2,8 +2,8 @@ import readlineSync from 'readline-sync'
 import { AdaptadorDoReadlineSync } from './adaptador-do-readline-sync'
 
 jest.mock('readline-sync', () => ({
-  question (): string {
-    return 'Input_qualquer'
+  questionEMail (): string {
+    return 'email_qualquer@mail.com'
   },
 
   questionNewPassword (): string {
@@ -16,18 +16,18 @@ const makeSut = (): AdaptadorDoReadlineSync => {
 }
 
 describe('AdaptadorDoReadlineSync', () => {
-  describe('Método perguntar', () => {
-    test('Deve chamar o método perguntar com os valores corretos', () => {
+  describe('Método perguntarEmail', () => {
+    test('Deve chamar o método perguntarEmail com os valores corretos', () => {
       const sut = makeSut()
-      const questionSpy = jest.spyOn(readlineSync, 'question')
-      sut.perguntar('Instrução qualquer')
+      const questionSpy = jest.spyOn(readlineSync, 'questionEMail')
+      sut.perguntarEmail('Instrução qualquer')
       expect(questionSpy).toHaveBeenCalledWith('Instrução qualquer')
     })
 
-    test('O método perguntar deve retornar os dados digitados pelo usuário', () => {
+    test('O método perguntarEmail deve retornar os dados digitados pelo usuário', () => {
       const sut = makeSut()
-      const input = sut.perguntar('Instrução qualquer')
-      expect(input).toBe('Input_qualquer')
+      const input = sut.perguntarEmail('Instrução qualquer')
+      expect(input).toBe('email_qualquer@mail.com')
     })
   })
 

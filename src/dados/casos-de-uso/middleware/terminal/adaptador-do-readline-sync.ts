@@ -3,8 +3,8 @@ import readlineSync from 'readline-sync'
 import { LeitorDeSenhaTerminal } from '../../../../dominio/casos-de-uso/middleware/terminal/leitor-de-senha-terminal'
 
 export class AdaptadorDoReadlineSync implements LeitorDeTerminal, LeitorDeSenhaTerminal {
-  perguntar (pergunta: any): string {
-    const input = readlineSync.question(pergunta)
+  perguntarEmail (pergunta: any): string {
+    const input = readlineSync.questionEMail(pergunta)
     return input
   }
 
