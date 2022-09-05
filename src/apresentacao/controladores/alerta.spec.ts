@@ -237,7 +237,7 @@ describe('Controlador de Alerta', () => {
       expect(inserirSpy).toHaveBeenCalledWith(alertaFalso)
     })
 
-    test('Deve retornar codigoo 500 se o CadastroDeAlerta retornar um erro', async () => {
+    test('Deve retornar código 500 se o CadastroDeAlerta retornar um erro', async () => {
       const { sut, cadastroDeAlertaStub } = makeSut()
       jest.spyOn(cadastroDeAlertaStub, 'inserir').mockReturnValueOnce(Promise.reject(new Error()))
       const requisicaoHttp = {
@@ -541,6 +541,25 @@ describe('Controlador de Alerta', () => {
         ativo: 'ativo_qualquer',
         estacaoId: 'estacaoId_qualquer'
       })
+    })
+
+    test('Deve retornar código 500 se o AlteraAlerta retornar um erro', async () => {
+      const { sut, alteraAlertaStub } = makeSut()
+      jest.spyOn(alteraAlertaStub, 'alterar').mockReturnValueOnce(Promise.reject(new Error()))
+      const requisicaoHttp = {
+        corpo: {
+          id: 'id_qualquer',
+          descricao: 'qualquer_descricao',
+          prioridade: 'qualquer_prioridade',
+          dataInicio: 'iniciodata_qualquer',
+          dataFim: 'fimdata_qualquer',
+          ativo: 'ativo_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'PUT'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
   })
 })
