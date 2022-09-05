@@ -7,6 +7,7 @@ import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alert
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
 import { Validador } from '../protocolos/validador'
+import { AlteraAlerta } from '../../dominio/casos-de-uso/alerta/altera-alerta'
 
 const alertaFalso = {
   descricao: 'qualquer_descricao',
@@ -78,23 +79,35 @@ const makeValidadorDeSiglaStub = (): Validador => {
   return new ValidadorDeSiglaStub()
 }
 
+const makeAlteraAlertaStub = (): AlteraAlerta => {
+  class AlteraAlertaStub implements AlteraAlerta {
+    async alterar (dados: ModeloAlerta): Promise<string | null> {
+      return await Promise.resolve('Alerta alterado com sucesso')
+    }
+  }
+  return new AlteraAlertaStub()
+}
+
 interface SutTypes {
   sut: ControladorDeAlerta
   cadastroDeAlertaStub: CadastroAlerta
   consultaAlertaStub: ConsultaAlerta
   validadorDeSiglaStub: Validador
+  alteraAlertaStub: AlteraAlerta
 }
 
 const makeSut = (): SutTypes => {
+  const alteraAlertaStub = makeAlteraAlertaStub()
   const validadorDeSiglaStub = makeValidadorDeSiglaStub()
   const cadastroDeAlertaStub = makeCadastroAlerta()
   const consultaAlertaStub = makeConsultaAlerta()
-  const sut = new ControladorDeAlerta(cadastroDeAlertaStub, consultaAlertaStub, validadorDeSiglaStub)
+  const sut = new ControladorDeAlerta(cadastroDeAlertaStub, consultaAlertaStub, validadorDeSiglaStub, alteraAlertaStub)
   return {
     sut,
     cadastroDeAlertaStub,
     consultaAlertaStub,
-    validadorDeSiglaStub
+    validadorDeSiglaStub,
+    alteraAlertaStub
   }
 }
 
@@ -501,6 +514,33 @@ describe('Controlador de Alerta', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(400)
       expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('estacaoId'))
+    })
+
+    test('Deve chamar o alteraAlerta com os valores corretos', async () => {
+      const { sut, alteraAlertaStub } = makeSut()
+      const inserirSpy = jest.spyOn(alteraAlertaStub, 'alterar')
+      const requisicaoHttp = {
+        corpo: {
+          id: 'id_qualquer',
+          descricao: 'qualquer_descricao',
+          prioridade: 'qualquer_prioridade',
+          dataInicio: 'iniciodata_qualquer',
+          dataFim: 'fimdata_qualquer',
+          ativo: 'ativo_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'PUT'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(inserirSpy).toHaveBeenCalledWith({
+        id: 'id_qualquer',
+        descricao: 'qualquer_descricao',
+        prioridade: 'qualquer_prioridade',
+        dataInicio: 'iniciodata_qualquer',
+        dataFim: 'fimdata_qualquer',
+        ativo: 'ativo_qualquer',
+        estacaoId: 'estacaoId_qualquer'
+      })
     })
   })
 })
