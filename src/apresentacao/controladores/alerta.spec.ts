@@ -561,5 +561,24 @@ describe('Controlador de Alerta', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
+
+    test('Deve retornar status 404 caso o AlteraAlerta retorne null', async () => {
+      const { sut, alteraAlertaStub } = makeSut()
+      jest.spyOn(alteraAlertaStub, 'alterar').mockReturnValueOnce(Promise.resolve(null))
+      const requisicaoHttp = {
+        corpo: {
+          id: 'id_qualquer',
+          descricao: 'qualquer_descricao',
+          prioridade: 'qualquer_prioridade',
+          dataInicio: 'iniciodata_qualquer',
+          dataFim: 'fimdata_qualquer',
+          ativo: 'ativo_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'PUT'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
   })
 })
