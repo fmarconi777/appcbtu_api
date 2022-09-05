@@ -376,4 +376,23 @@ describe('Controlador de Alerta', () => {
       expect(respostaHttpComAlerta).toEqual(erroDeServidor(new Error()))
     })
   })
+
+  describe('Método PUT', () => {
+    test('Deve retornar código 400 se uma descrição não for fornecida', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: {
+          prioridade: 'qualquer_prioridade',
+          dataInicio: 'iniciodata_qualquer',
+          dataFim: 'fimdata_qualquer',
+          ativo: 'ativo_qualquer',
+          estacaoId: 'estacaoId_qualquer'
+        },
+        metodo: 'PUT'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp.status).toBe(400)
+      expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('descricao'))
+    })
+  })
 })
