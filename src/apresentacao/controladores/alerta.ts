@@ -61,13 +61,17 @@ export class ControladorDeAlerta implements Controlador {
         }
       case 'PUT':
         try {
-          const camposRequeridos = ['id', 'descricao', 'prioridade', 'dataInicio', 'dataFim', 'ativo', 'estacaoId']
+          if (!Number.isInteger(+parametro) && +parametro !== Math.abs(+parametro)) {
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+          }
+          const camposRequeridos = ['descricao', 'prioridade', 'dataInicio', 'dataFim', 'ativo', 'estacaoId']
           for (const campo of camposRequeridos) {
             if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
               return requisicaoImpropria(new ErroFaltaParametro(campo))
             }
           }
-          const alerta = await this.alteraAlerta.alterar(requisicaoHttp.corpo)
+          const dados = Object.assign({}, { id: parametro }, requisicaoHttp.corpo)
+          const alerta = await this.alteraAlerta.alterar(dados)
           if (!alerta) {  // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }

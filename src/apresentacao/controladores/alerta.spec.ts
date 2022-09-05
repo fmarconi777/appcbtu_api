@@ -391,34 +391,35 @@ describe('Controlador de Alerta', () => {
   })
 
   describe('Método PUT', () => {
-    test('Deve retornar código 400 se um id não for fornecido', async () => {
+    test('Deve retornar código 404 se um parametro inválido for passado', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
+          descricao: 'qualquer_descricao',
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
           dataFim: 'fimdata_qualquer',
           ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
+        parametro: 'NaN',
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp.status).toBe(400)
-      expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('id'))
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
     })
 
     test('Deve retornar código 400 se uma descrição não for fornecida', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
-          id: 'id_qualquer',
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
           dataFim: 'fimdata_qualquer',
           ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
+        parametro: '1',
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -430,13 +431,13 @@ describe('Controlador de Alerta', () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
-          id: 'id_qualquer',
           descricao: 'qualquer_descricao',
           dataInicio: 'iniciodata_qualquer',
           dataFim: 'fimdata_qualquer',
           ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
+        parametro: '1',
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -448,13 +449,13 @@ describe('Controlador de Alerta', () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
-          id: 'id_qualquer',
           descricao: 'qualquer_descricao',
           prioridade: 'qualquer_prioridade',
           dataFim: 'datafim_qualquer',
           ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
+        parametro: '1',
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -466,13 +467,13 @@ describe('Controlador de Alerta', () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
-          id: 'id_qualquer',
           descricao: 'qualquer_descricao',
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
           ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
+        parametro: '1',
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -484,13 +485,13 @@ describe('Controlador de Alerta', () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
-          id: 'id_qualquer',
           descricao: 'qualquer_descricao',
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
           dataFim: 'fimdata_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
+        parametro: '1',
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -502,13 +503,13 @@ describe('Controlador de Alerta', () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
-          id: 'id_qualquer',
           descricao: 'qualquer_descricao',
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
           dataFim: 'fimdata_qualquer',
           ativo: 'ativo_qualquer'
         },
+        parametro: '1',
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -521,7 +522,6 @@ describe('Controlador de Alerta', () => {
       const inserirSpy = jest.spyOn(alteraAlertaStub, 'alterar')
       const requisicaoHttp = {
         corpo: {
-          id: 'id_qualquer',
           descricao: 'qualquer_descricao',
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
@@ -529,11 +529,12 @@ describe('Controlador de Alerta', () => {
           ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
+        parametro: '1',
         metodo: 'PUT'
       }
       await sut.tratar(requisicaoHttp)
       expect(inserirSpy).toHaveBeenCalledWith({
-        id: 'id_qualquer',
+        id: '1',
         descricao: 'qualquer_descricao',
         prioridade: 'qualquer_prioridade',
         dataInicio: 'iniciodata_qualquer',
@@ -548,7 +549,6 @@ describe('Controlador de Alerta', () => {
       jest.spyOn(alteraAlertaStub, 'alterar').mockReturnValueOnce(Promise.reject(new Error()))
       const requisicaoHttp = {
         corpo: {
-          id: 'id_qualquer',
           descricao: 'qualquer_descricao',
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
@@ -556,6 +556,7 @@ describe('Controlador de Alerta', () => {
           ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
+        parametro: '1',
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -567,7 +568,6 @@ describe('Controlador de Alerta', () => {
       jest.spyOn(alteraAlertaStub, 'alterar').mockReturnValueOnce(Promise.resolve(null))
       const requisicaoHttp = {
         corpo: {
-          id: 'id_qualquer',
           descricao: 'qualquer_descricao',
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
@@ -575,6 +575,7 @@ describe('Controlador de Alerta', () => {
           ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
+        parametro: '1',
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -585,7 +586,6 @@ describe('Controlador de Alerta', () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
-          id: 'id_qualquer',
           descricao: 'qualquer_descricao',
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
@@ -593,6 +593,7 @@ describe('Controlador de Alerta', () => {
           ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
+        parametro: '1',
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
