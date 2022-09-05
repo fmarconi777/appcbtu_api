@@ -7,12 +7,14 @@ import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alerta'
 import { Validador } from '../protocolos/validador'
+import { AlteraAlerta } from '../../dominio/casos-de-uso/alerta/altera-alerta'
 
 export class ControladorDeAlerta implements Controlador {
   constructor (
     private readonly cadastroDeAlerta: CadastroAlerta,
     private readonly consultaAlerta: ConsultaAlerta,
-    private readonly validadorDeSigla: Validador
+    private readonly validadorDeSigla: Validador,
+    private readonly alteraAlerta: AlteraAlerta
   ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
@@ -65,6 +67,7 @@ export class ControladorDeAlerta implements Controlador {
               return requisicaoImpropria(new ErroFaltaParametro(campo))
             }
           }
+          await this.alteraAlerta.alterar(requisicaoHttp.corpo)
           return resposta('')
         } catch (erro: any) {
           return erroDeServidor(erro)
