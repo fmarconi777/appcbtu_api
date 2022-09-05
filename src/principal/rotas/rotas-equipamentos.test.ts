@@ -13,8 +13,10 @@ describe('Rotas equipamentos', () => {
     console.log('conexão aberta')
   })
 
-  beforeEach(async () => {
+  afterAll(async () => {
     await Funcionario.destroy({ truncate: true, cascade: false })
+    await AuxiliaresMariaDB.desconectar()
+    console.log('conexão fechada')
   })
 
   describe('DELETE', () => {
@@ -78,7 +80,7 @@ describe('Rotas equipamentos', () => {
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
       const equipamentos = await Equipamento.findAll({ raw: true })
       await request(app)
-        .delete(`/equipamento/${equipamentos[equipamentos.length - 1].id}`)
+        .delete(`/equipamento/${equipamentos[0].id}`)
         .set('authorization', `Bearer ${tokenDeAcesso}`)
         .expect(200)
     })
