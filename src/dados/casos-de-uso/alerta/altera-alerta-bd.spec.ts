@@ -49,4 +49,11 @@ describe('AlteraAlertaBD', () => {
     const resposta = sut.alterar(dados)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar null caso o consultaAlertaPorId retorne null', async () => {
+    const { sut, consultaAlertaPorIdStub } = makeSut()
+    jest.spyOn(consultaAlertaPorIdStub, 'consultarPorId').mockReturnValueOnce(Promise.resolve(null))
+    const resposta = await sut.alterar(dados)
+    expect(resposta).toBeNull()
+  })
 })
