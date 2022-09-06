@@ -1,4 +1,4 @@
-import { ValidadorBD } from '../../apresentacao/protocolos/validadorBD'
+import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
 import { ValidadorDeAlerta } from './validador-de-alerta'
 import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alerta'
 import { ModeloAlerta } from '../../dominio/modelos/alerta'

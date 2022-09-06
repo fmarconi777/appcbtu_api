@@ -5,7 +5,7 @@ import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
-import { ValidadorBD } from '../protocolos/validadorBD'
+import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
 
 export class ControladorDeFalha implements Controlador {
   constructor (

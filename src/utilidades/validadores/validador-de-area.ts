@@ -1,4 +1,4 @@
-import { ValidadorBD } from '../../apresentacao/protocolos/validadorBD'
+import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
 import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 
 export class ValidadorDeArea implements ValidadorBD {

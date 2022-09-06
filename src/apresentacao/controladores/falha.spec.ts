@@ -4,7 +4,7 @@ import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta 
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { ValidadorBD } from '../protocolos/validadorBD'
+import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
 import { ControladorDeFalha } from './falha'
 
 const makeValidaEquipamentoStub = (): ValidadorBD => {

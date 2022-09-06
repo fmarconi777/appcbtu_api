@@ -1,4 +1,4 @@
-import { ValidadorBD } from '../../apresentacao/protocolos/validadorBD'
+import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
 import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
 
 export class ValidadorDeEquipamento implements ValidadorBD {

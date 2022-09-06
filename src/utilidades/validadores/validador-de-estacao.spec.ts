@@ -1,4 +1,4 @@
-import { ValidadorBD } from '../../apresentacao/protocolos/validadorBD'
+import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
 import { ConsultaEstacao } from '../../dominio/casos-de-uso/estacao/consulta-estacao'
 import { ModeloEstacao } from '../../dominio/modelos/estacao'
 import { ValidadorDeEstacao } from './validador-de-estacao'

@@ -1,4 +1,4 @@
-import { ValidadorBD } from '../protocolos/validadorBD'
+import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ErroDeServidor } from '../erros/erro-de-servidor'
 import { erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'

@@ -1,4 +1,4 @@
-import { ValidadorBD } from '../../../apresentacao/protocolos/validadorBD'
+import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 import { AlteraCadastroDeEquipamento, EquipamentoValido } from '../../../dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
 import { RepositorioAlteraCadastroDeEquipamento } from '../../protocolos/bd/equipamento/repositorio-altera-cadastro-de-equipamento'
 import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
