@@ -1,5 +1,6 @@
 import { QueryTypes } from 'sequelize'
 import { RepositorioAlerta, DadosAlerta, ModeloAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-alerta'
+import { RepositorioAlteraAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-altera-alerta'
 import { RepositorioAlteraAlertaAtivo } from '../../../../dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
 import { ModelosAlertas, RepositorioConsultaAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-consulta-alerta-todas'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
@@ -7,7 +8,8 @@ import { Alerta } from '../models/modelo-alerta'
 
 export class RepositorioAlertaMariaDB implements RepositorioAlerta,
 RepositorioConsultaAlerta,
-RepositorioAlteraAlertaAtivo {
+RepositorioAlteraAlertaAtivo,
+RepositorioAlteraAlerta {
   async inserir (dadosAlerta: DadosAlerta): Promise<ModeloAlerta> {
     AuxiliaresMariaDB.verificaConexao()
     const alerta = await Alerta.create(this.transformaDados(dadosAlerta))
@@ -51,6 +53,12 @@ RepositorioAlteraAlertaAtivo {
     AuxiliaresMariaDB.verificaConexao()
     await Alerta.update({ ativo }, { where: { id } })
     return null
+  }
+
+  async alterar (dados: ModeloAlerta): Promise<string> {
+    AuxiliaresMariaDB.verificaConexao()
+    await Alerta.update(this.transformaDados(dados), { where: { id: +dados.id } })
+    return 'Alerta alterado com sucesso'
   }
 
   private transformaDados (dadosAlerta: DadosAlerta): any {
