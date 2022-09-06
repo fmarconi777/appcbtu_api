@@ -7,7 +7,7 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
   class ConsultaAlertaStub implements ConsultaAlerta {
     async consultar (): Promise<ModeloAlerta> {
       const listaFalsa = {
-        id: 'id_valida',
+        id: '1',
         descricao: 'descricao_valida',
         prioridade: 'prioridade_valida',
         dataInicio: 'datainicio_valida',
@@ -20,7 +20,7 @@ const makeConsultaAlerta = (): ConsultaAlerta => {
 
     async consultarTodas (): Promise<ModeloAlerta[]> {
       const alertaFalsa = [{
-        id: 'id_qualquer',
+        id: '1',
         descricao: 'descricao_qualquer',
         prioridade: 'prioridade_qualquer',
         dataInicio: 'datainicio_qualquer',
@@ -62,7 +62,7 @@ describe('Validador de parametro', () => {
 
   test('Deve retornar true se o validador retornar true', async () => {
     const { sut } = makeSut()
-    const eValido = await sut.validar('id_qualquer')
+    const eValido = await sut.validar(1)
     expect(eValido).toBe(true)
   })
 })
