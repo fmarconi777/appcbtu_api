@@ -21,39 +21,58 @@ const makeValidadorDeAlertaStub = (): ValidadorBD => {
   return new ValidadorDeAlertaStub()
 }
 
+const makeValidadorDeEstacaoStub = (): ValidadorBD => {
+  class ValidadorDeEstacaoStub implements ValidadorBD {
+    async validar (id: number): Promise<boolean> {
+      return true
+    }
+  }
+  return new ValidadorDeEstacaoStub()
+}
+
 interface SubTipos {
   sut: AlteraAlertaBD
   validadorDeAlertaStub: ValidadorBD
+  validadorDeEstacaoStub: ValidadorBD
 }
 
 const makeSut = (): SubTipos => {
+  const validadorDeEstacaoStub = makeValidadorDeEstacaoStub()
   const validadorDeAlertaStub = makeValidadorDeAlertaStub()
-  const sut = new AlteraAlertaBD(validadorDeAlertaStub)
+  const sut = new AlteraAlertaBD(validadorDeAlertaStub, validadorDeEstacaoStub)
   return {
     sut,
-    validadorDeAlertaStub
+    validadorDeAlertaStub,
+    validadorDeEstacaoStub
   }
 }
 
 describe('AlteraAlertaBD', () => {
-  test('Deve chamar o consultaAlertaPorId com o parametro correto', async () => {
+  test('Deve chamar o validadorDeAlerta com o parametro correto', async () => {
     const { sut, validadorDeAlertaStub } = makeSut()
     const validarSpy = jest.spyOn(validadorDeAlertaStub, 'validar')
     await sut.alterar(dados)
     expect(validarSpy).toHaveBeenCalledWith(+dados.id)
   })
 
-  test('Deve retornar um erro caso o consultaAlertaPorId retorne um erro', async () => {
+  test('Deve retornar um erro caso o validadorDeAlerta retorne um erro', async () => {
     const { sut, validadorDeAlertaStub } = makeSut()
     jest.spyOn(validadorDeAlertaStub, 'validar').mockReturnValueOnce(Promise.reject(new Error()))
     const resposta = sut.alterar(dados)
     await expect(resposta).rejects.toThrow()
   })
 
-  test('Deve retornar null caso o consultaAlertaPorId retorne null', async () => {
+  test('Deve retornar null caso o validadorDeAlerta retorne false', async () => {
     const { sut, validadorDeAlertaStub } = makeSut()
     jest.spyOn(validadorDeAlertaStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
     const resposta = await sut.alterar(dados)
     expect(resposta).toBeNull()
+  })
+
+  test('Deve chamar o validadorDeEstacao com o parametro correto', async () => {
+    const { sut, validadorDeEstacaoStub } = makeSut()
+    const validarSpy = jest.spyOn(validadorDeEstacaoStub, 'validar')
+    await sut.alterar(dados)
+    expect(validarSpy).toHaveBeenCalledWith(+dados.estacaoId)
   })
 })
