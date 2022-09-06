@@ -11,8 +11,11 @@ export class AlteraAlertaBD implements AlteraAlerta {
   async alterar (dados: ModeloAlerta): Promise<AlertaValidado> {
     const alertaValido = await this.validadorDeAlerta.validar(+dados.id)
     if (alertaValido) {
-      await this.validadorDeEstacao.validar(+dados.estacaoId)
-      return await Promise.resolve({ valido: true, resposta: '' })
+      const estacaoValida = await this.validadorDeEstacao.validar(+dados.estacaoId)
+      if (estacaoValida) {
+        return await Promise.resolve({ valido: true, resposta: '' })
+      }
+      return { valido: false, resposta: 'estacaoId' }
     }
     return { valido: false, resposta: 'id' }
   }
