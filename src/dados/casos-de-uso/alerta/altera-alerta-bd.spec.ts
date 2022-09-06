@@ -77,9 +77,16 @@ describe('AlteraAlertaBD', () => {
   })
 
   test('Deve retornar um erro caso o validadorDeEstacao retorne um erro', async () => {
-    const { sut, validadorDeAlertaStub } = makeSut()
-    jest.spyOn(validadorDeAlertaStub, 'validar').mockReturnValueOnce(Promise.reject(new Error()))
+    const { sut, validadorDeEstacaoStub } = makeSut()
+    jest.spyOn(validadorDeEstacaoStub, 'validar').mockReturnValueOnce(Promise.reject(new Error()))
     const resposta = sut.alterar(dados)
     await expect(resposta).rejects.toThrow()
+  })
+
+  test('Deve retornar { valido: false, resposta: estacaoId } caso o validadorDeEstacao retorne false', async () => {
+    const { sut, validadorDeEstacaoStub } = makeSut()
+    jest.spyOn(validadorDeEstacaoStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
+    const resposta = await sut.alterar(dados)
+    expect(resposta).toEqual({ valido: false, resposta: 'estacaoId' })
   })
 })
