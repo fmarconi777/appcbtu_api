@@ -62,11 +62,11 @@ describe('AlteraAlertaBD', () => {
     await expect(resposta).rejects.toThrow()
   })
 
-  test('Deve retornar null caso o validadorDeAlerta retorne false', async () => {
+  test('Deve retornar { valido: false, resposta: id } caso o validadorDeAlerta retorne false', async () => {
     const { sut, validadorDeAlertaStub } = makeSut()
     jest.spyOn(validadorDeAlertaStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
     const resposta = await sut.alterar(dados)
-    expect(resposta).toBeNull()
+    expect(resposta).toEqual({ valido: false, resposta: 'id' })
   })
 
   test('Deve chamar o validadorDeEstacao com o parametro correto', async () => {

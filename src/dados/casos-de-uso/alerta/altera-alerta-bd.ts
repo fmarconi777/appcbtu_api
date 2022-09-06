@@ -1,5 +1,5 @@
 import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
-import { AlteraAlerta } from '../../../dominio/casos-de-uso/alerta/altera-alerta'
+import { AlertaValidado, AlteraAlerta } from '../../../dominio/casos-de-uso/alerta/altera-alerta'
 import { ModeloAlerta } from '../../../dominio/modelos/alerta'
 
 export class AlteraAlertaBD implements AlteraAlerta {
@@ -8,12 +8,12 @@ export class AlteraAlertaBD implements AlteraAlerta {
     private readonly validadorDeEstacao: ValidadorBD
   ) {}
 
-  async alterar (dados: ModeloAlerta): Promise<string | null> {
+  async alterar (dados: ModeloAlerta): Promise<AlertaValidado> {
     const alertaValido = await this.validadorDeAlerta.validar(+dados.id)
     if (alertaValido) {
       await this.validadorDeEstacao.validar(+dados.estacaoId)
-      return await Promise.resolve('')
+      return await Promise.resolve({ valido: true, resposta: '' })
     }
-    return null
+    return { valido: false, resposta: 'id' }
   }
 }
