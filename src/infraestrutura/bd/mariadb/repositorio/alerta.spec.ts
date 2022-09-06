@@ -154,4 +154,30 @@ describe('Repositorio mariaDB Alerta', () => {
       expect(resposta).toBeNull()
     })
   })
+
+  describe('Método alterar', () => {
+    test('Deve retornar a mensagem "Alerta alterado com sucesso" em caso de sucesso', async () => {
+      const sut = makeSut()
+      await sut.inserir({
+        descricao: 'descricao_valido',
+        prioridade: 'pri_valido',
+        dataInicio: '2022-01-01 00:00:00z',
+        dataFim: '2022-02-01 00:00:00z',
+        ativo: 'true',
+        estacaoId: '1'
+      })
+      const alertas = await Alerta.findAll({ raw: true })
+      const dados = {
+        id: (alertas[alertas.length - 1].id).toString(),
+        descricao: 'descricao_alterada',
+        prioridade: 'alterado',
+        dataInicio: '2022-01-01 00:00:00z',
+        dataFim: '2022-02-01 00:00:00z',
+        ativo: 'true',
+        estacaoId: '1'
+      }
+      const resposta = await sut.alterar(dados)
+      expect(resposta).toBe('Alerta alterado com sucesso')
+    })
+  })
 })
