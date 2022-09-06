@@ -116,4 +116,10 @@ describe('AlteraAlertaBD', () => {
     const resposta = sut.alterar(dados)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar { valido: true, resposta: Alerta alterado com sucesso } em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const resposta = await sut.alterar(dados)
+    expect(resposta).toEqual({ valido: true, resposta: 'Alerta alterado com sucesso' })
+  })
 })
