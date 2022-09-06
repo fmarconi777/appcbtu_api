@@ -6,7 +6,10 @@ export class AlteraAlertaBD implements AlteraAlerta {
   constructor (private readonly consultaAlertaPorId: ConsultaAlertaPorId) {}
 
   async alterar (dados: ModeloAlerta): Promise<string | null> {
-    await this.consultaAlertaPorId.consultarPorId(+dados.id)
-    return await Promise.resolve(null)
+    const alerta = await this.consultaAlertaPorId.consultarPorId(+dados.id)
+    if (alerta) { // eslint-disable-line
+      return await Promise.resolve('')
+    }
+    return alerta
   }
 }
