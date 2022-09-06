@@ -7,7 +7,7 @@ import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alert
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
 import { Validador } from '../protocolos/validador'
-import { AlteraAlerta } from '../../dominio/casos-de-uso/alerta/altera-alerta'
+import { AlteraAlerta, AlertaValidado } from '../../dominio/casos-de-uso/alerta/altera-alerta'
 
 const alertaFalso = {
   descricao: 'qualquer_descricao',
@@ -81,8 +81,8 @@ const makeValidadorDeSiglaStub = (): Validador => {
 
 const makeAlteraAlertaStub = (): AlteraAlerta => {
   class AlteraAlertaStub implements AlteraAlerta {
-    async alterar (dados: ModeloAlerta): Promise<string | null> {
-      return await Promise.resolve('Alerta alterado com sucesso')
+    async alterar (dados: ModeloAlerta): Promise<AlertaValidado> {
+      return await Promise.resolve({ valido: true, resposta: 'Alerta alterado com sucesso' })
     }
   }
   return new AlteraAlertaStub()
@@ -563,9 +563,9 @@ describe('Controlador de Alerta', () => {
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
 
-    test('Deve retornar status 404 caso o AlteraAlerta retorne null', async () => {
+    test('Deve retornar status 404 caso o AlteraAlerta retorne a propriedade valido igual a false', async () => {
       const { sut, alteraAlertaStub } = makeSut()
-      jest.spyOn(alteraAlertaStub, 'alterar').mockReturnValueOnce(Promise.resolve(null))
+      jest.spyOn(alteraAlertaStub, 'alterar').mockReturnValueOnce(Promise.resolve({ valido: false, resposta: 'parametro_invalido' }))
       const requisicaoHttp = {
         corpo: {
           descricao: 'qualquer_descricao',
@@ -579,7 +579,7 @@ describe('Controlador de Alerta', () => {
         metodo: 'PUT'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('parametro_invalido')))
     })
 
     test('Deve retornar código 200 se dados válidos forem passados', async () => {

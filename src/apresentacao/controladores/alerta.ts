@@ -72,10 +72,10 @@ export class ControladorDeAlerta implements Controlador {
           }
           const dados = Object.assign({}, { id: parametro }, requisicaoHttp.corpo)
           const alerta = await this.alteraAlerta.alterar(dados)
-          if (!alerta) {  // eslint-disable-line
-            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+          if (!alerta.valido) {  // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido(alerta.resposta))
           }
-          return resposta(alerta)
+          return resposta(alerta.resposta)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
