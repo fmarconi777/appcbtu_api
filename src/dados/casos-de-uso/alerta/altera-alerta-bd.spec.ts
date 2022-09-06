@@ -1,5 +1,5 @@
+import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 import { ModeloAlerta } from '../../../dominio/modelos/alerta'
-import { ConsultaAlertaPorId } from '../../protocolos/bd/alerta/repositorio-consulta-alerta-por-id'
 import { AlteraAlertaBD } from './altera-alerta-bd'
 
 const dados: ModeloAlerta = {
@@ -12,47 +12,47 @@ const dados: ModeloAlerta = {
   estacaoId: '1'
 }
 
-const makeConsultaAlertaPorIdStub = (): ConsultaAlertaPorId => {
-  class ConsultaAlertaPorIdStub implements ConsultaAlertaPorId {
-    async consultarPorId (id: number): Promise<ModeloAlerta | null> {
-      return dados
+const makeValidadorDeAlertaStub = (): ValidadorBD => {
+  class ValidadorDeAlertaStub implements ValidadorBD {
+    async validar (id: number): Promise<boolean> {
+      return true
     }
   }
-  return new ConsultaAlertaPorIdStub()
+  return new ValidadorDeAlertaStub()
 }
 
 interface SubTipos {
   sut: AlteraAlertaBD
-  consultaAlertaPorIdStub: ConsultaAlertaPorId
+  validadorDeAlertaStub: ValidadorBD
 }
 
 const makeSut = (): SubTipos => {
-  const consultaAlertaPorIdStub = makeConsultaAlertaPorIdStub()
-  const sut = new AlteraAlertaBD(consultaAlertaPorIdStub)
+  const validadorDeAlertaStub = makeValidadorDeAlertaStub()
+  const sut = new AlteraAlertaBD(validadorDeAlertaStub)
   return {
     sut,
-    consultaAlertaPorIdStub
+    validadorDeAlertaStub
   }
 }
 
 describe('AlteraAlertaBD', () => {
   test('Deve chamar o consultaAlertaPorId com o parametro correto', async () => {
-    const { sut, consultaAlertaPorIdStub } = makeSut()
-    const consultarPorIdSpy = jest.spyOn(consultaAlertaPorIdStub, 'consultarPorId')
+    const { sut, validadorDeAlertaStub } = makeSut()
+    const validarSpy = jest.spyOn(validadorDeAlertaStub, 'validar')
     await sut.alterar(dados)
-    expect(consultarPorIdSpy).toHaveBeenCalledWith(+dados.id)
+    expect(validarSpy).toHaveBeenCalledWith(+dados.id)
   })
 
   test('Deve retornar um erro caso o consultaAlertaPorId retorne um erro', async () => {
-    const { sut, consultaAlertaPorIdStub } = makeSut()
-    jest.spyOn(consultaAlertaPorIdStub, 'consultarPorId').mockReturnValueOnce(Promise.reject(new Error()))
+    const { sut, validadorDeAlertaStub } = makeSut()
+    jest.spyOn(validadorDeAlertaStub, 'validar').mockReturnValueOnce(Promise.reject(new Error()))
     const resposta = sut.alterar(dados)
     await expect(resposta).rejects.toThrow()
   })
 
   test('Deve retornar null caso o consultaAlertaPorId retorne null', async () => {
-    const { sut, consultaAlertaPorIdStub } = makeSut()
-    jest.spyOn(consultaAlertaPorIdStub, 'consultarPorId').mockReturnValueOnce(Promise.resolve(null))
+    const { sut, validadorDeAlertaStub } = makeSut()
+    jest.spyOn(validadorDeAlertaStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
     const resposta = await sut.alterar(dados)
     expect(resposta).toBeNull()
   })
