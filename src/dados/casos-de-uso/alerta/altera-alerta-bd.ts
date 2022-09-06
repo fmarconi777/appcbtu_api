@@ -15,8 +15,8 @@ export class AlteraAlertaBD implements AlteraAlerta {
     if (alertaValido) {
       const estacaoValida = await this.validadorDeEstacao.validar(+dados.estacaoId)
       if (estacaoValida) {
-        await this.repositorioAlteraAlerta.alterar(dados)
-        return await Promise.resolve({ valido: true, resposta: '' })
+        const alertaAlterado = await this.repositorioAlteraAlerta.alterar(dados)
+        return await Promise.resolve({ valido: true, resposta: alertaAlterado })
       }
       return { valido: false, resposta: 'estacaoId' }
     }
