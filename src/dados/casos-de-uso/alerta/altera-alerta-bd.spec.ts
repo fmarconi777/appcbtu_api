@@ -1,6 +1,7 @@
 import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 import { ModeloAlerta } from '../../../dominio/modelos/alerta'
 import { AlteraAlertaBD } from './altera-alerta-bd'
+import { RepositorioAlteraAlerta } from '../../protocolos/bd/alerta/repositorio-altera-alerta'
 
 const dados: ModeloAlerta = {
   id: '1',
@@ -30,20 +31,32 @@ const makeValidadorDeEstacaoStub = (): ValidadorBD => {
   return new ValidadorDeEstacaoStub()
 }
 
+const makeRepositorioAlteraAlertaStub = (): RepositorioAlteraAlerta => {
+  class RepositorioAlteraAlertaStub implements RepositorioAlteraAlerta {
+    async alterar (dados: ModeloAlerta): Promise<string> {
+      return await Promise.resolve('Alerta alterado com sucesso')
+    }
+  }
+  return new RepositorioAlteraAlertaStub()
+}
+
 interface SubTipos {
   sut: AlteraAlertaBD
   validadorDeAlertaStub: ValidadorBD
   validadorDeEstacaoStub: ValidadorBD
+  repositorioAlteraAlertaStub: RepositorioAlteraAlerta
 }
 
 const makeSut = (): SubTipos => {
+  const repositorioAlteraAlertaStub = makeRepositorioAlteraAlertaStub()
   const validadorDeEstacaoStub = makeValidadorDeEstacaoStub()
   const validadorDeAlertaStub = makeValidadorDeAlertaStub()
-  const sut = new AlteraAlertaBD(validadorDeAlertaStub, validadorDeEstacaoStub)
+  const sut = new AlteraAlertaBD(validadorDeAlertaStub, validadorDeEstacaoStub, repositorioAlteraAlertaStub)
   return {
     sut,
     validadorDeAlertaStub,
-    validadorDeEstacaoStub
+    validadorDeEstacaoStub,
+    repositorioAlteraAlertaStub
   }
 }
 
@@ -88,5 +101,12 @@ describe('AlteraAlertaBD', () => {
     jest.spyOn(validadorDeEstacaoStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
     const resposta = await sut.alterar(dados)
     expect(resposta).toEqual({ valido: false, resposta: 'estacaoId' })
+  })
+
+  test('Deve chamar o repositorioAlteraAlerta com o parametro correto', async () => {
+    const { sut, repositorioAlteraAlertaStub } = makeSut()
+    const validarSpy = jest.spyOn(repositorioAlteraAlertaStub, 'alterar')
+    await sut.alterar(dados)
+    expect(validarSpy).toHaveBeenCalledWith(dados)
   })
 })
