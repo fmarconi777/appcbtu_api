@@ -4,8 +4,8 @@ import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/cons
 export class ValidadorDeEquipamento implements ValidadorBD {
   constructor (private readonly consultaEquipamento: ConsultaEquipamento) {}
 
-  async validar (parametro: number): Promise<boolean> {
+  async validar (id: number): Promise<boolean> {
     const listaEquipamento = await this.consultaEquipamento.consultarTodos()
-    return listaEquipamento.some(equipamento => +equipamento.id === parametro)
+    return listaEquipamento.some(equipamento => +equipamento.id === id)
   }
 }

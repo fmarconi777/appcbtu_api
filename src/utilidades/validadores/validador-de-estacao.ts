@@ -4,8 +4,8 @@ import { ConsultaEstacao } from '../../dominio/casos-de-uso/estacao/consulta-est
 export class ValidadorDeEstacao implements ValidadorBD {
   constructor (private readonly consultaEstacao: ConsultaEstacao) {}
 
-  async validar (parametro: number): Promise<boolean> {
+  async validar (id: number): Promise<boolean> {
     const listaEstacoes = await this.consultaEstacao.consultarTodas()
-    return listaEstacoes.some(estacao => +estacao.id === parametro)
+    return listaEstacoes.some(estacao => +estacao.id === id)
   }
 }

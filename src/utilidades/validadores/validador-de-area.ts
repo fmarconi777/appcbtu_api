@@ -3,8 +3,8 @@ import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 
 export class ValidadorDeArea implements ValidadorBD {
   constructor (private readonly consultaArea: ConsultaArea) {}
-  async validar (parametro: string): Promise<boolean> {
+  async validar (nome: string): Promise<boolean> {
     const listaAreas = await this.consultaArea.consultarTodas()
-    return listaAreas.some(area => area.nome === parametro)
+    return listaAreas.some(area => area.nome === nome)
   }
 }
