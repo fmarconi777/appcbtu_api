@@ -10,7 +10,7 @@ const makeAlertaFalsa = (): ModeloAlerta => ({
   prioridade: 'prioridade_qualquer',
   ativo: 'true',
   dataInicio: 'dataInicio_qualquer',
-  dataFim: '2022-01-01T00:00:00.000Z',
+  dataFim: '2025-01-01T00:00:00.000Z',
   estacaoId: 'estacaoId_qualquer'
 })
 
@@ -44,12 +44,8 @@ const makeAuxiliarAlertaStub = (): AuxiliarAlerta => {
       return false
     }
 
-    async asyncFilter (vetor: any[], condicional: CallableFunction): Promise<any[]> {
-      return await new Promise(resolve => resolve(vetor))
-    }
-
-    async condicional (alerta: { dataFim: string, id: string }): Promise<boolean> {
-      return await new Promise(resolve => resolve(true))
+    async filtrarAlertas (vetor: any[], repositorioAlteraAlertaAtivo: RepositorioAlteraAlertaAtivo): Promise<any[]> {
+      return await Promise.resolve([makeAlertaFalsa()])
     }
   }
   return new AuxiliarAlertaStub()
@@ -94,31 +90,24 @@ describe('ConsultaAlerta', () => {
       expect(respostaConsultar).toEqual([])
     })
 
-    test('Deve chamar o asyncFilter com o valor correto caso hajam alertas', async () => {
-      const { sut, auxiliarAlertaStub } = makeSut()
-      const asyncFilterSpy = jest.spyOn(auxiliarAlertaStub, 'asyncFilter')
+    test('Deve chamar o filtrarAlertas com os valores corretos caso hajam alertas', async () => {
+      const { sut, auxiliarAlertaStub, repositorioAlteraAlertaAtivoStub } = makeSut()
+      const filtrarAlertasSpy = jest.spyOn(auxiliarAlertaStub, 'filtrarAlertas')
       await sut.consultarTodas()
-      expect(asyncFilterSpy).toHaveBeenCalledWith([makeAlertaFalsa(), makeAlertaFalsa()], expect.any(Function))
+      expect(filtrarAlertasSpy).toHaveBeenCalledWith([makeAlertaFalsa(), makeAlertaFalsa()], repositorioAlteraAlertaAtivoStub)
     })
 
-    test('Deve retornar um erro caso o asyncFilter retorne um erro', async () => {
+    test('Deve retornar um erro caso o filtrarAlertas retorne um erro', async () => {
       const { sut, auxiliarAlertaStub } = makeSut()
-      jest.spyOn(auxiliarAlertaStub, 'asyncFilter').mockReturnValueOnce(Promise.reject(new Error()))
+      jest.spyOn(auxiliarAlertaStub, 'filtrarAlertas').mockReturnValueOnce(Promise.reject(new Error()))
       const resposta = sut.consultarTodas()
       await expect(resposta).rejects.toThrow()
-    })
-
-    test('Deve retornar um array vazio caso a dataFim seja menor que a data atual para todos os alertas', async () => {
-      const { sut, auxiliarAlertaStub } = makeSut()
-      jest.spyOn(auxiliarAlertaStub, 'asyncFilter').mockReturnValueOnce(Promise.resolve([]))
-      const resposta = await sut.consultarTodas()
-      expect(resposta).toEqual([])
     })
 
     test('Deve Retornar um array com todos os alertas ativos em caso de sucesso', async () => {
       const { sut } = makeSut()
       const resposta = await sut.consultarTodas()
-      expect(resposta).toEqual([makeAlertaFalsa(), makeAlertaFalsa()])
+      expect(resposta).toEqual([makeAlertaFalsa()])
     })
   })
 
@@ -142,40 +131,32 @@ describe('ConsultaAlerta', () => {
     test('Deve retornar um array vazio caso o RepositorioConsultaAlerta não encontre um alerta para a sigla', async () => {
       const { sut, repositorioConsultaAlertaStub } = makeSut()
       jest.spyOn(repositorioConsultaAlertaStub, 'consultar').mockReturnValueOnce(new Promise(resolve => resolve(null)))
-      const silga = 'sigla_qualquer'
-      const respostaConsultar = await sut.consultar(silga)
+      const sigla = 'sigla_qualquer'
+      const respostaConsultar = await sut.consultar(sigla)
       expect(respostaConsultar).toEqual([])
     })
 
-    test('Deve chamar o asyncFilter com o valor correto caso hajam alertas', async () => {
-      const { sut, auxiliarAlertaStub } = makeSut()
-      const asyncFilterSpy = jest.spyOn(auxiliarAlertaStub, 'asyncFilter')
+    test('Deve chamar o filtrarAlertas com os valores corretos caso hajam alertas', async () => {
+      const { sut, auxiliarAlertaStub, repositorioAlteraAlertaAtivoStub } = makeSut()
+      const filtrarAlertasSpy = jest.spyOn(auxiliarAlertaStub, 'filtrarAlertas')
       const sigla = 'sigla_qualquer'
       await sut.consultar(sigla)
-      expect(asyncFilterSpy).toHaveBeenCalledWith([makeAlertaFalsa(), makeAlertaFalsa()], expect.any(Function))
+      expect(filtrarAlertasSpy).toHaveBeenCalledWith([makeAlertaFalsa(), makeAlertaFalsa()], repositorioAlteraAlertaAtivoStub)
     })
 
-    test('Deve retornar um erro caso o asyncFilter retorne um erro', async () => {
+    test('Deve retornar um erro caso o filtrarAlertas retorne um erro', async () => {
       const { sut, auxiliarAlertaStub } = makeSut()
-      jest.spyOn(auxiliarAlertaStub, 'asyncFilter').mockReturnValueOnce(Promise.reject(new Error()))
+      jest.spyOn(auxiliarAlertaStub, 'filtrarAlertas').mockReturnValueOnce(Promise.reject(new Error()))
       const sigla = 'sigla_qualquer'
       const resposta = sut.consultar(sigla)
       await expect(resposta).rejects.toThrow()
     })
 
-    test('Deve retornar um array vazio caso a dataFim seja menor que a data atual para todos os alertas', async () => {
-      const { sut, auxiliarAlertaStub } = makeSut()
-      jest.spyOn(auxiliarAlertaStub, 'asyncFilter').mockReturnValueOnce(Promise.resolve([]))
-      const sigla = 'sigla_qualquer'
-      const resposta = await sut.consultar(sigla)
-      expect(resposta).toEqual([])
-    })
-
     test('Deve retornar um array de alertas ativos em caso de sucesso quando somente a sigla seja fornecida', async () => {
       const { sut } = makeSut()
-      const alerta = 'sigla_qualquer'
-      const resposta = await sut.consultar(alerta)
-      expect(resposta).toEqual([makeAlertaFalsa(), makeAlertaFalsa()])
+      const sigla = 'sigla_qualquer'
+      const resposta = await sut.consultar(sigla)
+      expect(resposta).toEqual([makeAlertaFalsa()])
     })
 
     test('Deve chamar o RepositorioConsultaAlerta com os valores corretos caso uma sigla e um id sejam fornecidos', async () => {
@@ -211,7 +192,7 @@ describe('ConsultaAlerta', () => {
       const sigla = 'sigla_qualquer'
       const id = '1'
       await sut.consultar(sigla, +id)
-      expect(compararDatasSpy).toHaveBeenCalledWith('2022-01-01T00:00:00.000Z')
+      expect(compararDatasSpy).toHaveBeenCalledWith('2025-01-01T00:00:00.000Z')
     })
 
     test('Deve retornar um erro caso o compararDatas retorne um erro', async () => {

@@ -17,7 +17,7 @@ export const criaControladorDeAlerta = (): Controlador => {
   const repositorioAlerta = new RepositorioAlertaMariaDB()
   const repositorioEstacao = new RepositorioEstacaoMariaDB()
   const consultaEstacaoBD = new ConsultaEstacaoBD(repositorioEstacao)
-  const auxiliarDadosAlerta = new AuxiliarDadosAlerta(repositorioAlerta)
+  const auxiliarDadosAlerta = new AuxiliarDadosAlerta()
   const validadorDeEstacao = new ValidadorDeEstacao(consultaEstacaoBD)
   const consultaAlertaBD = new ConsultaAlertaBD(repositorioAlerta, repositorioAlerta, auxiliarDadosAlerta)
   const validadorDeAlerta = new ValidadorDeAlerta(consultaAlertaBD)

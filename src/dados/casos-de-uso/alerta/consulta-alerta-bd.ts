@@ -12,20 +12,18 @@ export class ConsultaAlertaBD implements ConsultaAlerta {
   ) {}
 
   async consultarTodas (): Promise<ModeloAlerta[]> {
-    const alertas: [] = await this.repositorioConsultaAlerta.consultar()
+    const alertas: ModeloAlerta[] = await this.repositorioConsultaAlerta.consultar()
     if (alertas) { //eslint-disable-line
-      const alertasAtivos = await this.auxiliarAlerta.asyncFilter(alertas, this.auxiliarAlerta.condicional)
-      return alertasAtivos
+      return await this.auxiliarAlerta.filtrarAlertas(alertas, this.repositorioAlteraAlertaAtivo)
     }
     return []
   }
 
   async consultar (sigla: string, id?: number): Promise<ModeloAlerta | ModeloAlerta[] | null | string> {
     if (!id) { //eslint-disable-line
-      const alertas: [] = await this.repositorioConsultaAlerta.consultar(sigla)
+      const alertas: ModeloAlerta[] = await this.repositorioConsultaAlerta.consultar(sigla)
       if (alertas) { //eslint-disable-line
-        const alertasAtivos = await this.auxiliarAlerta.asyncFilter(alertas, this.auxiliarAlerta.condicional)
-        return alertasAtivos
+        return await this.auxiliarAlerta.filtrarAlertas(alertas, this.repositorioAlteraAlertaAtivo)
       }
       return []
     }
