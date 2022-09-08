@@ -10,6 +10,8 @@ import { ValidadorDeEstacao } from '../../utilidades/validadores/validador-de-es
 import { AuxiliarDadosAlerta } from '../../utilidades/auxiliares/auxiliar-dados-alerta'
 import { ConsultaEstacaoBD } from '../../dados/casos-de-uso/estacao/consulta-estacao-bd'
 import { RepositorioEstacaoMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/estacao'
+import { AlteraAlertaBD } from '../../dados/casos-de-uso/alerta/altera-alerta-bd'
+import { ValidadorDeAlerta } from '../../utilidades/validadores/validador-de-alerta'
 
 export const criaControladorDeAlerta = (): Controlador => {
   const repositorioAlerta = new RepositorioAlertaMariaDB()
@@ -18,9 +20,11 @@ export const criaControladorDeAlerta = (): Controlador => {
   const auxiliarDadosAlerta = new AuxiliarDadosAlerta(repositorioAlerta)
   const validadorDeEstacao = new ValidadorDeEstacao(consultaEstacaoBD)
   const consultaAlertaBD = new ConsultaAlertaBD(repositorioAlerta, repositorioAlerta, auxiliarDadosAlerta)
+  const validadorDeAlerta = new ValidadorDeAlerta(consultaAlertaBD)
   const cadastroDeAlerta = new CadastroDeAlerta(repositorioAlerta, validadorDeEstacao)
   const validadorDeSigla = new ValidadorDeSigla()
-  const controladorDeAlerta = new ControladorDeAlerta(cadastroDeAlerta, consultaAlertaBD, validadorDeSigla)
+  const alteraAlertaBD = new AlteraAlertaBD(validadorDeAlerta, validadorDeEstacao, repositorioAlerta)
+  const controladorDeAlerta = new ControladorDeAlerta(cadastroDeAlerta, consultaAlertaBD, validadorDeSigla, alteraAlertaBD)
   const repositorioLogDeErro = new RepositorioLogDeErroMariaDB()
   return new DecoradorControladorLog(controladorDeAlerta, repositorioLogDeErro)
 }
