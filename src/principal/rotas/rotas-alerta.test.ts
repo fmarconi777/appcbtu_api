@@ -201,6 +201,39 @@ describe('Rotas Alerta', () => {
         .expect(403)
     })
 
+    test('Deve retornar status 400 ao alterar um alerta faltando um campo requerido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app).post('/alerta').set('authorization', `Bearer ${tokenDeAcesso}`).send({
+        descricao: 'Estação Parada!',
+        prioridade: 'Altissima',
+        dataInicio: '2022-02-05',
+        dataFim: '2025-02-05',
+        ativo: 'true',
+        estacaoId: '1'
+      })
+      const alertas = await Alerta.findAll({ raw: true })
+      await request(app)
+        .put(`/alerta/${alertas[0].id}`)
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .send({
+          prioridade: 'Alterada',
+          dataInicio: '2022-02-05',
+          dataFim: '2025-02-05',
+          ativo: 'true',
+          estacaoId: '1'
+        })
+        .expect(400)
+    })
+
     test('Deve retornar status 200 ao alterar um alerta com um token válido', async () => {
       const senha = await hash('123', 12)
       const resposta = await Funcionario.create({
