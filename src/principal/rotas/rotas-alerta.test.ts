@@ -185,5 +185,20 @@ describe('Rotas Alerta', () => {
         })
         .expect(403)
     })
+
+    test('Deve retornar status 403 ao adicionar um alerta com authorization sem token de acesso', async () => {
+      await request(app)
+        .put('/alerta/1')
+        .set('authorization', 'Bearer ')
+        .send({
+          descricao: 'Estação Parada!',
+          prioridade: 'Altissima',
+          dataInicio: '2022-02-05',
+          dataFim: '2022-02-05',
+          ativo: 'true',
+          estacaoId: '1'
+        })
+        .expect(403)
+    })
   })
 })
