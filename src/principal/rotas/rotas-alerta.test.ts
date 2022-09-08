@@ -170,4 +170,20 @@ describe('Rotas Alerta', () => {
         .expect(404)
     })
   })
+
+  describe('Método PUT', () => {
+    test('Deve retornar status 403 ao adicionar um alerta sem autenticação', async () => {
+      await request(app)
+        .put('/alerta/1')
+        .send({
+          descricao: 'Descrição alterada',
+          prioridade: 'Alterada',
+          dataInicio: '2022-02-05',
+          dataFim: '2022-02-05',
+          ativo: 'true',
+          estacaoId: '1'
+        })
+        .expect(403)
+    })
+  })
 })
