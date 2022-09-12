@@ -1,4 +1,11 @@
-import { ModeloAlerta } from '../../modelos/alerta'
+export interface DadosAlterados {
+  id: string
+  descricao: string
+  prioridade: string
+  dataInicio: string
+  dataFim: string
+  estacaoId: string
+}
 
 export interface AlertaValidado {
   valido: boolean
@@ -6,5 +13,5 @@ export interface AlertaValidado {
 }
 
 export interface AlteraAlerta {
-  alterar: (dados: ModeloAlerta) => Promise<AlertaValidado>
+  alterar: (dados: DadosAlterados) => Promise<AlertaValidado>
 }

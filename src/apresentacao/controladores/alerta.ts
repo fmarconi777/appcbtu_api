@@ -59,12 +59,12 @@ export class ControladorDeAlerta implements Controlador {
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
-      case 'PUT':
+      case 'PATCH':
         try {
           if (!Number.isInteger(+parametro) && +parametro !== Math.abs(+parametro)) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
-          const camposRequeridos = ['descricao', 'prioridade', 'dataInicio', 'dataFim', 'ativo', 'estacaoId']
+          const camposRequeridos = ['descricao', 'prioridade', 'dataInicio', 'dataFim', 'estacaoId']
           for (const campo of camposRequeridos) {
             if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
               return requisicaoImpropria(new ErroFaltaParametro(campo))

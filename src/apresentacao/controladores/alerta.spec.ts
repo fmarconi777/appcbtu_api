@@ -7,7 +7,7 @@ import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alert
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
 import { Validador } from '../protocolos/validador'
-import { AlteraAlerta, AlertaValidado } from '../../dominio/casos-de-uso/alerta/altera-alerta'
+import { AlteraAlerta, AlertaValidado, DadosAlterados } from '../../dominio/casos-de-uso/alerta/altera-alerta'
 
 const alertaFalso = {
   descricao: 'qualquer_descricao',
@@ -81,7 +81,7 @@ const makeValidadorDeSiglaStub = (): Validador => {
 
 const makeAlteraAlertaStub = (): AlteraAlerta => {
   class AlteraAlertaStub implements AlteraAlerta {
-    async alterar (dados: ModeloAlerta): Promise<AlertaValidado> {
+    async alterar (dados: DadosAlterados): Promise<AlertaValidado> {
       return await Promise.resolve({ valido: true, resposta: 'Alerta alterado com sucesso' })
     }
   }
@@ -390,7 +390,7 @@ describe('Controlador de Alerta', () => {
     })
   })
 
-  describe('Método PUT', () => {
+  describe('Método PATCH', () => {
     test('Deve retornar código 404 se um parametro inválido for passado', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
@@ -399,11 +399,10 @@ describe('Controlador de Alerta', () => {
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
           dataFim: 'fimdata_qualquer',
-          ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
         parametro: 'NaN',
-        metodo: 'PUT'
+        metodo: 'PATCH'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
@@ -416,11 +415,10 @@ describe('Controlador de Alerta', () => {
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
           dataFim: 'fimdata_qualquer',
-          ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
         parametro: '1',
-        metodo: 'PUT'
+        metodo: 'PATCH'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(400)
@@ -434,11 +432,10 @@ describe('Controlador de Alerta', () => {
           descricao: 'qualquer_descricao',
           dataInicio: 'iniciodata_qualquer',
           dataFim: 'fimdata_qualquer',
-          ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
         parametro: '1',
-        metodo: 'PUT'
+        metodo: 'PATCH'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(400)
@@ -452,11 +449,10 @@ describe('Controlador de Alerta', () => {
           descricao: 'qualquer_descricao',
           prioridade: 'qualquer_prioridade',
           dataFim: 'datafim_qualquer',
-          ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
         parametro: '1',
-        metodo: 'PUT'
+        metodo: 'PATCH'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(400)
@@ -470,33 +466,14 @@ describe('Controlador de Alerta', () => {
           descricao: 'qualquer_descricao',
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
-          ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
         parametro: '1',
-        metodo: 'PUT'
+        metodo: 'PATCH'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(400)
       expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('dataFim'))
-    })
-
-    test('Deve retornar código 400 se um estado de ativo não for fornecido', async () => {
-      const { sut } = makeSut()
-      const requisicaoHttp = {
-        corpo: {
-          descricao: 'qualquer_descricao',
-          prioridade: 'qualquer_prioridade',
-          dataInicio: 'iniciodata_qualquer',
-          dataFim: 'fimdata_qualquer',
-          estacaoId: 'estacaoId_qualquer'
-        },
-        parametro: '1',
-        metodo: 'PUT'
-      }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp.status).toBe(400)
-      expect(respostaHttp.corpo).toEqual(new ErroFaltaParametro('ativo'))
     })
 
     test('Deve retornar código 400 se um id de estação não for fornecido', async () => {
@@ -510,7 +487,7 @@ describe('Controlador de Alerta', () => {
           ativo: 'ativo_qualquer'
         },
         parametro: '1',
-        metodo: 'PUT'
+        metodo: 'PATCH'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(400)
@@ -526,11 +503,10 @@ describe('Controlador de Alerta', () => {
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
           dataFim: 'fimdata_qualquer',
-          ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
         parametro: '1',
-        metodo: 'PUT'
+        metodo: 'PATCH'
       }
       await sut.tratar(requisicaoHttp)
       expect(inserirSpy).toHaveBeenCalledWith({
@@ -539,7 +515,6 @@ describe('Controlador de Alerta', () => {
         prioridade: 'qualquer_prioridade',
         dataInicio: 'iniciodata_qualquer',
         dataFim: 'fimdata_qualquer',
-        ativo: 'ativo_qualquer',
         estacaoId: 'estacaoId_qualquer'
       })
     })
@@ -553,11 +528,10 @@ describe('Controlador de Alerta', () => {
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
           dataFim: 'fimdata_qualquer',
-          ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
         parametro: '1',
-        metodo: 'PUT'
+        metodo: 'PATCH'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
@@ -572,11 +546,10 @@ describe('Controlador de Alerta', () => {
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
           dataFim: 'fimdata_qualquer',
-          ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
         parametro: '1',
-        metodo: 'PUT'
+        metodo: 'PATCH'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('parametro_invalido')))
@@ -590,11 +563,10 @@ describe('Controlador de Alerta', () => {
           prioridade: 'qualquer_prioridade',
           dataInicio: 'iniciodata_qualquer',
           dataFim: 'fimdata_qualquer',
-          ativo: 'ativo_qualquer',
           estacaoId: 'estacaoId_qualquer'
         },
         parametro: '1',
-        metodo: 'PUT'
+        metodo: 'PATCH'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp.status).toBe(200)

@@ -171,16 +171,15 @@ describe('Rotas Alerta', () => {
     })
   })
 
-  describe('Método PUT', () => {
+  describe('Método patch', () => {
     test('Deve retornar status 403 ao adicionar um alerta sem autenticação', async () => {
       await request(app)
-        .put('/alerta/1')
+        .patch('/alerta/1')
         .send({
           descricao: 'Descrição alterada',
           prioridade: 'Alterada',
           dataInicio: '2022-02-05',
           dataFim: '2022-02-05',
-          ativo: 'true',
           estacaoId: '1'
         })
         .expect(403)
@@ -188,14 +187,13 @@ describe('Rotas Alerta', () => {
 
     test('Deve retornar status 403 ao adicionar um alerta com authorization sem token de acesso', async () => {
       await request(app)
-        .put('/alerta/1')
+        .patch('/alerta/1')
         .set('authorization', 'Bearer ')
         .send({
           descricao: 'Descrição alterada',
           prioridade: 'Alterada',
           dataInicio: '2022-02-05',
           dataFim: '2022-02-05',
-          ativo: 'true',
           estacaoId: '1'
         })
         .expect(403)
@@ -222,13 +220,12 @@ describe('Rotas Alerta', () => {
       })
       const alertas = await Alerta.findAll({ raw: true })
       await request(app)
-        .put(`/alerta/${alertas[0].id}`)
+        .patch(`/alerta/${alertas[0].id}`)
         .set('authorization', `Bearer ${tokenDeAcesso}`)
         .send({
           prioridade: 'Alterada',
           dataInicio: '2022-02-05',
           dataFim: '2025-02-05',
-          ativo: 'true',
           estacaoId: '1'
         })
         .expect(400)
@@ -246,14 +243,13 @@ describe('Rotas Alerta', () => {
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
       await request(app)
-        .put('/alerta/10')
+        .patch('/alerta/10')
         .set('authorization', `Bearer ${tokenDeAcesso}`)
         .send({
           descricao: 'Descrição alterada',
           prioridade: 'Alterada',
           dataInicio: '2022-02-05',
           dataFim: '2025-02-05',
-          ativo: 'true',
           estacaoId: '1'
         })
         .expect(404)
@@ -280,14 +276,13 @@ describe('Rotas Alerta', () => {
       })
       const alertas = await Alerta.findAll({ raw: true })
       await request(app)
-        .put(`/alerta/${alertas[0].id}`)
+        .patch(`/alerta/${alertas[0].id}`)
         .set('authorization', `Bearer ${tokenDeAcesso}`)
         .send({
           descricao: 'Descrição alterada',
           prioridade: 'Alterada',
           dataInicio: '2022-02-05',
           dataFim: '2025-02-05',
-          ativo: 'true',
           estacaoId: '1'
         })
         .expect(404)
@@ -314,14 +309,13 @@ describe('Rotas Alerta', () => {
       })
       const alertas = await Alerta.findAll({ raw: true })
       await request(app)
-        .put(`/alerta/${alertas[0].id}`)
+        .patch(`/alerta/${alertas[0].id}`)
         .set('authorization', `Bearer ${tokenDeAcesso}`)
         .send({
           descricao: 'Descrição alterada',
           prioridade: 'Alterada',
           dataInicio: '2022-02-05',
           dataFim: '2025-02-05',
-          ativo: 'true',
           estacaoId: '1'
         })
         .expect(200)

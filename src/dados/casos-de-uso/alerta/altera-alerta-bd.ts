@@ -1,6 +1,5 @@
 import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
-import { AlertaValidado, AlteraAlerta } from '../../../dominio/casos-de-uso/alerta/altera-alerta'
-import { ModeloAlerta } from '../../../dominio/modelos/alerta'
+import { AlertaValidado, AlteraAlerta, DadosAlterados } from '../../../dominio/casos-de-uso/alerta/altera-alerta'
 import { RepositorioAlteraAlerta } from '../../protocolos/bd/alerta/repositorio-altera-alerta'
 
 export class AlteraAlertaBD implements AlteraAlerta {
@@ -10,12 +9,13 @@ export class AlteraAlertaBD implements AlteraAlerta {
     private readonly repositorioAlteraAlerta: RepositorioAlteraAlerta
   ) {}
 
-  async alterar (dados: ModeloAlerta): Promise<AlertaValidado> {
+  async alterar (dados: DadosAlterados): Promise<AlertaValidado> {
     const alertaValido = await this.validadorDeAlerta.validar(+dados.id)
     if (alertaValido) {
       const estacaoValida = await this.validadorDeEstacao.validar(+dados.estacaoId)
       if (estacaoValida) {
-        const alertaAlterado = await this.repositorioAlteraAlerta.alterar(dados)
+        const dadosParaAlteracao = Object.assign({}, dados, { ativo: 'true' })
+        const alertaAlterado = await this.repositorioAlteraAlerta.alterar(dadosParaAlteracao)
         return await Promise.resolve({ valido: true, resposta: alertaAlterado })
       }
       return { valido: false, resposta: 'estacaoId' }

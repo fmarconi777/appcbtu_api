@@ -80,5 +80,5 @@ Ao iniciar a API, caso ainda não haja uma conta admin cadastrada, será solicit
 * `http://10.10.20.202:5000/api/alerta` - Métodos: POST
 * `http://10.10.20.202:5000/api/alerta/(sigla da estação)` - Métodos: GET
 * `http://10.10.20.202:5000/api/alerta/(sigla da estação)/(id do alerta)` - Métodos: GET
-* `http://10.10.20.202:5000/api/alerta/(id do alerta)` - Métodos: PUT
+* `http://10.10.20.202:5000/api/alerta/(id do alerta)` - Métodos: PATCH
 * `http://10.10.20.202:5000/api/falha` - Métodos: POST
