@@ -8,6 +8,7 @@ import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
 import { Validador } from '../protocolos/validador'
 import { AlteraAlerta, AlertaValidado, DadosAlterados } from '../../dominio/casos-de-uso/alerta/altera-alerta'
+import { DeletaAlerta } from '../../dominio/casos-de-uso/alerta/deleta-alerta'
 
 const alertaFalso = {
   descricao: 'qualquer_descricao',
@@ -88,26 +89,38 @@ const makeAlteraAlertaStub = (): AlteraAlerta => {
   return new AlteraAlertaStub()
 }
 
+const makeDeletaAlertaStub = (): DeletaAlerta => {
+  class DeletaAlertaStub implements DeletaAlerta {
+    async deletar (id: number): Promise<string | null> {
+      return await Promise.resolve('Alerta deletado com sucesso')
+    }
+  }
+  return new DeletaAlertaStub()
+}
+
 interface SutTypes {
   sut: ControladorDeAlerta
   cadastroDeAlertaStub: CadastroAlerta
   consultaAlertaStub: ConsultaAlerta
   validadorDeSiglaStub: Validador
   alteraAlertaStub: AlteraAlerta
+  deletaAlertaStub: DeletaAlerta
 }
 
 const makeSut = (): SutTypes => {
+  const deletaAlertaStub = makeDeletaAlertaStub()
   const alteraAlertaStub = makeAlteraAlertaStub()
   const validadorDeSiglaStub = makeValidadorDeSiglaStub()
   const cadastroDeAlertaStub = makeCadastroAlerta()
   const consultaAlertaStub = makeConsultaAlerta()
-  const sut = new ControladorDeAlerta(cadastroDeAlertaStub, consultaAlertaStub, validadorDeSiglaStub, alteraAlertaStub)
+  const sut = new ControladorDeAlerta(cadastroDeAlertaStub, consultaAlertaStub, validadorDeSiglaStub, alteraAlertaStub, deletaAlertaStub)
   return {
     sut,
     cadastroDeAlertaStub,
     consultaAlertaStub,
     validadorDeSiglaStub,
-    alteraAlertaStub
+    alteraAlertaStub,
+    deletaAlertaStub
   }
 }
 
@@ -578,12 +591,22 @@ describe('Controlador de Alerta', () => {
     test('Deve retornar código 404 se um parametro inválido for passado', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
-        corpo: '',
-        parametro: 'NaN',
+        parametro: '-2',
         metodo: 'DELETE'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
+
+    test('Deve chamar deletaAlerta com o valor correto', async () => {
+      const { sut, deletaAlertaStub } = makeSut()
+      const deletarSpy = jest.spyOn(deletaAlertaStub, 'deletar')
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'DELETE'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(deletarSpy).toHaveBeenCalledWith(1)
     })
   })
 })
