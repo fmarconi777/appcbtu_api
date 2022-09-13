@@ -616,5 +616,16 @@ describe('Controlador de Alerta', () => {
       await sut.tratar(requisicaoHttp)
       expect(deletarSpy).toHaveBeenCalledWith(1)
     })
+
+    test('Deve retornar status 500 caso deletaAlerta retorne um erro', async () => {
+      const { sut, deletaAlertaStub } = makeSut()
+      jest.spyOn(deletaAlertaStub, 'deletar').mockReturnValueOnce(Promise.reject(new Error()))
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'DELETE'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
   })
 })
