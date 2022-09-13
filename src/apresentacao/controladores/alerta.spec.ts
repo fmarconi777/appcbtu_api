@@ -5,7 +5,7 @@ import { ModeloAlerta } from '../../dominio/modelos/alerta'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alerta'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { erroDeServidor, requisicaoNaoEncontrada } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoNaoEncontrada, resposta } from '../auxiliares/auxiliar-http'
 import { Validador } from '../protocolos/validador'
 import { AlteraAlerta, AlertaValidado, DadosAlterados } from '../../dominio/casos-de-uso/alerta/altera-alerta'
 import { DeletaAlerta } from '../../dominio/casos-de-uso/alerta/deleta-alerta'
@@ -637,6 +637,16 @@ describe('Controlador de Alerta', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
+
+    test('Deve retornar código 200 se um parametro válido for passado', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'DELETE'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(resposta('Alerta deletado com sucesso'))
     })
   })
 })
