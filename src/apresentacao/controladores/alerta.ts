@@ -8,13 +8,15 @@ import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alerta'
 import { Validador } from '../protocolos/validador'
 import { AlteraAlerta } from '../../dominio/casos-de-uso/alerta/altera-alerta'
+import { DeletaAlerta } from '../../dominio/casos-de-uso/alerta/deleta-alerta'
 
 export class ControladorDeAlerta implements Controlador {
   constructor (
     private readonly cadastroDeAlerta: CadastroAlerta,
     private readonly consultaAlerta: ConsultaAlerta,
     private readonly validadorDeSigla: Validador,
-    private readonly alteraAlerta: AlteraAlerta
+    private readonly alteraAlerta: AlteraAlerta,
+    private readonly deletaAlerta: DeletaAlerta
   ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
@@ -61,7 +63,7 @@ export class ControladorDeAlerta implements Controlador {
         }
       case 'PATCH':
         try {
-          if (!Number.isInteger(+parametro) && +parametro !== Math.abs(+parametro)) {
+          if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
           const camposRequeridos = ['descricao', 'prioridade', 'dataInicio', 'dataFim', 'estacaoId']
@@ -80,9 +82,10 @@ export class ControladorDeAlerta implements Controlador {
           return erroDeServidor(erro)
         }
       case 'DELETE':
-        if (!Number.isInteger(+parametro) && +parametro !== Math.abs(+parametro)) {
+        if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
           return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
         }
+        await this.deletaAlerta.deletar(+parametro)
         return resposta('')
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
