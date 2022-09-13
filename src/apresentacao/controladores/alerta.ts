@@ -86,7 +86,10 @@ export class ControladorDeAlerta implements Controlador {
           if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
-          await this.deletaAlerta.deletar(+parametro)
+          const alerta = await this.deletaAlerta.deletar(+parametro)
+          if (!alerta) {  // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+          }
           return resposta('')
         } catch (erro: any) {
           return erroDeServidor(erro)
