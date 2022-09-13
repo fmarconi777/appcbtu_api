@@ -350,6 +350,14 @@ describe('Controlador de Alerta', () => {
       expect(spyConsula).toHaveBeenCalledWith('sigla_qualquer', undefined)
     })
 
+    test('Deve retornar status 500 caso ConsultaAlerta retorne um erro', async () => {
+      const { sut, consultaAlertaStub } = makeSut()
+      jest.spyOn(consultaAlertaStub, 'consultar').mockReturnValueOnce(Promise.reject(new Error()))
+      const requisicaoHttp = { parametro: 'sigla_qualquer', metodo: 'GET' }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
+
     test('Deve retornar codigo 404 se o consultaAlerta retornar null quando o parametro2 não estiver cadastrado', async () => {
       const { sut, consultaAlertaStub } = makeSut()
       jest.spyOn(consultaAlertaStub, 'consultar').mockReturnValueOnce(Promise.resolve(null))
@@ -591,7 +599,7 @@ describe('Controlador de Alerta', () => {
     test('Deve retornar código 404 se um parametro inválido for passado', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
-        parametro: '-2',
+        parametro: 'NaN',
         metodo: 'DELETE'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
