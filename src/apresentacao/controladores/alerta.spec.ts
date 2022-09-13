@@ -573,4 +573,17 @@ describe('Controlador de Alerta', () => {
       expect(respostaHttp.corpo).toBe('Alerta alterado com sucesso')
     })
   })
+
+  describe('Método DELETE', () => {
+    test('Deve retornar código 404 se um parametro inválido for passado', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: '',
+        parametro: 'NaN',
+        metodo: 'DELETE'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
+  })
 })
