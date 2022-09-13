@@ -90,7 +90,7 @@ export class ControladorDeAlerta implements Controlador {
           if (!alerta) {  // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
-          return resposta('')
+          return resposta(alerta)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
