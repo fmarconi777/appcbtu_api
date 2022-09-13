@@ -627,5 +627,16 @@ describe('Controlador de Alerta', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
+
+    test('Deve retornar codigo 404 se o deletaAlerta retornar null quando o parametro não estiver cadastrado ou já estiver desativado', async () => {
+      const { sut, deletaAlertaStub } = makeSut()
+      jest.spyOn(deletaAlertaStub, 'deletar').mockReturnValueOnce(Promise.resolve(null))
+      const requisicaoHttp = {
+        parametro: '13958674000',
+        metodo: 'DELETE'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
   })
 })
