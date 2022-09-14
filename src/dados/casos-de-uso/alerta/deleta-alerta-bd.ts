@@ -7,7 +7,10 @@ export class DeletaAlertaBD implements DeletaAlerta {
   ) {}
 
   async deletar (id: number): Promise<string | null> {
-    await this.validadorDeAlerta.validar(id)
-    return await Promise.resolve(null)
+    const alertaValido = await this.validadorDeAlerta.validar(id)
+    if (alertaValido) {
+      return await Promise.resolve('')
+    }
+    return null
   }
 }
