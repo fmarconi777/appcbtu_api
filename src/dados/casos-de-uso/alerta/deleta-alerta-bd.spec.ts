@@ -1,5 +1,15 @@
+import { RepositorioAlteraAlertaAtivo } from '../../protocolos/bd/alerta/repositorio-altera-alerta-ativo'
 import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 import { DeletaAlertaBD } from './deleta-alerta-bd'
+
+const makeRepositorioAlteraAlertaAtivoStub = (): RepositorioAlteraAlertaAtivo => {
+  class RepositorioAlteraAlertaAtivoStub implements RepositorioAlteraAlertaAtivo {
+    async alterarAtivo (ativo: boolean, id: number): Promise<null> {
+      return null
+    }
+  }
+  return new RepositorioAlteraAlertaAtivoStub()
+}
 
 const makeValidadorDeAlertaStub = (): ValidadorBD => {
   class ValidadorDeAlertaStub implements ValidadorBD {
@@ -12,37 +22,47 @@ const makeValidadorDeAlertaStub = (): ValidadorBD => {
 
 interface SubTipos {
   sut: DeletaAlertaBD
-  validadorDeAlerta: ValidadorBD
+  validadorDeAlertaStub: ValidadorBD
+  repositorioAlteraAlertaAtivoStub: RepositorioAlteraAlertaAtivo
 }
 
 const makeSut = (): SubTipos => {
-  const validadorDeAlerta = makeValidadorDeAlertaStub()
-  const sut = new DeletaAlertaBD(validadorDeAlerta)
+  const repositorioAlteraAlertaAtivoStub = makeRepositorioAlteraAlertaAtivoStub()
+  const validadorDeAlertaStub = makeValidadorDeAlertaStub()
+  const sut = new DeletaAlertaBD(validadorDeAlertaStub, repositorioAlteraAlertaAtivoStub)
   return {
     sut,
-    validadorDeAlerta
+    validadorDeAlertaStub,
+    repositorioAlteraAlertaAtivoStub
   }
 }
 
 describe('DeletaAlertaBD', () => {
   test('Deve chamar o validaAlerta com o valor correto', async () => {
-    const { sut, validadorDeAlerta } = makeSut()
-    const validarSpy = jest.spyOn(validadorDeAlerta, 'validar')
+    const { sut, validadorDeAlertaStub } = makeSut()
+    const validarSpy = jest.spyOn(validadorDeAlertaStub, 'validar')
     await sut.deletar(1)
     expect(validarSpy).toHaveBeenCalledWith(1)
   })
 
   test('Deve retornar um erro caso o validaAlerta retorne um erro', async () => {
-    const { sut, validadorDeAlerta } = makeSut()
-    jest.spyOn(validadorDeAlerta, 'validar').mockReturnValueOnce(Promise.reject(new Error()))
+    const { sut, validadorDeAlertaStub } = makeSut()
+    jest.spyOn(validadorDeAlertaStub, 'validar').mockReturnValueOnce(Promise.reject(new Error()))
     const resposta = sut.deletar(1)
     await expect(resposta).rejects.toThrow()
   })
 
   test('Deve retornar null caso o validaAlerta retorne false', async () => {
-    const { sut, validadorDeAlerta } = makeSut()
-    jest.spyOn(validadorDeAlerta, 'validar').mockReturnValueOnce(Promise.resolve(false))
+    const { sut, validadorDeAlertaStub } = makeSut()
+    jest.spyOn(validadorDeAlertaStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
     const resposta = await sut.deletar(1)
     expect(resposta).toBeNull()
+  })
+
+  test('Deve chamar o repositorioAlteraAlertaAtivo com o valor correto', async () => {
+    const { sut, repositorioAlteraAlertaAtivoStub } = makeSut()
+    const alterarAtivoSpy = jest.spyOn(repositorioAlteraAlertaAtivoStub, 'alterarAtivo')
+    await sut.deletar(1)
+    expect(alterarAtivoSpy).toHaveBeenCalledWith(false, 1)
   })
 })
