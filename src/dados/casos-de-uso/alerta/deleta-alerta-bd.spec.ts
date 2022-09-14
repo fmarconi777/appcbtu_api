@@ -65,4 +65,11 @@ describe('DeletaAlertaBD', () => {
     await sut.deletar(1)
     expect(alterarAtivoSpy).toHaveBeenCalledWith(false, 1)
   })
+
+  test('Deve retornar um erro caso o repositorioAlteraAlertaAtivo retorne um erro', async () => {
+    const { sut, repositorioAlteraAlertaAtivoStub } = makeSut()
+    jest.spyOn(repositorioAlteraAlertaAtivoStub, 'alterarAtivo').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.deletar(1)
+    await expect(resposta).rejects.toThrow()
+  })
 })
