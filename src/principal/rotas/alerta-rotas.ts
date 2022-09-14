@@ -9,5 +9,6 @@ export default (router: Router): Router => {
   router.post('/alerta',autentificacaoArea, adaptadorDeRota(criaControladorDeAlerta())) // eslint-disable-line
   router.get('/alerta/:parametro?/:parametro2?', adaptadorDeRota(criaControladorDeAlerta())) // eslint-disable-line
   router.patch('/alerta/:parametro', autentificacaoArea, adaptadorDeRota(criaControladorDeAlerta())) // eslint-disable-line
+  router.delete('/alerta/:parametro', autentificacaoArea, adaptadorDeRota(criaControladorDeAlerta())) // eslint-disable-line
   return router
 }
