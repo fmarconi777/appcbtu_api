@@ -12,7 +12,7 @@ export class DeletaAlertaBD implements DeletaAlerta {
     const alertaValido = await this.validadorDeAlerta.validar(id)
     if (alertaValido) {
       await this.repositorioAlteraAlertaAtivo.alterarAtivo(false, id)
-      return await Promise.resolve('')
+      return 'Alerta deletado com sucesso'
     }
     return null
   }
