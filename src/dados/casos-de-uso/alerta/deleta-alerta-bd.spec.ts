@@ -72,4 +72,10 @@ describe('DeletaAlertaBD', () => {
     const resposta = sut.deletar(1)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar a mensagem "Alerta deletado com sucesso" em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const resposta = await sut.deletar(1)
+    expect(resposta).toBe('Alerta deletado com sucesso')
+  })
 })
