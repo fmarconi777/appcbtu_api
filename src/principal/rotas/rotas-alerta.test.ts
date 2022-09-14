@@ -171,7 +171,7 @@ describe('Rotas Alerta', () => {
     })
   })
 
-  describe('Método patch', () => {
+  describe('Método PATCH', () => {
     test('Deve retornar status 403 ao adicionar um alerta sem autenticação', async () => {
       await request(app)
         .patch('/alerta/1')
@@ -319,6 +319,14 @@ describe('Rotas Alerta', () => {
           estacaoId: '1'
         })
         .expect(200)
+    })
+  })
+
+  describe('Método DELETE', () => {
+    test('Deve retornar status 403 ao deletar um alerta sem autenticação', async () => {
+      await request(app)
+        .delete('/alerta/1')
+        .expect(403)
     })
   })
 })
