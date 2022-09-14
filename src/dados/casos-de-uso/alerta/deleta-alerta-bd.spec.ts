@@ -38,4 +38,11 @@ describe('DeletaAlertaBD', () => {
     const resposta = sut.deletar(1)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar null caso o validaAlerta retorne false', async () => {
+    const { sut, validadorDeAlerta } = makeSut()
+    jest.spyOn(validadorDeAlerta, 'validar').mockReturnValueOnce(Promise.resolve(false))
+    const resposta = await sut.deletar(1)
+    expect(resposta).toBeNull()
+  })
 })
