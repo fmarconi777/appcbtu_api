@@ -328,5 +328,12 @@ describe('Rotas Alerta', () => {
         .delete('/alerta/1')
         .expect(403)
     })
+
+    test('Deve retornar status 403 ao adicionar um alerta com authorization sem token de acesso', async () => {
+      await request(app)
+        .delete('/alerta/1')
+        .set('authorization', 'Bearer ')
+        .expect(403)
+    })
   })
 })
