@@ -352,5 +352,22 @@ describe('Rotas Alerta', () => {
         .set('authorization', `Bearer ${tokenDeAcesso}`)
         .expect(404)
     })
+
+    test('Deve retornar status 404 ao deletar um alerta inexistente com um token válido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app)
+        .delete('/alerta/139999999999999')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .expect(404)
+    })
   })
 })
