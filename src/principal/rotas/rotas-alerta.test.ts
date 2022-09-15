@@ -329,11 +329,28 @@ describe('Rotas Alerta', () => {
         .expect(403)
     })
 
-    test('Deve retornar status 403 ao adicionar um alerta com authorization sem token de acesso', async () => {
+    test('Deve retornar status 403 ao deletar um alerta com authorization sem token de acesso', async () => {
       await request(app)
         .delete('/alerta/1')
         .set('authorization', 'Bearer ')
         .expect(403)
+    })
+
+    test('Deve retornar status 404 ao deletar um alerta inválido com um token válido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app)
+        .delete('/alerta/NaN')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .expect(404)
     })
   })
 })
