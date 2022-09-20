@@ -1,4 +1,5 @@
 import { RepositorioDeletaArea } from '../../protocolos/bd/area/repositorio-deleta-area'
+import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 import { DeletaAreaBD } from './deleta-area-bd'
 
 const makeRepositorioArea = (): RepositorioDeletaArea => {
@@ -10,21 +11,54 @@ const makeRepositorioArea = (): RepositorioDeletaArea => {
   return new RepositorioDeletaAreaStub()
 }
 
+const makeValidaAreaStub = (): ValidadorBD => {
+  class ValidaAreaStub implements ValidadorBD {
+    async validar (parametro: string): Promise<boolean> {
+      return await new Promise(resolve => resolve(true))
+    }
+  }
+  return new ValidaAreaStub()
+}
+
 interface SubTipo {
   sut: DeletaAreaBD
+  validaAreaStub: ValidadorBD
   repositorioDeletaAreaStub: RepositorioDeletaArea
 }
 
 const makeSut = (): SubTipo => {
   const repositorioDeletaAreaStub = makeRepositorioArea()
-  const sut = new DeletaAreaBD(repositorioDeletaAreaStub)
+  const validaAreaStub = makeValidaAreaStub()
+  const sut = new DeletaAreaBD(validaAreaStub, repositorioDeletaAreaStub)
   return {
     sut,
+    validaAreaStub,
     repositorioDeletaAreaStub
   }
 }
 
 describe('DeletaAreaBD', () => {
+  test('Deve chamar o validaArea com o valor correto', async () => {
+    const { sut, validaAreaStub } = makeSut()
+    const validarSpy = jest.spyOn(validaAreaStub, 'validar')
+    await sut.deletar('AREA_QUALQUER')
+    expect(validarSpy).toHaveBeenCalledWith('AREA_QUALQUER')
+  })
+
+  test('Deve retornar um erro caso o validaArea retorne um erro', async () => {
+    const { sut, validaAreaStub } = makeSut()
+    jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.deletar('AREA_QUALQUER')
+    await expect(resposta).rejects.toThrow()
+  })
+
+  test('Deve retornar null caso o validaArea retorne false', async () => {
+    const { sut, validaAreaStub } = makeSut()
+    jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
+    const resposta = await sut.deletar('AREA_QUALQUER')
+    expect(resposta).toBeNull()
+  })
+
   test('Deve chamar o RepositorioArea com o valor correto', async () => {
     const { sut, repositorioDeletaAreaStub } = makeSut()
     const deletarSpy = jest.spyOn(repositorioDeletaAreaStub, 'deletar')
