@@ -2,6 +2,7 @@ import { AlteraAreaBD } from './altera-area-bd'
 import { ConsultaAreaPorNome } from '../../protocolos/bd/area/repositorio-consulta-area-por-nome'
 import { ModeloArea } from '../../../dominio/modelos/area'
 import { RepositorioAlteraArea } from '../../protocolos/bd/area/repositorio-altera-area'
+import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 
 const makeConsultaAreaPorNome = (): ConsultaAreaPorNome => {
   class ConsultaAreaPorNomeStub implements ConsultaAreaPorNome {
@@ -21,8 +22,18 @@ const makeRepositorioAlteraAreaStub = (): RepositorioAlteraArea => {
   return new RepositorioAlteraAreaStub()
 }
 
+const makeValidaAreaStub = (): ValidadorBD => {
+  class ValidaAreaStub implements ValidadorBD {
+    async validar (parametro: string): Promise<boolean> {
+      return await new Promise(resolve => resolve(true))
+    }
+  }
+  return new ValidaAreaStub()
+}
+
 interface SubTipos {
   sut: AlteraAreaBD
+  validaAreaStub: ValidadorBD
   consultaAreaPorNomeStub: ConsultaAreaPorNome
   repositorioAlteraAreaStub: RepositorioAlteraArea
 }
@@ -30,15 +41,37 @@ interface SubTipos {
 const makeSut = (): SubTipos => {
   const repositorioAlteraAreaStub = makeRepositorioAlteraAreaStub()
   const consultaAreaPorNomeStub = makeConsultaAreaPorNome()
-  const sut = new AlteraAreaBD(consultaAreaPorNomeStub, repositorioAlteraAreaStub)
+  const validaAreaStub = makeValidaAreaStub()
+  const sut = new AlteraAreaBD(validaAreaStub, consultaAreaPorNomeStub, repositorioAlteraAreaStub)
   return {
     sut,
+    validaAreaStub,
     consultaAreaPorNomeStub,
     repositorioAlteraAreaStub
   }
 }
 
 describe('AlteraAreaBD', () => {
+  test('Deve chamar o validaArea com o valor correto', async () => {
+    const { sut, validaAreaStub } = makeSut()
+    const validarSpy = jest.spyOn(validaAreaStub, 'validar')
+    await sut.alterar('AREA_ALTERADA', 'AREA_QUALQUER')
+    expect(validarSpy).toHaveBeenCalledWith('AREA_QUALQUER')
+  })
+
+  test('Deve retornar um erro caso o validaArea retorne um erro', async () => {
+    const { sut, validaAreaStub } = makeSut()
+    jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.alterar('AREA_ALTERADA', 'AREA_QUALQUER')
+    await expect(resposta).rejects.toThrow()
+  })
+
+  test('Deve retornar null caso o validaArea retorne false', async () => {
+    const { sut, validaAreaStub } = makeSut()
+    jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
+    const resposta = await sut.alterar('AREA_ALTERADA', 'AREA_QUALQUER')
+    expect(resposta).toBeNull()
+  })
   test('Deve chamar o consultaAreaPorNome com o valor correto', async () => {
     const { sut, consultaAreaPorNomeStub } = makeSut()
     const consultarPorNomeSpy = jest.spyOn(consultaAreaPorNomeStub, 'consultarPorNome')
