@@ -1,7 +1,5 @@
-import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { ErroDeServidor } from '../erros/erro-de-servidor'
-import { erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '../auxiliares/auxiliar-http'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ControladorDeArea } from './area'
 import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
@@ -22,7 +20,7 @@ describe('Controlador de estações', () => {
         return await new Promise(resolve => resolve(listaFalsa))
       }
 
-      async consultar (parametro: string): Promise<ModeloArea> {
+      async consultar (parametro: string): Promise<ModeloArea | null> {
         const areaFalsa = {
           id: 'id_valida',
           nome: parametro
@@ -33,20 +31,11 @@ describe('Controlador de estações', () => {
     return new ConsultaAreaStub()
   }
 
-  const makeValidaArea = (): ValidadorBD => {
-    class ValidaAreaStub implements ValidadorBD {
-      async validar (parametro: string): Promise<boolean> {
-        return await new Promise(resolve => resolve(true))
-      }
-    }
-    return new ValidaAreaStub()
-  }
-
   const makeCadastroDeArea = (): CadastroArea => {
     class CadastroDeAreaStub implements CadastroArea {
-      async inserir (nome: string): Promise<ModeloArea> {
+      async inserir (nome: string, id: number): Promise<ModeloArea> {
         return await new Promise(resolve => resolve({
-          id: 'id_qualquer',
+          id: id.toString(),
           nome
         }))
       }
@@ -75,7 +64,6 @@ describe('Controlador de estações', () => {
   interface SutTypes {
     sut: ControladorDeArea
     consultaAreaStub: ConsultaArea
-    validaAreaStub: ValidadorBD
     cadastroDeAreaStub: CadastroArea
     deletaAreaStub: DeletaArea
     alteraAreaStub: AlteraArea
@@ -86,12 +74,10 @@ describe('Controlador de estações', () => {
     const deletaAreaStub = makeDeletaArea()
     const cadastroDeAreaStub = makeCadastroDeArea()
     const consultaAreaStub = makeConsultaArea()
-    const validaAreaStub = makeValidaArea()
-    const sut = new ControladorDeArea(consultaAreaStub, validaAreaStub, cadastroDeAreaStub, deletaAreaStub, alteraAreaStub)
+    const sut = new ControladorDeArea(consultaAreaStub, cadastroDeAreaStub, deletaAreaStub, alteraAreaStub)
     return {
       sut,
       consultaAreaStub,
-      validaAreaStub,
       cadastroDeAreaStub,
       deletaAreaStub,
       alteraAreaStub
@@ -118,7 +104,15 @@ describe('Controlador de estações', () => {
       }])
     })
 
-    test('Deve chamar ConsultaArea com o valor correto', async () => {
+    test('Deve retornar codigo 500 se o método consultarTodas retornar um erro', async () => {
+      const { sut, consultaAreaStub } = makeSut()
+      jest.spyOn(consultaAreaStub, 'consultarTodas').mockReturnValueOnce(Promise.reject(new Error()))
+      const requisicaoHttp = { metodo: 'GET' }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
+
+    test('Deve chamar o método consultar com o valor correto caso um parâmetro seja fornecido', async () => {
       const { sut, consultaAreaStub } = makeSut()
       const spyConsula = jest.spyOn(consultaAreaStub, 'consultar')
       const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'GET' }
@@ -126,61 +120,30 @@ describe('Controlador de estações', () => {
       expect(spyConsula).toHaveBeenCalledWith('AREA_QUALQUER')
     })
 
+    test('Deve retornar codigo 500 se o método consultar retornar um erro', async () => {
+      const { sut, consultaAreaStub } = makeSut()
+      jest.spyOn(consultaAreaStub, 'consultar').mockReturnValueOnce(Promise.reject(new Error()))
+      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'GET' }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
+
+    test('Deve retornar codigo 404 se o método consultar retornar null', async () => {
+      const { sut, consultaAreaStub } = makeSut()
+      jest.spyOn(consultaAreaStub, 'consultar').mockReturnValueOnce(Promise.resolve(null))
+      const requisicaoHttp = { parametro: 'area_invalida', metodo: 'GET' }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('área')))
+    })
+
     test('Deve retornar codigo 200 e uma área se o parâmetro estiver correto', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = { parametro: 'area_valida', metodo: 'GET' }
       const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp.status).toBe(200)
-      expect(respostaHttp.corpo).toEqual({
+      expect(respostaHttp).toEqual(resposta({
         id: 'id_valida',
         nome: 'AREA_VALIDA'
-      })
-    })
-
-    test('Deve chamar ValidaArea com o valor correto', async () => {
-      const { sut, validaAreaStub } = makeSut()
-      const spyConsula = jest.spyOn(validaAreaStub, 'validar')
-      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'GET' }
-      await sut.tratar(requisicaoHttp)
-      expect(spyConsula).toHaveBeenCalledWith('AREA_QUALQUER')
-    })
-
-    test('Deve retornar um erro caso o ValidaArea retornar um erro', async () => {
-      const { sut, validaAreaStub } = makeSut()
-      jest.spyOn(validaAreaStub, 'validar').mockImplementationOnce(() => { throw new Error() })
-      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'GET' }
-      const resposta = await sut.tratar(requisicaoHttp)
-      expect(resposta).toEqual(erroDeServidor(new Error()))
-    })
-
-    test('Deve retornar codigo 404 se o parâmetro estiver incorreto', async () => {
-      const { sut, validaAreaStub } = makeSut()
-      jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(new Promise(resolve => resolve(false)))
-      const requisicaoHttp = { parametro: 'area_invalida', metodo: 'GET' }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp.status).toBe(404)
-      expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('área'))
-    })
-
-    test('Deve retornar codigo 500 se o ConsultaArea retornar um erro', async () => {
-      const { sut, consultaAreaStub } = makeSut()
-      const erroFalso = new Error()
-      erroFalso.stack = 'stack_qualquer'
-      const erro = erroDeServidor(erroFalso)
-      jest.spyOn(consultaAreaStub, 'consultarTodas').mockImplementationOnce(async () => {
-        return await new Promise((resolve, reject) => reject(erro))
-      })
-      jest.spyOn(consultaAreaStub, 'consultar').mockImplementationOnce(async () => {
-        return await new Promise((resolve, reject) => reject(erro))
-      })
-      const requisicaoHttpSemArea = { parametro: '', metodo: 'GET' }
-      const requisicaoHttpComArea = { parametro: 'area_qualquer', metodo: 'GET' }
-      const respostaHttpSemArea = await sut.tratar(requisicaoHttpSemArea)
-      const respostaHttpComArea = await sut.tratar(requisicaoHttpComArea)
-      expect(respostaHttpSemArea.status).toBe(500)
-      expect(respostaHttpSemArea.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
-      expect(respostaHttpComArea.status).toBe(500)
-      expect(respostaHttpComArea.corpo).toEqual(new ErroDeServidor(erroFalso.stack))
+      }))
     })
   })
 
@@ -189,7 +152,7 @@ describe('Controlador de estações', () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
-          nome: ''
+          id: '1'
         },
         metodo: 'POST'
       }
@@ -197,17 +160,30 @@ describe('Controlador de estações', () => {
       expect(resposta).toEqual(requisicaoImpropria(new ErroFaltaParametro('nome')))
     })
 
-    test('Deve chamar o cadastroDeArea com o valor correto', async () => {
-      const { sut, cadastroDeAreaStub } = makeSut()
-      const inserirSpy = jest.spyOn(cadastroDeAreaStub, 'inserir')
+    test('Deve retornar status 400 caso o id da área for fornecido', async () => {
+      const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
           nome: 'area_qualquer'
         },
         metodo: 'POST'
       }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(requisicaoImpropria(new ErroFaltaParametro('id')))
+    })
+
+    test('Deve chamar o cadastroDeArea com o valor correto', async () => {
+      const { sut, cadastroDeAreaStub } = makeSut()
+      const inserirSpy = jest.spyOn(cadastroDeAreaStub, 'inserir')
+      const requisicaoHttp = {
+        corpo: {
+          id: '1',
+          nome: 'area_qualquer'
+        },
+        metodo: 'POST'
+      }
       await sut.tratar(requisicaoHttp)
-      expect(inserirSpy).toHaveBeenCalledWith('AREA_QUALQUER')
+      expect(inserirSpy).toHaveBeenCalledWith('AREA_QUALQUER', 1)
     })
 
     test('Deve retornar status 500 se o cadastroDeArea retornar um erro', async () => {
@@ -215,6 +191,7 @@ describe('Controlador de estações', () => {
       jest.spyOn(cadastroDeAreaStub, 'inserir').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
       const requisicaoHttp = {
         corpo: {
+          id: '1',
           nome: 'area_qualquer'
         },
         metodo: 'POST'
@@ -227,60 +204,42 @@ describe('Controlador de estações', () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         corpo: {
+          id: '1',
           nome: 'area_qualquer'
         },
         metodo: 'POST'
       }
-      const resposta = await sut.tratar(requisicaoHttp)
-      expect(resposta.status).toEqual(200)
-      expect(resposta.corpo).toEqual({
-        id: 'id_qualquer',
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(resposta({
+        id: '1',
         nome: 'AREA_QUALQUER'
-      })
+      }))
     })
   })
 
   describe('Método DELETE', () => {
-    test('Deve retornar um erro caso um parametro não seja fornecido na url', async () => {
-      const { sut } = makeSut()
-      const requisicaoHttp = {
-        metodo: 'DELETE'
-      }
-      const resposta = await sut.tratar(requisicaoHttp)
-      expect(resposta).toEqual(requisicaoImpropria(new ErroFaltaParametro('área')))
-    })
-
-    test('Deve chamar ValidaArea com o valor correto', async () => {
-      const { sut, validaAreaStub } = makeSut()
-      const validarSpy = jest.spyOn(validaAreaStub, 'validar')
-      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'DELETE' }
-      await sut.tratar(requisicaoHttp)
-      expect(validarSpy).toHaveBeenCalledWith('AREA_QUALQUER')
-    })
-
-    test('Deve retornar codigo 404 se o parâmetro estiver incorreto', async () => {
-      const { sut, validaAreaStub } = makeSut()
-      jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(new Promise(resolve => resolve(false)))
-      const requisicaoHttp = { parametro: 'area_invalida', metodo: 'DELETE' }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp.status).toBe(404)
-      expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('área'))
-    })
-
-    test('Deve retornar um erro caso o ValidaArea retornar um erro', async () => {
-      const { sut, validaAreaStub } = makeSut()
-      jest.spyOn(validaAreaStub, 'validar').mockImplementationOnce(() => { throw new Error() })
-      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'DELETE' }
-      const resposta = await sut.tratar(requisicaoHttp)
-      expect(resposta).toEqual(erroDeServidor(new Error()))
-    })
-
     test('Deve chamar DeletaArea com o valor correto', async () => {
       const { sut, deletaAreaStub } = makeSut()
       const spyDeletar = jest.spyOn(deletaAreaStub, 'deletar')
       const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'DELETE' }
       await sut.tratar(requisicaoHttp)
       expect(spyDeletar).toHaveBeenCalledWith('AREA_QUALQUER')
+    })
+
+    test('Deve retornar erro 500 caso o DeletaArea retornar um erro', async () => {
+      const { sut, deletaAreaStub } = makeSut()
+      jest.spyOn(deletaAreaStub, 'deletar').mockReturnValueOnce(Promise.reject(new Error()))
+      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'DELETE' }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(erroDeServidor(new Error()))
+    })
+
+    test('Deve retornar código 404 caso o DeletaArea retornar null', async () => {
+      const { sut, deletaAreaStub } = makeSut()
+      jest.spyOn(deletaAreaStub, 'deletar').mockReturnValueOnce(Promise.resolve(null))
+      const requisicaoHttp = { parametro: 'area_invalida', metodo: 'DELETE' }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('área')))
     })
 
     test('Deve retornar status 200 e a mensagem "Área deletada com sucesso" em caso de sucesso', async () => {
@@ -290,70 +249,14 @@ describe('Controlador de estações', () => {
       expect(resposta.status).toEqual(200)
       expect(resposta.corpo).toEqual('Área deletada com sucesso')
     })
-
-    test('Deve retornar erro 500 caso o DeletaArea retornar um erro', async () => {
-      const { sut, deletaAreaStub } = makeSut()
-      jest.spyOn(deletaAreaStub, 'deletar').mockImplementationOnce(async () => await Promise.reject(new Error()))
-      const requisicaoHttp = { parametro: 'area_qualquer', metodo: 'DELETE' }
-      const resposta = await sut.tratar(requisicaoHttp)
-      expect(resposta).toEqual(erroDeServidor(new Error()))
-    })
   })
 
   describe('Método PATCH', () => {
-    test('Deve retornar um erro caso um parametro não seja fornecido na url', async () => {
-      const { sut } = makeSut()
-      const requisicaoHttp = {
-        metodo: 'PATCH'
-      }
-      const resposta = await sut.tratar(requisicaoHttp)
-      expect(resposta).toEqual(requisicaoImpropria(new ErroFaltaParametro('área')))
-    })
-
-    test('Deve chamar ValidaArea com o valor correto', async () => {
-      const { sut, validaAreaStub } = makeSut()
-      const validarSpy = jest.spyOn(validaAreaStub, 'validar')
-      const requisicaoHttp = {
-        parametro: 'area_qualquer',
-        corpo: {
-          nome: 'nome_qualquer'
-        },
-        metodo: 'PATCH'
-      }
-      await sut.tratar(requisicaoHttp)
-      expect(validarSpy).toHaveBeenCalledWith('AREA_QUALQUER')
-    })
-
-    test('Deve retornar um erro caso o ValidaArea retornar um erro', async () => {
-      const { sut, validaAreaStub } = makeSut()
-      jest.spyOn(validaAreaStub, 'validar').mockImplementationOnce(() => { throw new Error() })
-      const requisicaoHttp = {
-        parametro: 'area_qualquer',
-        corpo: {
-          nome: 'nome_qualquer'
-        },
-        metodo: 'PATCH'
-      }
-      const resposta = await sut.tratar(requisicaoHttp)
-      expect(resposta).toEqual(erroDeServidor(new Error()))
-    })
-
-    test('Deve retornar codigo 404 se o parâmetro estiver incorreto', async () => {
-      const { sut, validaAreaStub } = makeSut()
-      jest.spyOn(validaAreaStub, 'validar').mockReturnValueOnce(new Promise(resolve => resolve(false)))
-      const requisicaoHttp = { parametro: 'area_invalida', metodo: 'PATCH' }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp.status).toBe(404)
-      expect(respostaHttp.corpo).toEqual(new ErroParametroInvalido('área'))
-    })
-
-    test('Deve retornar status 400 caso o nome da área for fornecido', async () => {
+    test('Deve retornar status 400 caso o nome da área não for fornecido', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
         parametro: 'area_qualquer',
-        corpo: {
-          nome: ''
-        },
+        corpo: {},
         metodo: 'PATCH'
       }
       const resposta = await sut.tratar(requisicaoHttp)
@@ -376,7 +279,7 @@ describe('Controlador de estações', () => {
 
     test('Deve retornar erro 500 caso o AlteraArea retornar um erro', async () => {
       const { sut, alteraAreaStub } = makeSut()
-      jest.spyOn(alteraAreaStub, 'alterar').mockImplementationOnce(async () => await Promise.reject(new Error()))
+      jest.spyOn(alteraAreaStub, 'alterar').mockReturnValueOnce(Promise.reject(new Error()))
       const requisicaoHttp = {
         parametro: 'area_qualquer',
         corpo: {
@@ -386,6 +289,20 @@ describe('Controlador de estações', () => {
       }
       const resposta = await sut.tratar(requisicaoHttp)
       expect(resposta).toEqual(erroDeServidor(new Error()))
+    })
+
+    test('Deve retornar código 404 caso o AlteraArea retornar null', async () => {
+      const { sut, alteraAreaStub } = makeSut()
+      jest.spyOn(alteraAreaStub, 'alterar').mockReturnValueOnce(Promise.resolve(null))
+      const requisicaoHttp = {
+        parametro: 'area_invalida',
+        corpo: {
+          nome: 'nome_qualquer'
+        },
+        metodo: 'PATCH'
+      }
+      const resposta = await sut.tratar(requisicaoHttp)
+      expect(resposta).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('área')))
     })
 
     test('Deve retornar status 200 e a mensagem "Área alterada com sucesso" em caso de sucesso', async () => {

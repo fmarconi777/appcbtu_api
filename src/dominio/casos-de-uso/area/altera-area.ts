@@ -1,3 +1,3 @@
 export interface AlteraArea {
-  alterar: (nome: string, parametro: string) => Promise<string>
+  alterar: (nome: string, parametro: string) => Promise<string | null>
 }

@@ -1,3 +1,3 @@
 export interface DeletaArea {
-  deletar: (nome: string) => Promise<string>
+  deletar: (nome: string) => Promise<string | null>
 }

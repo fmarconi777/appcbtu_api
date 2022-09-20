@@ -3,7 +3,6 @@ import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 import { resposta, requisicaoNaoEncontrada, erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
-import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
 import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { CadastroArea } from '../../dominio/casos-de-uso/area/cadastro-de-area'
@@ -13,7 +12,6 @@ import { AlteraArea } from '../../dominio/casos-de-uso/area/altera-area'
 export class ControladorDeArea implements Controlador {
   constructor (
     private readonly consultaArea: ConsultaArea,
-    private readonly validaArea: ValidadorBD,
     private readonly cadastroDeArea: CadastroArea,
     private readonly deletaArea: DeletaArea,
     private readonly alteraArea: AlteraArea
@@ -29,11 +27,10 @@ export class ControladorDeArea implements Controlador {
             const todasAreas = await this.consultaArea.consultarTodas()
             return resposta(todasAreas)
           }
-          const areaValida = await this.validaArea.validar(parametro.toUpperCase())
-          if (!areaValida) {
+          const area = await this.consultaArea.consultar(parametro.toUpperCase())
+          if (!area) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
           }
-          const area = await this.consultaArea.consultar(parametro.toUpperCase())
           return resposta(area)
         } catch (erro: any) {
           return erroDeServidor(erro)
@@ -41,42 +38,38 @@ export class ControladorDeArea implements Controlador {
       case 'POST':
         try {
           const nome = requisicaoHttp.corpo.nome
+          const id = requisicaoHttp.corpo.id
           if (!nome || nome === 'undefined') { // eslint-disable-line
             return requisicaoImpropria(new ErroFaltaParametro('nome'))
           }
-          const area = await this.cadastroDeArea.inserir(requisicaoHttp.corpo.nome.toUpperCase())
+          if (!id || !Number.isInteger(+id) || +id !== Math.abs(+id)) { // eslint-disable-line
+            return requisicaoImpropria(new ErroFaltaParametro('id'))
+          }
+          const area = await this.cadastroDeArea.inserir(requisicaoHttp.corpo.nome.toUpperCase(), +id)
           return resposta(area)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
       case 'DELETE':
         try {
-          if (!parametro || parametro === 'undefined') { // eslint-disable-line
-            return requisicaoImpropria(new ErroFaltaParametro('área'))
-          }
-          const areaValida = await this.validaArea.validar(parametro.toUpperCase())
-          if (!areaValida) {
+          const area = await this.deletaArea.deletar(parametro.toUpperCase())
+          if (!area) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
           }
-          const area = await this.deletaArea.deletar(parametro.toUpperCase())
           return resposta(area)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
       case 'PATCH':
         try {
-          if (!parametro || parametro === 'undefined') { // eslint-disable-line
-            return requisicaoImpropria(new ErroFaltaParametro('área'))
-          }
-          const areaValida = await this.validaArea.validar(parametro.toUpperCase())
-          if (!areaValida) {
-            return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
-          }
           const nome = requisicaoHttp.corpo.nome
           if (!nome || nome === 'undefined') { // eslint-disable-line
             return requisicaoImpropria(new ErroFaltaParametro('nome'))
           }
           const area = await this.alteraArea.alterar(nome.toUpperCase(), parametro.toUpperCase())
+          if (!area) { // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('área'))
+          }
           return resposta(area)
         } catch (erro: any) {
           return erroDeServidor(erro)

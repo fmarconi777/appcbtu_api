@@ -9,5 +9,5 @@ o que esses métodos devem receber e o que devem retornar.
 export interface ConsultaArea {
   consultarTodas: () => Promise<ModeloArea[]>
 
-  consultar: (parametro: string) => Promise<ModeloArea>
+  consultar: (parametro: string) => Promise<ModeloArea | null>
 }
