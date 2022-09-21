@@ -55,6 +55,22 @@ describe('RepositorioAreaMariaDB', () => {
     })
   })
 
+  describe('Método consultarPorId', () => {
+    test('Deve retornar uma área em caso de sucesso ao consultar por id', async () => {
+      const sut = makeSut()
+      const resposta = await sut.consultarPorId(9)
+      expect(resposta).toBeTruthy()
+      expect(resposta?.id).toBeTruthy()
+      expect(resposta).toMatchObject(resultadoEsperado)
+    })
+
+    test('Deve retornar null caso ao consultar por id falhar', async () => {
+      const sut = makeSut()
+      const resposta = await sut.consultarPorId(56)
+      expect(resposta).toBeNull()
+    })
+  })
+
   describe('Método inserir', () => {
     test('Deve retornar uma área em caso de sucesso', async () => {
       const sut = makeSut()
