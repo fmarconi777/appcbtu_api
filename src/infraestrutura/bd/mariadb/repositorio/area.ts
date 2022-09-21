@@ -1,5 +1,6 @@
 import { RepositorioAlteraArea } from '../../../../dados/protocolos/bd/area/repositorio-altera-area'
 import { RepositorioArea, ModelosAreas } from '../../../../dados/protocolos/bd/area/repositorio-area'
+import { ConsultaAreaPorId } from '../../../../dados/protocolos/bd/area/repositorio-consulta-area-por-id'
 import { ConsultaAreaPorNome } from '../../../../dados/protocolos/bd/area/repositorio-consulta-area-por-nome'
 import { RepositorioDeletaArea } from '../../../../dados/protocolos/bd/area/repositorio-deleta-area'
 import { RepositorioInserirArea } from '../../../../dados/protocolos/bd/area/repositorio-inserir-area'
@@ -11,6 +12,7 @@ import { Area } from '../models/modelo-area'
 export class RepositorioAreaMariaDB implements
 RepositorioArea,
 ConsultaAreaPorNome,
+ConsultaAreaPorId,
 RepositorioInserirArea,
 RepositorioDeletaArea,
 RepositorioAlteraArea {
@@ -25,6 +27,12 @@ RepositorioAlteraArea {
   async consultarPorNome (nome: string): Promise<ModeloArea | null> {
     AuxiliaresMariaDB.verificaConexao()
     const area = await Area.findOne({ where: { nome: nome } })
+    return area ? FuncoesAuxiliares.mapeadorDeDados(area) : null //eslint-disable-line
+  }
+
+  async consultarPorId (id: number): Promise<ModeloArea | null> {
+    AuxiliaresMariaDB.verificaConexao()
+    const area = await Area.findOne({ where: { id } })
     return area ? FuncoesAuxiliares.mapeadorDeDados(area) : null //eslint-disable-line
   }
 
