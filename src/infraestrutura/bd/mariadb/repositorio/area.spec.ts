@@ -30,6 +30,12 @@ describe('RepositorioAreaMariaDB', () => {
       expect(resposta).toMatchObject(resultadoEsperado)
     })
 
+    test('Deve retornar null se um parametro não cadastrado for fornecido', async () => {
+      const sut = makeSut()
+      const resposta = await sut.consultar('AREA')
+      expect(resposta).toBeNull()
+    })
+
     test('Deve retornar todas as áreas se um parametro não for fornecido', async () => {
       const sut = makeSut()
       const resposta = await sut.consultar()
