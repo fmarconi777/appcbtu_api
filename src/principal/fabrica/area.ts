@@ -11,12 +11,12 @@ import { DecoradorControladorLog } from '../decoradores/log'
 
 export const criaControladorDeArea = (): Controlador => {
   const repositorioAreaMariaDB = new RepositorioAreaMariaDB()
-  const deletaAreaBD = new DeletaAreaBD(repositorioAreaMariaDB)
-  const cadastroDeAreaBD = new CadastroDeAreaBD(repositorioAreaMariaDB, repositorioAreaMariaDB)
   const consultaAreaBD = new ConsultaAreaBD(repositorioAreaMariaDB)
   const validadorDeArea = new ValidadorDeArea(consultaAreaBD)
-  const alteraAraBD = new AlteraAreaBD(repositorioAreaMariaDB, repositorioAreaMariaDB)
-  const controladorDeArea = new ControladorDeArea(consultaAreaBD, validadorDeArea, cadastroDeAreaBD, deletaAreaBD, alteraAraBD)
+  const deletaAreaBD = new DeletaAreaBD(validadorDeArea, repositorioAreaMariaDB)
+  const cadastroDeAreaBD = new CadastroDeAreaBD(repositorioAreaMariaDB, repositorioAreaMariaDB, repositorioAreaMariaDB)
+  const alteraAraBD = new AlteraAreaBD(validadorDeArea, repositorioAreaMariaDB, repositorioAreaMariaDB)
+  const controladorDeArea = new ControladorDeArea(consultaAreaBD, cadastroDeAreaBD, deletaAreaBD, alteraAraBD)
   const repositorioLogDeErro = new RepositorioLogDeErroMariaDB()
   return new DecoradorControladorLog(controladorDeArea, repositorioLogDeErro)
 }

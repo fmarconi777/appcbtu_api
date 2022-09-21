@@ -74,7 +74,7 @@ describe('Rotas Area', () => {
     test('Deve retornar status 403 ao inserir uma area sem autenticação', async () => {
       await request(app)
         .post('/area')
-        .send()
+        .send({ id: '99', nome: 'area_qualquer' })
         .expect(403)
     })
 
@@ -82,7 +82,7 @@ describe('Rotas Area', () => {
       await request(app)
         .post('/area')
         .set('authorization', 'Bearer ')
-        .send()
+        .send({ id: '99', nome: 'area_qualquer' })
         .expect(403)
     })
 
@@ -100,7 +100,7 @@ describe('Rotas Area', () => {
       await request(app)
         .post('/area')
         .set('authorization', `Bearer ${tokenDeAcesso}`)
-        .send({ nome: 'area_qualquer' })
+        .send({ id: '99', nome: 'area_qualquer' })
         .expect(200)
       await Area.destroy({ where: { nome: 'area_qualquer' } })
     })
@@ -150,7 +150,7 @@ describe('Rotas Area', () => {
       })
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
-      await request(app).post('/area').set('authorization', `Bearer ${tokenDeAcesso}`).send({ nome: 'area_qualquer' })
+      await request(app).post('/area').set('authorization', `Bearer ${tokenDeAcesso}`).send({ id: '99', nome: 'area_qualquer' })
       await request(app)
         .delete('/area/area_qualquer')
         .set('authorization', `Bearer ${tokenDeAcesso}`)
@@ -221,7 +221,7 @@ describe('Rotas Area', () => {
       })
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
-      await request(app).post('/area').set('authorization', `Bearer ${tokenDeAcesso}`).send({ nome: 'area_qualquer' })
+      await request(app).post('/area').set('authorization', `Bearer ${tokenDeAcesso}`).send({ id: '99', nome: 'area_qualquer' })
       await request(app)
         .patch('/area/area_qualquer')
         .set('authorization', `Bearer ${tokenDeAcesso}`)
