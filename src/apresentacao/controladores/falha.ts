@@ -46,7 +46,7 @@ export class ControladorDeFalha implements Controlador {
           if (!falha) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
-          return resposta('')
+          return resposta(falha)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
