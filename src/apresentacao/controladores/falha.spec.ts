@@ -1,10 +1,23 @@
 import { CadastroDeFalha } from '../../dominio/casos-de-uso/falha/cadastro-de-falha'
+import { ConsultaFalha } from '../../dominio/casos-de-uso/falha/consulta-falha'
 import { ModeloFalha } from '../../dominio/modelos/falha'
 import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ControladorDeFalha } from './falha'
+
+const falhaFalsa = {
+  id: '1',
+  numFalha: 'numero_qualquer',
+  dataCriacao: '2022-01-01T00:00:00Z',
+  equipamentoId: '1'
+}
+
+const dadoFalso = {
+  numFalha: 'numero_qualquer',
+  equipamentoId: '1'
+}
 
 const makeCadastroDeFalhaStub = (): CadastroDeFalha => {
   class CadastroDeFalhaStub implements CadastroDeFalha {
@@ -15,22 +28,33 @@ const makeCadastroDeFalhaStub = (): CadastroDeFalha => {
   return new CadastroDeFalhaStub()
 }
 
-const falhaFalsa = {
-  numFalha: 'numero_qualquer',
-  equipamentoId: '1'
+const makeConsultaFalhaStub = (): ConsultaFalha => {
+  class ConsultaFalhaStub implements ConsultaFalha {
+    async consultarTodas (): Promise<ModeloFalha[]> {
+      return await Promise.resolve([falhaFalsa])
+    }
+
+    async consultar (id: number): Promise<ModeloFalha | null> {
+      return await Promise.resolve(falhaFalsa)
+    }
+  }
+  return new ConsultaFalhaStub()
 }
 
 interface SubTipos {
   sut: ControladorDeFalha
   cadastroDeFalhaStub: CadastroDeFalha
+  consultaFalhaStub: ConsultaFalha
 }
 
 const makeSut = (): SubTipos => {
+  const consultaFalhaStub = makeConsultaFalhaStub()
   const cadastroDeFalhaStub = makeCadastroDeFalhaStub()
-  const sut = new ControladorDeFalha(cadastroDeFalhaStub)
+  const sut = new ControladorDeFalha(cadastroDeFalhaStub, consultaFalhaStub)
   return {
     sut,
-    cadastroDeFalhaStub
+    cadastroDeFalhaStub,
+    consultaFalhaStub
   }
 }
 
@@ -38,12 +62,23 @@ describe('ControladorDeFalha', () => {
   test('Deve retornar codigo 400 se um método não suportado for fornecido', async () => {
     const { sut } = makeSut()
     const requisicaoHttp = {
-      corpo: falhaFalsa,
+      corpo: dadoFalso,
       metodo: 'metodo_invalido'
     }
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
+  })
+
+  describe('Método GET', () => {
+    test('Deve retornar código 200 e todas as falhas caso um parâmetro não seja fornecido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        metodo: 'GET'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(resposta([falhaFalsa]))
+    })
   })
 
   describe('Método POST', () => {
@@ -75,18 +110,18 @@ describe('ControladorDeFalha', () => {
       const { sut, cadastroDeFalhaStub } = makeSut()
       const validarSpy = jest.spyOn(cadastroDeFalhaStub, 'inserir')
       const requisicaoHttp = {
-        corpo: falhaFalsa,
+        corpo: dadoFalso,
         metodo: 'POST'
       }
       await sut.tratar(requisicaoHttp)
-      expect(validarSpy).toHaveBeenCalledWith(falhaFalsa)
+      expect(validarSpy).toHaveBeenCalledWith(dadoFalso)
     })
 
     test('Deve retornar codigo 500 caso o cadastroDeFalha retorne um erro', async () => {
       const { sut, cadastroDeFalhaStub } = makeSut()
       jest.spyOn(cadastroDeFalhaStub, 'inserir').mockReturnValueOnce(Promise.reject(new Error()))
       const requisicaoHttp = {
-        corpo: falhaFalsa,
+        corpo: dadoFalso,
         metodo: 'POST'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -97,7 +132,7 @@ describe('ControladorDeFalha', () => {
       const { sut, cadastroDeFalhaStub } = makeSut()
       jest.spyOn(cadastroDeFalhaStub, 'inserir').mockReturnValueOnce(Promise.resolve(null))
       const requisicaoHttp = {
-        corpo: falhaFalsa,
+        corpo: dadoFalso,
         metodo: 'POST'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
@@ -107,7 +142,7 @@ describe('ControladorDeFalha', () => {
     test('Deve retornar codigo 200 em caso de sucesso ao cadastrar uma falha', async () => {
       const { sut } = makeSut()
       const requisicaoHttp = {
-        corpo: falhaFalsa,
+        corpo: dadoFalso,
         metodo: 'POST'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
