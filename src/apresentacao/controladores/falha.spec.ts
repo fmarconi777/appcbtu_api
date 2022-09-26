@@ -110,6 +110,17 @@ describe('ControladorDeFalha', () => {
       await sut.tratar(requisicaoHttp)
       expect(consultarSpy).toHaveBeenCalledWith(1)
     })
+
+    test('Deve retornar código 500 caso o método consultar do consultaFalha retorne um erro', async () => {
+      const { sut, consultaFalhaStub } = makeSut()
+      jest.spyOn(consultaFalhaStub, 'consultar').mockReturnValueOnce(Promise.reject(new Error()))
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'GET'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
   })
 
   describe('Método POST', () => {
