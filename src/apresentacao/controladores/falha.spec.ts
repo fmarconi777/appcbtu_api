@@ -121,6 +121,17 @@ describe('ControladorDeFalha', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
+
+    test('Deve retornar código 404 caso o método consultar retorne null', async () => {
+      const { sut, consultaFalhaStub } = makeSut()
+      jest.spyOn(consultaFalhaStub, 'consultar').mockReturnValueOnce(Promise.resolve(null))
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'GET'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
   })
 
   describe('Método POST', () => {
