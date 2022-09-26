@@ -42,7 +42,10 @@ export class ControladorDeFalha implements Controlador {
           if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
             return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
           }
-          await this.consultaFalha.consultar(+parametro)
+          const falha = await this.consultaFalha.consultar(+parametro)
+          if (!falha) { // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+          }
           return resposta('')
         } catch (erro: any) {
           return erroDeServidor(erro)
