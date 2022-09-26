@@ -79,6 +79,16 @@ describe('ControladorDeFalha', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(resposta([falhaFalsa]))
     })
+
+    test('Deve retornar código 500 caso o método consultarTodas do consultaFalha retorne um erro', async () => {
+      const { sut, consultaFalhaStub } = makeSut()
+      jest.spyOn(consultaFalhaStub, 'consultarTodas').mockReturnValueOnce(Promise.reject(new Error()))
+      const requisicaoHttp = {
+        metodo: 'GET'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
   })
 
   describe('Método POST', () => {
