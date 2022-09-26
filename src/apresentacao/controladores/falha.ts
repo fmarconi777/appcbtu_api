@@ -39,6 +39,9 @@ export class ControladorDeFalha implements Controlador {
             const falhas = await this.consultaFalha.consultarTodas()
             return resposta(falhas)
           }
+          if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+          }
           return resposta('')
         } catch (erro: any) {
           return erroDeServidor(erro)
