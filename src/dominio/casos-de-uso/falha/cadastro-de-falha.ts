@@ -1,5 +1,9 @@
-import { ModeloFalha } from '../../modelos/falha'
+export interface DadosFalha {
+  numFalha: string
+  dataCriacao: string
+  equipamentoId: string
+}
 
 export interface CadastroDeFalha {
-  inserir: (dados: ModeloFalha) => Promise<string | null>
+  inserir: (dados: DadosFalha) => Promise<string | null>
 }

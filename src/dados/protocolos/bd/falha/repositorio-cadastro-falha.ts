@@ -1,5 +1,5 @@
-import { ModeloFalha } from '../../../../dominio/modelos/falha'
+import { DadosFalha } from '../../../../dominio/casos-de-uso/falha/cadastro-de-falha'
 
 export interface RepositorioCadastroFalha {
-  inserir: (dados: ModeloFalha) => Promise<string>
+  inserir: (dados: DadosFalha) => Promise<string>
 }
