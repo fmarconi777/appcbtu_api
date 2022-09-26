@@ -9,12 +9,12 @@ import { ValidadorDeEquipamento } from '../../utilidades/validadores/validador-d
 import { DecoradorControladorLog } from '../decoradores/log'
 
 export const criaControladorDeFalha = (): Controlador => {
-  const repositorioCadastroFalha = new RepositorioFalhaMariaDB()
-  const cadastroDeFalha = new CadastroDeFalhaBD(repositorioCadastroFalha)
   const repositorioConsultaEquipamento = new RepositorioEquipamentoMariaDB()
+  const repositorioCadastroFalha = new RepositorioFalhaMariaDB()
   const consultaEquipamento = new ConsultaEquipamentoBD(repositorioConsultaEquipamento)
   const validaEquipamento = new ValidadorDeEquipamento(consultaEquipamento)
-  const controladorDeFalha = new ControladorDeFalha(validaEquipamento, cadastroDeFalha)
+  const cadastroDeFalha = new CadastroDeFalhaBD(validaEquipamento, repositorioCadastroFalha)
+  const controladorDeFalha = new ControladorDeFalha(cadastroDeFalha)
   const repositorioLogDeErro = new RepositorioLogDeErroMariaDB()
   return new DecoradorControladorLog(controladorDeFalha, repositorioLogDeErro)
 }
