@@ -1,4 +1,4 @@
-import { CadastroDeFalha } from '../../dominio/casos-de-uso/falha/cadastro-de-falha'
+import { CadastroDeFalha, DadosFalha } from '../../dominio/casos-de-uso/falha/cadastro-de-falha'
 import { ConsultaFalha } from '../../dominio/casos-de-uso/falha/consulta-falha'
 import { ModeloFalha } from '../../dominio/modelos/falha'
 import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '../auxiliares/auxiliar-http'
@@ -21,7 +21,7 @@ const dadoFalso = {
 
 const makeCadastroDeFalhaStub = (): CadastroDeFalha => {
   class CadastroDeFalhaStub implements CadastroDeFalha {
-    async inserir (dados: ModeloFalha): Promise<string> {
+    async inserir (dados: DadosFalha): Promise<string> {
       return await new Promise(resolve => resolve('Falha cadastrada com sucesso'))
     }
   }
@@ -176,8 +176,11 @@ describe('ControladorDeFalha', () => {
         corpo: dadoFalso,
         metodo: 'POST'
       }
+      const data = new Date(Date.now() - 10800000).toISOString()
+      const dataCriacao = (data.substring(0, 19) + 'Z')
+      const dados = Object.assign({}, dadoFalso, { dataCriacao })
       await sut.tratar(requisicaoHttp)
-      expect(validarSpy).toHaveBeenCalledWith(dadoFalso)
+      expect(validarSpy).toHaveBeenCalledWith(dados)
     })
 
     test('Deve retornar codigo 500 caso o cadastroDeFalha retorne um erro', async () => {

@@ -1,15 +1,13 @@
-import { ModeloFalha } from '../../../dominio/modelos/falha'
 import { RepositorioCadastroFalha } from '../../protocolos/bd/falha/repositorio-cadastro-falha'
 import { CadastroDeFalhaBD } from './cadastro-de-falha-bd'
 import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
+import { DadosFalha } from '../../../dominio/casos-de-uso/falha/cadastro-de-falha'
 
-const dadosFalsos = (): ModeloFalha => {
-  const data = new Date(Date.now() - 10800000).toISOString()
-  return {
-    numFalha: 'numFalha_qualquer',
-    dataCriacao: (data.substring(0, 19) + 'Z'),
-    equipamentoId: 'equipamentoId_qualquer'
-  }
+const dadosFalsos = {
+  numFalha: 'numFalha_qualquer',
+  dataCriacao: '2022-01-01T00:00:00Z',
+  equipamentoId: 'equipamentoId_qualquer'
+
 }
 
 const makeValidaEquipamentoStub = (): ValidadorBD => {
@@ -23,7 +21,7 @@ const makeValidaEquipamentoStub = (): ValidadorBD => {
 
 const makeRepositorioCadastroFalhaStub = (): RepositorioCadastroFalha => {
   class RepositorioCadastroFalhaStub implements RepositorioCadastroFalha {
-    async inserir (dados: ModeloFalha): Promise<string> {
+    async inserir (dados: DadosFalha): Promise<string> {
       return await new Promise(resolve => resolve('Falha cadastrada com sucesso'))
     }
   }
@@ -84,12 +82,8 @@ describe('CadastroDefalhaBD', () => {
   test('Deve chamar o repositorioFalha com os valores corretos', async () => {
     const { sut, repositorioCadastroFalhaStub } = makeSut()
     const inserirSpy = jest.spyOn(repositorioCadastroFalhaStub, 'inserir')
-    const dados: any = {
-      numFalha: 'numFalha_qualquer',
-      equipamentoId: 'equipamentoId_qualquer'
-    }
-    await sut.inserir(dados)
-    expect(inserirSpy).toHaveBeenCalledWith(dadosFalsos())
+    await sut.inserir(dadosFalsos)
+    expect(inserirSpy).toHaveBeenCalledWith(dadosFalsos)
   })
 
   test('Deve retornar um erro caso o repositorioFalha retorne um erro', async () => {

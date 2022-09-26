@@ -25,7 +25,10 @@ export class ControladorDeFalha implements Controlador {
               return requisicaoImpropria(new ErroFaltaParametro(campo))
             }
           }
-          const falha = await this.cadastroDeFalha.inserir(requisicaoHttp.corpo)
+          const data = new Date(Date.now() - 10800000).toISOString()
+          const dataCriacao = (data.substring(0, 19) + 'Z')
+          const dadosfalha = Object.assign({}, requisicaoHttp.corpo, { dataCriacao })
+          const falha = await this.cadastroDeFalha.inserir(dadosfalha)
           if (!falha) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('equipamentoId'))
           }
