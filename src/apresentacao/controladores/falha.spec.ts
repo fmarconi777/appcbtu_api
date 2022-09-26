@@ -89,6 +89,16 @@ describe('ControladorDeFalha', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
+
+    test('Deve retornar código 404 caso seja fornecido um parâmetro inválido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: 'NaN',
+        metodo: 'GET'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
   })
 
   describe('Método POST', () => {
