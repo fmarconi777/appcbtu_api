@@ -5,11 +5,9 @@ import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { Controlador } from '../protocolos/controlador'
 import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
-import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
 
 export class ControladorDeFalha implements Controlador {
   constructor (
-    private readonly validaEquipamento: ValidadorBD,
     private readonly cadastroDeFalha: CadastroDeFalha
   ) {}
 
@@ -24,12 +22,10 @@ export class ControladorDeFalha implements Controlador {
               return requisicaoImpropria(new ErroFaltaParametro(campo))
             }
           }
-          const equipamentoIdValido = await this.validaEquipamento.validar(+requisicaoHttp.corpo.equipamentoId)
-          if (!equipamentoIdValido) {
+          const falha = await this.cadastroDeFalha.inserir(requisicaoHttp.corpo)
+          if (!falha) { // eslint-disable-line
             return requisicaoNaoEncontrada(new ErroParametroInvalido('equipamentoId'))
           }
-          const dados = requisicaoHttp.corpo
-          const falha = await this.cadastroDeFalha.inserir(dados)
           return resposta(falha)
         } catch (erro: any) {
           return erroDeServidor(erro)

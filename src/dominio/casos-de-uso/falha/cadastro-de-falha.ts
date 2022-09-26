@@ -1,5 +1,5 @@
 import { ModeloFalha } from '../../modelos/falha'
 
 export interface CadastroDeFalha {
-  inserir: (dados: ModeloFalha) => Promise<string>
+  inserir: (dados: ModeloFalha) => Promise<string | null>
 }

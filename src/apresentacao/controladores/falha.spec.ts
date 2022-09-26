@@ -4,17 +4,7 @@ import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta 
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
 import { ControladorDeFalha } from './falha'
-
-const makeValidaEquipamentoStub = (): ValidadorBD => {
-  class ValidaEquipamentoStub implements ValidadorBD {
-    async validar (parametro: any): Promise<boolean> {
-      return await new Promise(resolve => resolve(true))
-    }
-  }
-  return new ValidaEquipamentoStub()
-}
 
 const makeCadastroDeFalhaStub = (): CadastroDeFalha => {
   class CadastroDeFalhaStub implements CadastroDeFalha {
@@ -32,17 +22,14 @@ const falhaFalsa = {
 
 interface SubTipos {
   sut: ControladorDeFalha
-  validaEquipamentoStub: ValidadorBD
   cadastroDeFalhaStub: CadastroDeFalha
 }
 
 const makeSut = (): SubTipos => {
   const cadastroDeFalhaStub = makeCadastroDeFalhaStub()
-  const validaEquipamentoStub = makeValidaEquipamentoStub()
-  const sut = new ControladorDeFalha(validaEquipamentoStub, cadastroDeFalhaStub)
+  const sut = new ControladorDeFalha(cadastroDeFalhaStub)
   return {
     sut,
-    validaEquipamentoStub,
     cadastroDeFalhaStub
   }
 }
@@ -84,39 +71,6 @@ describe('ControladorDeFalha', () => {
       expect(respostaHttp).toEqual(requisicaoImpropria(new ErroFaltaParametro('equipamentoId')))
     })
 
-    test('Deve chamar o validaEquipamento com o valor correto', async () => {
-      const { sut, validaEquipamentoStub } = makeSut()
-      const validarSpy = jest.spyOn(validaEquipamentoStub, 'validar')
-      const requisicaoHttp = {
-        corpo: falhaFalsa,
-        metodo: 'POST'
-      }
-      await sut.tratar(requisicaoHttp)
-      expect(validarSpy).toHaveBeenCalledWith(1)
-    })
-
-    test('Deve retornar codigo 500 caso o o validaEquipamento retorne um erro', async () => {
-      const { sut, validaEquipamentoStub } = makeSut()
-      jest.spyOn(validaEquipamentoStub, 'validar').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-      const requisicaoHttp = {
-        corpo: falhaFalsa,
-        metodo: 'POST'
-      }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
-    })
-
-    test('Deve retornar codigo 404 caso o o validaEquipamento retorne false', async () => {
-      const { sut, validaEquipamentoStub } = makeSut()
-      jest.spyOn(validaEquipamentoStub, 'validar').mockReturnValueOnce(new Promise(resolve => resolve(false)))
-      const requisicaoHttp = {
-        corpo: falhaFalsa,
-        metodo: 'POST'
-      }
-      const respostaHttp = await sut.tratar(requisicaoHttp)
-      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('equipamentoId')))
-    })
-
     test('Deve chamar o cadastroDeFalha com os valores corretos', async () => {
       const { sut, cadastroDeFalhaStub } = makeSut()
       const validarSpy = jest.spyOn(cadastroDeFalhaStub, 'inserir')
@@ -130,13 +84,24 @@ describe('ControladorDeFalha', () => {
 
     test('Deve retornar codigo 500 caso o cadastroDeFalha retorne um erro', async () => {
       const { sut, cadastroDeFalhaStub } = makeSut()
-      jest.spyOn(cadastroDeFalhaStub, 'inserir').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+      jest.spyOn(cadastroDeFalhaStub, 'inserir').mockReturnValueOnce(Promise.reject(new Error()))
       const requisicaoHttp = {
         corpo: falhaFalsa,
         metodo: 'POST'
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
+
+    test('Deve retornar codigo 404 caso o o cadastroDeFalha retorne null', async () => {
+      const { sut, cadastroDeFalhaStub } = makeSut()
+      jest.spyOn(cadastroDeFalhaStub, 'inserir').mockReturnValueOnce(Promise.resolve(null))
+      const requisicaoHttp = {
+        corpo: falhaFalsa,
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('equipamentoId')))
     })
 
     test('Deve retornar codigo 200 em caso de sucesso ao cadastrar uma falha', async () => {
