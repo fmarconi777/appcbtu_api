@@ -132,6 +132,16 @@ describe('ControladorDeFalha', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
     })
+
+    test('Deve retornar código 200 e uma falha caso um parâmetro válido seja fornecido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'GET'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(resposta(falhaFalsa))
+    })
   })
 
   describe('Método POST', () => {
