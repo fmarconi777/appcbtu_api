@@ -99,6 +99,17 @@ describe('ControladorDeFalha', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
     })
+
+    test('Deve chamar o método consultar do consultaFalha com o valor correto', async () => {
+      const { sut, consultaFalhaStub } = makeSut()
+      const consultarSpy = jest.spyOn(consultaFalhaStub, 'consultar')
+      const requisicaoHttp = {
+        parametro: '1',
+        metodo: 'GET'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(consultarSpy).toHaveBeenCalledWith(1)
+    })
   })
 
   describe('Método POST', () => {
