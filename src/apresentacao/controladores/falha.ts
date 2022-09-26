@@ -34,13 +34,15 @@ export class ControladorDeFalha implements Controlador {
           return erroDeServidor(erro)
         }
       case 'GET':
-      {
-        if (!parametro) { // eslint-disable-line
-          const falhas = await this.consultaFalha.consultarTodas()
-          return resposta(falhas)
+        try {
+          if (!parametro) { // eslint-disable-line
+            const falhas = await this.consultaFalha.consultarTodas()
+            return resposta(falhas)
+          }
+          return resposta('')
+        } catch (erro: any) {
+          return erroDeServidor(erro)
         }
-        return resposta('')
-      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
