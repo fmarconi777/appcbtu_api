@@ -1,4 +1,5 @@
 import { CadastroDeFalha } from '../../dominio/casos-de-uso/falha/cadastro-de-falha'
+import { ConsultaFalha } from '../../dominio/casos-de-uso/falha/consulta-falha'
 import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
@@ -8,11 +9,13 @@ import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 
 export class ControladorDeFalha implements Controlador {
   constructor (
-    private readonly cadastroDeFalha: CadastroDeFalha
+    private readonly cadastroDeFalha: CadastroDeFalha,
+    private readonly consultaFalha: ConsultaFalha
   ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
     const metodo = requisicaoHttp.metodo
+    const parametro = requisicaoHttp.parametro
     switch (metodo) {
       case 'POST':
         try {
@@ -30,6 +33,14 @@ export class ControladorDeFalha implements Controlador {
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
+      case 'GET':
+      {
+        if (!parametro) { // eslint-disable-line
+          const falhas = await this.consultaFalha.consultarTodas()
+          return resposta(falhas)
+        }
+        return resposta('')
+      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
