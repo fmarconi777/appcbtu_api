@@ -61,5 +61,11 @@ describe('RepositorioFalhaMariaDB', () => {
       expect(resposta.id).toBeTruthy()
       expect(resposta).toMatchObject(dadosFalsos)
     })
+
+    test('Deve retornar null em caso um parâmetro não cadastrado for fornecido', async () => {
+      const sut = new RepositorioFalhaMariaDB()
+      const resposta = await sut.consultar(1999)
+      expect(resposta).toBeNull()
+    })
   })
 })
