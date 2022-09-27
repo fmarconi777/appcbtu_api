@@ -11,7 +11,7 @@ export class ConsultaFalhaBD implements ConsultaFalha {
   }
 
   async consultar (id: number): Promise<ModeloFalha | null> {
-    await this.repositorioConsultaFalha.consultar(id)
-    return null
+    const falha: any = await this.repositorioConsultaFalha.consultar(id)
+    return falha
   }
 }
