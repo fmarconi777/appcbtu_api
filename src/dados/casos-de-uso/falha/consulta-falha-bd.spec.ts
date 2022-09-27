@@ -58,5 +58,12 @@ describe('ConsultaFalhaBD', () => {
       await sut.consultar(1)
       expect(consultarSpy).toHaveBeenCalledWith(1)
     })
+
+    test('Deve retornar um erro caso o repositorioConsultaFalha retorne um erro', async () => {
+      const { sut, repositorioConsultaFalhaStub } = makeSut()
+      jest.spyOn(repositorioConsultaFalhaStub, 'consultar').mockReturnValueOnce(Promise.reject(new Error()))
+      const resposta = sut.consultar(1)
+      await expect(resposta).rejects.toThrow()
+    })
   })
 })
