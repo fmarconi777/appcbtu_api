@@ -72,5 +72,11 @@ describe('ConsultaFalhaBD', () => {
       const resposta = await sut.consultar(1)
       expect(resposta).toBeNull()
     })
+
+    test('Deve retornar uma falha em caso de sucesso', async () => {
+      const { sut } = makeSut()
+      const resposta = await sut.consultar(1)
+      expect(resposta).toEqual(falhaFalsa)
+    })
   })
 })
