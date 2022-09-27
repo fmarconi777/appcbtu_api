@@ -50,4 +50,13 @@ describe('ConsultaFalhaBD', () => {
       await expect(resposta).rejects.toThrow()
     })
   })
+
+  describe('Método consultar', () => {
+    test('Deve chamar o repositorioConsultaFalha com o valor correto', async () => {
+      const { sut, repositorioConsultaFalhaStub } = makeSut()
+      const consultarSpy = jest.spyOn(repositorioConsultaFalhaStub, 'consultar')
+      await sut.consultar(1)
+      expect(consultarSpy).toHaveBeenCalledWith(1)
+    })
+  })
 })
