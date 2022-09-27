@@ -47,5 +47,19 @@ describe('RepositorioFalhaMariaDB', () => {
       expect(Array.isArray(resposta)).toBeTruthy()
       expect(resposta.length).toBeGreaterThan(0)
     })
+
+    test('Deve retornar uma falha em caso de sucesso se um parâmetro for fornecido', async () => {
+      const sut = new RepositorioFalhaMariaDB()
+      const equipamentos = await Equipamento.findAll({ raw: true })
+      const dadosFalsos = {
+        numFalha: '12345',
+        dataCriacao: '2011-04-11T10:20:30.000Z',
+        equipamentoId: (equipamentos[equipamentos.length - 1].id).toString()
+      }
+      await sut.inserir(dadosFalsos)
+      const resposta: any = await sut.consultar(1)
+      expect(resposta.id).toBeTruthy()
+      expect(resposta).toMatchObject(dadosFalsos)
+    })
   })
 })
