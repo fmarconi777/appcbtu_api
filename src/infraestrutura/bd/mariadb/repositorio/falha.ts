@@ -15,6 +15,16 @@ RepositorioConsultaFalha {
   }
 
   async consultar (id?: number | undefined): Promise<ModeloFalha | ModeloFalha[] | null> {
+    if (id) { // eslint-disable-line
+      const resultado: any = await Falha.findByPk(id)
+      const falha = {
+        id: resultado.id.toString(),
+        numFalha: resultado.numFalha.toString(),
+        dataCriacao: new Date(resultado.dataCriacao).toISOString(),
+        equipamentoId: resultado.equipamentoId.toString()
+      }
+      return falha as any // eslint-disable-line
+    }
     return await Falha.findAll() as any
   }
 
