@@ -7,5 +7,6 @@ import { criaMiddlewareDeAutenticacao } from '../fabrica/middleware-de-autentica
 export default (router: Router): Router => {
   const autentificacaoArea = adaptadorDeMiddleware(criaMiddlewareDeAutenticacao('3'))
   router.post('/falha', autentificacaoArea, adaptadorDeRota(criaControladorDeFalha())) // eslint-disable-line
+  router.get('/falha/:parametro?', autentificacaoArea, adaptadorDeRota(criaControladorDeFalha())) // eslint-disable-line
   return router
 }
