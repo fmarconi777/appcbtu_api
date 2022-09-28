@@ -1,5 +1,5 @@
 import { ModeloArea } from '../../../../dominio/modelos/area'
 
 export interface RepositorioInserirArea {
-  inserir: (nome: string) => Promise<ModeloArea>
+  inserir: (id: number, nome: string) => Promise<ModeloArea>
 }

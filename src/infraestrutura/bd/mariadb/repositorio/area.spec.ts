@@ -64,7 +64,7 @@ describe('RepositorioAreaMariaDB', () => {
   describe('Método consultarPorId', () => {
     test('Deve retornar uma área em caso de sucesso ao consultar por id', async () => {
       const sut = makeSut()
-      const resposta = await sut.consultarPorId(9)
+      const resposta = await sut.consultarPorId(32)
       expect(resposta).toBeTruthy()
       expect(resposta?.id).toBeTruthy()
       expect(resposta).toMatchObject(resultadoEsperado)
@@ -80,7 +80,7 @@ describe('RepositorioAreaMariaDB', () => {
   describe('Método inserir', () => {
     test('Deve retornar uma área em caso de sucesso', async () => {
       const sut = makeSut()
-      const resposta = await sut.inserir('AREA_VALIDA')
+      const resposta = await sut.inserir(99, 'AREA_VALIDA')
       expect(resposta).toBeTruthy()
       expect(resposta.id).toBeTruthy()
       expect(resposta.nome).toEqual('AREA_VALIDA')
@@ -97,7 +97,7 @@ describe('RepositorioAreaMariaDB', () => {
 
     test('Deve retornar a mensagem "Área deletada com sucesso" em caso de sucesso', async () => {
       const sut = makeSut()
-      await sut.inserir('AREA_VALIDA')
+      await sut.inserir(99, 'AREA_VALIDA')
       const resposta = await sut.deletar('AREA_VALIDA')
       expect(resposta).toBe('Área deletada com sucesso')
     })
@@ -106,7 +106,7 @@ describe('RepositorioAreaMariaDB', () => {
   describe('Método alterar', () => {
     test('Deve retornar a mensagem "Área alterada com sucesso" em caso de sucesso', async () => {
       const sut = makeSut()
-      await sut.inserir('AREA_VALIDA')
+      await sut.inserir(99, 'AREA_VALIDA')
       const resposta = await sut.alterar('AREA_ALTERADA', 'AREA_VALIDA')
       expect(resposta).toBe('Área alterada com sucesso')
       await Area.destroy({ where: { nome: 'AREA_ALTERADA' } })

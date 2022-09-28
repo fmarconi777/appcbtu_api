@@ -20,6 +20,6 @@ export class CadastroDeAreaBD implements CadastroArea {
     if (idCadastrada) { //eslint-disable-line
       return 'id já cadastrada'
     }
-    return await this.repositorioInserirArea.inserir(nome)
+    return await this.repositorioInserirArea.inserir(id, nome)
   }
 }

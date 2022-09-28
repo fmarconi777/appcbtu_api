@@ -40,7 +40,7 @@ describe('Rotas Area', () => {
         email: 'email@email.com',
         senha,
         administrador: true,
-        areaId: 3
+        areaId: 16
       })
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
@@ -58,7 +58,7 @@ describe('Rotas Area', () => {
         email: 'email@email.com',
         senha,
         administrador: true,
-        areaId: 3
+        areaId: 16
       })
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
@@ -93,7 +93,7 @@ describe('Rotas Area', () => {
         email: 'email@email.com',
         senha,
         administrador: true,
-        areaId: 3
+        areaId: 16
       })
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
@@ -129,7 +129,7 @@ describe('Rotas Area', () => {
         email: 'email@email.com',
         senha,
         administrador: true,
-        areaId: 3
+        areaId: 16
       })
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
@@ -146,7 +146,7 @@ describe('Rotas Area', () => {
         email: 'email@email.com',
         senha,
         administrador: true,
-        areaId: 3
+        areaId: 16
       })
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
@@ -181,7 +181,7 @@ describe('Rotas Area', () => {
         email: 'email@email.com',
         senha,
         administrador: true,
-        areaId: 3
+        areaId: 16
       })
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
@@ -199,7 +199,7 @@ describe('Rotas Area', () => {
         email: 'email@email.com',
         senha,
         administrador: true,
-        areaId: 3
+        areaId: 16
       })
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
@@ -217,7 +217,7 @@ describe('Rotas Area', () => {
         email: 'email@email.com',
         senha,
         administrador: true,
-        areaId: 3
+        areaId: 16
       })
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })

@@ -36,9 +36,9 @@ RepositorioAlteraArea {
     return area ? FuncoesAuxiliares.mapeadorDeDados(area) : null //eslint-disable-line
   }
 
-  async inserir (nome: string): Promise<ModeloArea> {
+  async inserir (id: number, nome: string): Promise<ModeloArea> {
     AuxiliaresMariaDB.verificaConexao()
-    const area = await Area.create({ nome })
+    const area = await Area.create({ id, nome })
     return FuncoesAuxiliares.mapeadorDeDados(area)
   }
 

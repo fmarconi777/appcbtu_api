@@ -30,7 +30,7 @@ describe('CadastroDeAreaBD', () => {
 
   const makeRepositorioInserirArea = (): RepositorioInserirArea => {
     class RepositorioInserirAreaStub implements RepositorioInserirArea {
-      async inserir (nome: string): Promise<ModeloArea> {
+      async inserir (id: number, nome: string): Promise<ModeloArea> {
         return await new Promise(resolve => resolve(makeAreaFalsa()))
       }
     }
@@ -103,7 +103,7 @@ describe('CadastroDeAreaBD', () => {
     const { sut, repositorioInserirAreaStub } = makeSut()
     const inserirSpy = jest.spyOn(repositorioInserirAreaStub, 'inserir')
     await sut.inserir('AREA_QUALQUER', 1)
-    expect(inserirSpy).toHaveBeenCalledWith('AREA_QUALQUER')
+    expect(inserirSpy).toHaveBeenCalledWith(1, 'AREA_QUALQUER')
   })
 
   test('Deve retornar um erro caso o RepositorioInserirArea retorne um erro', async () => {
