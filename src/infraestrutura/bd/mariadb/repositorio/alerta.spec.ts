@@ -47,7 +47,9 @@ describe('Repositorio mariaDB Alerta', () => {
       const sut = makeSut()
       const resultadoEsperado = {
         descricao: 'descricao_valido',
-        prioridade: 'pri_valido'
+        prioridade: 'pri_valido',
+        ativo: true,
+        sigla: 'usg'
       }
       await sut.inserir({
         descricao: 'descricao_valido',

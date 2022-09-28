@@ -30,23 +30,44 @@ RepositorioAlteraAlerta {
     AuxiliaresMariaDB.verificaConexao()
     if (sigla) { //eslint-disable-line
       if(idAlerta) { //eslint-disable-line
-        const alerta: any = await Alerta.sequelize?.query('select a.id, a.descricao, a.prioridade, a.dataInicio, a.dataFim, a.ativo, e.sigla from Alerta as a ' +
+        const consulta: any = await Alerta.sequelize?.query('select a.id, a.descricao, a.prioridade, a.dataInicio, a.dataFim, a.ativo, e.sigla from Alerta as a ' +
                                                           'left join Estacao as e ' +
                                                             'on a.estacaoId = e.id ' +
                                                           'where e.sigla = :sigla and a.id = :idAlerta and a.ativo = true;', { replacements: { sigla, idAlerta }, type: QueryTypes.SELECT, raw: true })
-        return alerta[0] ? alerta[0] : null //eslint-disable-line
+        if (consulta[0]) { //eslint-disable-line          
+          const alerta = consulta[0]
+          alerta.ativo = Boolean(alerta.ativo)
+          return alerta
+        }
+        return null
       }
-      const alerta: any = await Alerta.sequelize?.query('select a.id, a.descricao, a.prioridade, a.dataInicio, a.dataFim, a.ativo, e.sigla from Alerta as a ' +
+      const consulta: any = await Alerta.sequelize?.query('select a.id, a.descricao, a.prioridade, a.dataInicio, a.dataFim, a.ativo, e.sigla from Alerta as a ' +
                                                         'left join Estacao as e ' +
                                                           'on a.estacaoId = e.id ' +
                                                         'where e.sigla = :sigla and a.ativo = true;', { replacements: { sigla }, type: QueryTypes.SELECT, raw: true })
-      return alerta[0] ? alerta : null //eslint-disable-line
+      if (consulta[0]) { //eslint-disable-line
+        const arrayAlertas: any = []
+        for (const valor of consulta) {
+          valor.ativo = Boolean(valor.ativo)
+          arrayAlertas.push(valor)
+        }
+        return arrayAlertas
+      }
+      return null
     }
-    const alerta: any = await Alerta.sequelize?.query('select a.id, a.descricao, a.prioridade, a.dataInicio, a.dataFim, a.ativo, e.sigla from Alerta as a ' +
+    const consulta: any = await Alerta.sequelize?.query('select a.id, a.descricao, a.prioridade, a.dataInicio, a.dataFim, a.ativo, e.sigla from Alerta as a ' +
                                                       'left join Estacao as e ' +
                                                         'on a.estacaoId = e.id ' +
                                                       'where a.ativo = true;', { replacements: { sigla }, type: QueryTypes.SELECT, raw: true })
-    return alerta[0] ? alerta : null //eslint-disable-line
+    if (consulta[0]) { //eslint-disable-line
+      const arrayAlertas: any = []
+      for (const valor of consulta) {
+        valor.ativo = Boolean(valor.ativo)
+        arrayAlertas.push(valor)
+      }
+      return arrayAlertas
+    }
+    return null
   }
 
   async alterarAtivo (ativo: boolean, id: number): Promise<null> {
