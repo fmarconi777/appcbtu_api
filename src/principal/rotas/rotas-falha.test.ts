@@ -103,5 +103,22 @@ describe('Rotas falha', () => {
         .set('authorization', 'Bearer ')
         .expect(403)
     })
+
+    test('Deve retornar status 200 ao consultar uma falha com um token válido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: true,
+        areaId: 3
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      await request(app)
+        .get('/falha')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .expect(200)
+    })
   })
 })
