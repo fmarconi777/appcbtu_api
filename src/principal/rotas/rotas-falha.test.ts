@@ -96,5 +96,12 @@ describe('Rotas falha', () => {
         .get('/falha')
         .expect(403)
     })
+
+    test('Deve retornar status 403 ao consultar uma falha com authorization sem token de acesso', async () => {
+      await request(app)
+        .get('/falha')
+        .set('authorization', 'Bearer ')
+        .expect(403)
+    })
   })
 })
