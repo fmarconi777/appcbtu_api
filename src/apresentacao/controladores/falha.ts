@@ -56,24 +56,26 @@ export class ControladorDeFalha implements Controlador {
           return erroDeServidor(erro)
         }
       case 'PATCH':
-      {
-        const camposRequeridos = ['numFalha', 'equipamentoId']
-        for (const campo of camposRequeridos) {
-          if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
-            return requisicaoImpropria(new ErroFaltaParametro(campo))
+        try {
+          const camposRequeridos = ['numFalha', 'equipamentoId']
+          for (const campo of camposRequeridos) {
+            if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
+              return requisicaoImpropria(new ErroFaltaParametro(campo))
+            }
           }
+          if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
+            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+          }
+          const dados = {
+            id: +parametro,
+            numFalha: +requisicaoHttp.corpo.numFalha,
+            equipamentoId: +requisicaoHttp.corpo.equipamentoId
+          }
+          await this.alteraFalha.alterar(dados)
+          return resposta('')
+        } catch (erro: any) {
+          return erroDeServidor(erro)
         }
-        if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
-          return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
-        }
-        const dados = {
-          id: +parametro,
-          numFalha: +requisicaoHttp.corpo.numFalha,
-          equipamentoId: +requisicaoHttp.corpo.equipamentoId
-        }
-        await this.alteraFalha.alterar(dados)
-        return resposta('')
-      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
