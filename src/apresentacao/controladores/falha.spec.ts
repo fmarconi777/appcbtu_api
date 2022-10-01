@@ -215,4 +215,19 @@ describe('ControladorDeFalha', () => {
       expect(respostaHttp).toEqual(resposta('Falha cadastrada com sucesso'))
     })
   })
+
+  describe('Método PATCH', () => {
+    test('Deve retornar código 400 caso o parametro numFalha esteja faltando', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: '1',
+        corpo: {
+          equipamentoId: '1'
+        },
+        metodo: 'PATCH'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoImpropria(new ErroFaltaParametro('numFalha')))
+    })
+  })
 })
