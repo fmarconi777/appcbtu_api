@@ -71,9 +71,9 @@ export class ControladorDeFalha implements Controlador {
             numFalha: +requisicaoHttp.corpo.numFalha,
             equipamentoId: +requisicaoHttp.corpo.equipamentoId
           }
-          const falha = await this.alteraFalha.alterar(dados)
-          if (!falha) { // eslint-disable-line
-            return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+          const falha = await this.alteraFalha.alterar(dados) // refatorar retorno para validar equipamentId
+          if (falha.falhaInvalida) { // eslint-disable-line
+            return requisicaoNaoEncontrada(new ErroParametroInvalido(falha.parametro))
           }
           return resposta('')
         } catch (erro: any) {

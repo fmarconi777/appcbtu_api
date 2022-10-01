@@ -1,4 +1,4 @@
-import { AlteraFalha, FalhaAlterada } from '../../dominio/casos-de-uso/falha/altera-falha'
+import { AlteraFalha, FalhaAlterada, FalhaValida } from '../../dominio/casos-de-uso/falha/altera-falha'
 import { CadastroDeFalha, DadosFalha } from '../../dominio/casos-de-uso/falha/cadastro-de-falha'
 import { ConsultaFalha } from '../../dominio/casos-de-uso/falha/consulta-falha'
 import { ModeloFalha } from '../../dominio/modelos/falha'
@@ -44,8 +44,11 @@ const makeConsultaFalhaStub = (): ConsultaFalha => {
 
 const makeAlteraFalhaStub = (): AlteraFalha => {
   class AlteraFalhaStub implements AlteraFalha {
-    async alterar (dados: FalhaAlterada): Promise<string | null> {
-      return 'Falha alterada com sucesso'
+    async alterar (dados: FalhaAlterada): Promise<FalhaValida> {
+      return {
+        falhaInvalida: false,
+        parametro: 'Falha alterada com sucesso'
+      }
     }
   }
   return new AlteraFalhaStub()
@@ -301,9 +304,9 @@ describe('ControladorDeFalha', () => {
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
 
-    test('Deve retornar código 404 caso o alteraFalha retorne null', async () => {
+    test('Deve retornar código 404 caso o alteraFalha retorne falhaInvalida = true e parametro = id', async () => {
       const { sut, alteraFalhaStub } = makeSut()
-      jest.spyOn(alteraFalhaStub, 'alterar').mockReturnValueOnce(Promise.resolve(null))
+      jest.spyOn(alteraFalhaStub, 'alterar').mockReturnValueOnce(Promise.resolve({ falhaInvalida: true, parametro: 'id' }))
       const requisicaoHttp = {
         parametro: '1',
         corpo: {

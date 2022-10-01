@@ -4,6 +4,11 @@ export interface FalhaAlterada {
   equipamentoId: number
 }
 
+export interface FalhaValida {
+  falhaInvalida: boolean
+  parametro: string
+}
+
 export interface AlteraFalha {
-  alterar: (dados: FalhaAlterada) => Promise<string | null>
+  alterar: (dados: FalhaAlterada) => Promise<FalhaValida>
 }
