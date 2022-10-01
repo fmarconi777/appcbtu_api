@@ -333,5 +333,19 @@ describe('ControladorDeFalha', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('equipamentoId')))
     })
+
+    test('Deve retornar código 200 em caso de sucesso', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: '1',
+        corpo: {
+          numFalha: '0',
+          equipamentoId: '1'
+        },
+        metodo: 'PATCH'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(resposta('Falha alterada com sucesso'))
+    })
   })
 })
