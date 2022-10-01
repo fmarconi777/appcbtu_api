@@ -1,3 +1,4 @@
+import { AlteraFalha, FalhaAlterada } from '../../dominio/casos-de-uso/falha/altera-falha'
 import { CadastroDeFalha, DadosFalha } from '../../dominio/casos-de-uso/falha/cadastro-de-falha'
 import { ConsultaFalha } from '../../dominio/casos-de-uso/falha/consulta-falha'
 import { ModeloFalha } from '../../dominio/modelos/falha'
@@ -41,20 +42,32 @@ const makeConsultaFalhaStub = (): ConsultaFalha => {
   return new ConsultaFalhaStub()
 }
 
+const makeAlteraFalhaStub = (): AlteraFalha => {
+  class AlteraFalhaStub implements AlteraFalha {
+    async alterar (dados: FalhaAlterada): Promise<string | null> {
+      return 'Falha alterada com sucesso'
+    }
+  }
+  return new AlteraFalhaStub()
+}
+
 interface SubTipos {
   sut: ControladorDeFalha
   cadastroDeFalhaStub: CadastroDeFalha
   consultaFalhaStub: ConsultaFalha
+  alteraFalhaStub: AlteraFalha
 }
 
 const makeSut = (): SubTipos => {
+  const alteraFalhaStub = makeAlteraFalhaStub()
   const consultaFalhaStub = makeConsultaFalhaStub()
   const cadastroDeFalhaStub = makeCadastroDeFalhaStub()
-  const sut = new ControladorDeFalha(cadastroDeFalhaStub, consultaFalhaStub)
+  const sut = new ControladorDeFalha(cadastroDeFalhaStub, consultaFalhaStub, alteraFalhaStub)
   return {
     sut,
     cadastroDeFalhaStub,
-    consultaFalhaStub
+    consultaFalhaStub,
+    alteraFalhaStub
   }
 }
 
@@ -252,6 +265,25 @@ describe('ControladorDeFalha', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
+
+    test('Deve chamar o método alterar do alteraFalha com os valores corretos', async () => {
+      const { sut, alteraFalhaStub } = makeSut()
+      const alterarSpy = jest.spyOn(alteraFalhaStub, 'alterar')
+      const requisicaoHttp = {
+        parametro: '1',
+        corpo: {
+          numFalha: '0',
+          equipamentoId: '1'
+        },
+        metodo: 'PATCH'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(alterarSpy).toHaveBeenCalledWith({
+        id: 1,
+        numFalha: 0,
+        equipamentoId: 1
+      })
     })
   })
 })
