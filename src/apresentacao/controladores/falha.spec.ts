@@ -318,5 +318,20 @@ describe('ControladorDeFalha', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
     })
+
+    test('Deve retornar código 404 caso o alteraFalha retorne falhaInvalida = true e parametro = equipamentoId', async () => {
+      const { sut, alteraFalhaStub } = makeSut()
+      jest.spyOn(alteraFalhaStub, 'alterar').mockReturnValueOnce(Promise.resolve({ falhaInvalida: true, parametro: 'equipamentoId' }))
+      const requisicaoHttp = {
+        parametro: '1',
+        corpo: {
+          numFalha: '0',
+          equipamentoId: '1'
+        },
+        metodo: 'PATCH'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('equipamentoId')))
+    })
   })
 })
