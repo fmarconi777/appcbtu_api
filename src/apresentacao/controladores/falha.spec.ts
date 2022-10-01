@@ -242,5 +242,16 @@ describe('ControladorDeFalha', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoImpropria(new ErroFaltaParametro('equipamentoId')))
     })
+
+    test('Deve retornar código 404 caso seja fornecido um parâmetro inválido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        parametro: 'NaN',
+        corpo: dadoFalso,
+        metodo: 'PATCH'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
+    })
   })
 })
