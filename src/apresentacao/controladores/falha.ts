@@ -53,6 +53,13 @@ export class ControladorDeFalha implements Controlador {
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
+      case 'PATCH':
+      {
+        if (!requisicaoHttp.corpo.numFalha) { // eslint-disable-line
+          return requisicaoImpropria(new ErroFaltaParametro('numFalha'))
+        }
+        return resposta('')
+      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
