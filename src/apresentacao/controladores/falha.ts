@@ -61,6 +61,9 @@ export class ControladorDeFalha implements Controlador {
             return requisicaoImpropria(new ErroFaltaParametro(campo))
           }
         }
+        if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
+          return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
+        }
         return resposta('')
       }
       default:
