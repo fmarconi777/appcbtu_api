@@ -1,3 +1,4 @@
+import { AlteraFalha } from '../../dominio/casos-de-uso/falha/altera-falha'
 import { CadastroDeFalha } from '../../dominio/casos-de-uso/falha/cadastro-de-falha'
 import { ConsultaFalha } from '../../dominio/casos-de-uso/falha/consulta-falha'
 import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '../auxiliares/auxiliar-http'
@@ -10,7 +11,8 @@ import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
 export class ControladorDeFalha implements Controlador {
   constructor (
     private readonly cadastroDeFalha: CadastroDeFalha,
-    private readonly consultaFalha: ConsultaFalha
+    private readonly consultaFalha: ConsultaFalha,
+    private readonly alteraFalha: AlteraFalha
   ) {}
 
   async tratar (requisicaoHttp: RequisicaoHttp): Promise<RespostaHttp> {
@@ -64,6 +66,12 @@ export class ControladorDeFalha implements Controlador {
         if (!Number.isInteger(+parametro) || +parametro !== Math.abs(+parametro)) {
           return requisicaoNaoEncontrada(new ErroParametroInvalido('id'))
         }
+        const dados = {
+          id: +parametro,
+          numFalha: +requisicaoHttp.corpo.numFalha,
+          equipamentoId: +requisicaoHttp.corpo.equipamentoId
+        }
+        await this.alteraFalha.alterar(dados)
         return resposta('')
       }
       default:
