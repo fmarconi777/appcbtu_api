@@ -52,4 +52,14 @@ describe('AlteraFalhaBD', () => {
     const resposta = sut.alterar(FalhaAlterada)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar falhaInvalida: true e parametro: id caso o método consultar retorne null', async () => {
+    const { sut, repositorioConsultaFalhaStub } = makeSut()
+    jest.spyOn(repositorioConsultaFalhaStub, 'consultar').mockReturnValueOnce(Promise.resolve(null))
+    const resposta = await sut.alterar(FalhaAlterada)
+    expect(resposta).toEqual({
+      falhaInvalida: true,
+      parametro: 'id'
+    })
+  })
 })
