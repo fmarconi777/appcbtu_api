@@ -55,8 +55,11 @@ export class ControladorDeFalha implements Controlador {
         }
       case 'PATCH':
       {
-        if (!requisicaoHttp.corpo.numFalha) { // eslint-disable-line
-          return requisicaoImpropria(new ErroFaltaParametro('numFalha'))
+        const camposRequeridos = ['numFalha', 'equipamentoId']
+        for (const campo of camposRequeridos) {
+          if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
+            return requisicaoImpropria(new ErroFaltaParametro(campo))
+          }
         }
         return resposta('')
       }
