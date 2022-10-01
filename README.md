@@ -42,7 +42,7 @@ Após executar o `npm install`, crie um arquivo '.env' na raiz do projeto com as
 
 SALT = '12'
 
-# Variáveis do JWT
+### Variáveis do JWT
 
 CHAVE_SECRETA = 'chave_secreta'
 
