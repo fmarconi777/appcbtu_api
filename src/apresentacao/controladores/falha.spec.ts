@@ -285,5 +285,20 @@ describe('ControladorDeFalha', () => {
         equipamentoId: 1
       })
     })
+
+    test('Deve retornar código 500 caso o alteraFalha retorne null', async () => {
+      const { sut, alteraFalhaStub } = makeSut()
+      jest.spyOn(alteraFalhaStub, 'alterar').mockReturnValueOnce(Promise.reject(new Error()))
+      const requisicaoHttp = {
+        parametro: '1',
+        corpo: {
+          numFalha: '0',
+          equipamentoId: '1'
+        },
+        metodo: 'PATCH'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
   })
 })
