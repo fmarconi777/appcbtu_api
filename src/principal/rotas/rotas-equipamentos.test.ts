@@ -79,6 +79,12 @@ describe('Rotas equipamentos', () => {
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
       const equipamentos = await Equipamento.findAll({ raw: true })
+      await request(app).post('/equipamento').set('authorization', `Bearer ${tokenDeAcesso}`).send({
+        nome: 'Escada rolante',
+        tipo: 'escada',
+        estado: '1',
+        estacaoId: '1'
+      })
       await request(app)
         .delete(`/equipamento/${equipamentos[0].id}`)
         .set('authorization', `Bearer ${tokenDeAcesso}`)
@@ -117,9 +123,8 @@ describe('Rotas equipamentos', () => {
       })
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
-      const equipamentos = await Equipamento.findAll({ raw: true })
       await request(app)
-        .patch(`/equipamento/${equipamentos[equipamentos.length - 1].id}`)
+        .patch('/equipamento/1')
         .set('authorization', `Bearer ${tokenDeAcesso}`)
         .send()
         .expect(400)
@@ -177,6 +182,12 @@ describe('Rotas equipamentos', () => {
       const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
       const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
       const equipamentos = await Equipamento.findAll({ raw: true })
+      await request(app).post('/equipamento').set('authorization', `Bearer ${tokenDeAcesso}`).send({
+        nome: 'Escada rolante',
+        tipo: 'escada',
+        estado: '1',
+        estacaoId: '1'
+      })
       await request(app)
         .patch(`/equipamento/${equipamentos[equipamentos.length - 1].id}`)
         .set('authorization', `Bearer ${tokenDeAcesso}`)
@@ -184,6 +195,7 @@ describe('Rotas equipamentos', () => {
           estado: '0'
         })
         .expect(200)
+      await request(app).delete(`/equipamento/${equipamentos[equipamentos.length - 1].id}`).set('authorization', `Bearer ${tokenDeAcesso}`)
     })
   })
 
