@@ -286,7 +286,7 @@ describe('ControladorDeFalha', () => {
       })
     })
 
-    test('Deve retornar código 500 caso o alteraFalha retorne null', async () => {
+    test('Deve retornar código 500 caso o alteraFalha retorne um erro', async () => {
       const { sut, alteraFalhaStub } = makeSut()
       jest.spyOn(alteraFalhaStub, 'alterar').mockReturnValueOnce(Promise.reject(new Error()))
       const requisicaoHttp = {
@@ -299,6 +299,21 @@ describe('ControladorDeFalha', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
+    })
+
+    test('Deve retornar código 404 caso o alteraFalha retorne null', async () => {
+      const { sut, alteraFalhaStub } = makeSut()
+      jest.spyOn(alteraFalhaStub, 'alterar').mockReturnValueOnce(Promise.resolve(null))
+      const requisicaoHttp = {
+        parametro: '1',
+        corpo: {
+          numFalha: '0',
+          equipamentoId: '1'
+        },
+        metodo: 'PATCH'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoNaoEncontrada(new ErroParametroInvalido('id')))
     })
   })
 })
