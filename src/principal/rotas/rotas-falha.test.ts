@@ -151,5 +151,16 @@ describe('Rotas falha', () => {
         })
         .expect(403)
     })
+
+    test('Deve retornar status 403 ao alterar uma falha com authorization sem token de acesso', async () => {
+      await request(app)
+        .patch('/falha/1')
+        .set('authorization', 'Bearer ')
+        .send({
+          numFalha: '1234',
+          equipamentoId: '1'
+        })
+        .expect(403)
+    })
   })
 })
