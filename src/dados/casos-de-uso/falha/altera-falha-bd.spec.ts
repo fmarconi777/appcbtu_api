@@ -1,5 +1,6 @@
 import { ModeloFalha } from '../../../dominio/modelos/falha'
 import { RepositorioConsultaFalha } from '../../protocolos/bd/falha/repositorio-consulta-falha'
+import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 import { AlteraFalhaBD } from './altera-falha-bd'
 
 const falhaFalsa = {
@@ -23,18 +24,29 @@ const makeRepositorioConsultaFalhaStub = (): RepositorioConsultaFalha => {
   }
   return new RepositorioConsultaFalhaStub()
 }
+const makeValidaEquipamentoStub = (): ValidadorBD => {
+  class ValidaEquipamentoStub implements ValidadorBD {
+    async validar (parametro: any): Promise<boolean> {
+      return await new Promise(resolve => resolve(true))
+    }
+  }
+  return new ValidaEquipamentoStub()
+}
 
 interface SubTipos {
   sut: AlteraFalhaBD
   repositorioConsultaFalhaStub: RepositorioConsultaFalha
+  validaEquipamentoStub: ValidadorBD
 }
 
 const makeSut = (): SubTipos => {
+  const validaEquipamentoStub = makeValidaEquipamentoStub()
   const repositorioConsultaFalhaStub = makeRepositorioConsultaFalhaStub()
-  const sut = new AlteraFalhaBD(repositorioConsultaFalhaStub)
+  const sut = new AlteraFalhaBD(repositorioConsultaFalhaStub, validaEquipamentoStub)
   return {
     sut,
-    repositorioConsultaFalhaStub
+    repositorioConsultaFalhaStub,
+    validaEquipamentoStub
   }
 }
 
@@ -61,5 +73,12 @@ describe('AlteraFalhaBD', () => {
       falhaInvalida: true,
       parametro: 'id'
     })
+  })
+
+  test('Deve chamar o validadorDeEquipamento com o parâmetro correto', async () => {
+    const { sut, validaEquipamentoStub } = makeSut()
+    const validarSpy = jest.spyOn(validaEquipamentoStub, 'validar')
+    await sut.alterar(FalhaAlterada)
+    expect(validarSpy).toHaveBeenCalledWith(FalhaAlterada.id)
   })
 })
