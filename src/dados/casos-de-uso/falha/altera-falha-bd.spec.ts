@@ -126,4 +126,13 @@ describe('AlteraFalhaBD', () => {
     const resposta = sut.alterar(falhaAlterada)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar falhaInvalida: false e parametro: Falha alterada com sucesso em caso de sucesso', async () => {
+    const { sut } = makeSut()
+    const resposta = await sut.alterar(falhaAlterada)
+    expect(resposta).toEqual({
+      falhaInvalida: false,
+      parametro: 'Falha alterada com sucesso'
+    })
+  })
 })
