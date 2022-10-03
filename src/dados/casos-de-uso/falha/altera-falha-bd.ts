@@ -15,10 +15,10 @@ export class AlteraFalhaBD implements AlteraFalha {
     if (idValido) { //eslint-disable-line
       const equipamentoValido = await this.validaEquipamento.validar(dados.equipamentoId)
       if (equipamentoValido) {
-        await this.repositorioAlteraFalha.alterar(dados)
+        const falhaAlterada = await this.repositorioAlteraFalha.alterar(dados)
         return {
           falhaInvalida: false,
-          parametro: ''
+          parametro: falhaAlterada
         }
       }
       return {
