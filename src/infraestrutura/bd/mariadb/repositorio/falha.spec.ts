@@ -68,4 +68,24 @@ describe('RepositorioFalhaMariaDB', () => {
       expect(resposta).toBeNull()
     })
   })
+
+  describe('Método alterar', () => {
+    test('Deve retornar a mensagem "Falha alterada com sucesso" em caso de sucesso ao alterar uma falha', async () => {
+      const sut = new RepositorioFalhaMariaDB()
+      const equipamentos = await Equipamento.findAll({ raw: true })
+      const dadosFalsos = {
+        numFalha: '12345',
+        dataCriacao: '2011-04-11T10:20:30Z',
+        equipamentoId: (equipamentos[equipamentos.length - 1].id).toString()
+      }
+      await sut.inserir(dadosFalsos)
+      const falhaAlterada = {
+        id: 1,
+        numFalha: 0,
+        equipamentoId: equipamentos[0].id
+      }
+      const resposta = await sut.alterar(falhaAlterada)
+      expect(resposta).toBe('Falha alterada com sucesso')
+    })
+  })
 })
