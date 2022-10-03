@@ -1,11 +1,13 @@
 import { AlteraFalha, FalhaAlterada, FalhaValida } from '../../../dominio/casos-de-uso/falha/altera-falha'
+import { RepositorioAlteraFalha } from '../../protocolos/bd/falha/repositorio-altera-falha'
 import { RepositorioConsultaFalha } from '../../protocolos/bd/falha/repositorio-consulta-falha'
 import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 
 export class AlteraFalhaBD implements AlteraFalha {
   constructor (
     private readonly repositorioConsultaFalha: RepositorioConsultaFalha,
-    private readonly validaEquipamento: ValidadorBD
+    private readonly validaEquipamento: ValidadorBD,
+    private readonly repositorioAlteraFalha: RepositorioAlteraFalha
   ) {}
 
   async alterar (dados: FalhaAlterada): Promise<FalhaValida> {
@@ -13,6 +15,7 @@ export class AlteraFalhaBD implements AlteraFalha {
     if (idValido) { //eslint-disable-line
       const equipamentoValido = await this.validaEquipamento.validar(dados.equipamentoId)
       if (equipamentoValido) {
+        await this.repositorioAlteraFalha.alterar(dados)
         return {
           falhaInvalida: false,
           parametro: ''
