@@ -11,10 +11,16 @@ export class AlteraFalhaBD implements AlteraFalha {
   async alterar (dados: FalhaAlterada): Promise<FalhaValida> {
     const idValido = await this.repositorioConsultaFalha.consultar(dados.id)
     if (idValido) { //eslint-disable-line
-      await this.validaEquipamento.validar(dados.equipamentoId)
+      const equipamentoValido = await this.validaEquipamento.validar(dados.equipamentoId)
+      if (equipamentoValido) {
+        return {
+          falhaInvalida: false,
+          parametro: ''
+        }
+      }
       return {
-        falhaInvalida: false,
-        parametro: ''
+        falhaInvalida: true,
+        parametro: 'equipamentoId'
       }
     }
     return {
