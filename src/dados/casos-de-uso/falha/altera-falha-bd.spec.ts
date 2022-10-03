@@ -81,4 +81,11 @@ describe('AlteraFalhaBD', () => {
     await sut.alterar(FalhaAlterada)
     expect(validarSpy).toHaveBeenCalledWith(FalhaAlterada.id)
   })
+
+  test('Deve retornar um erro caso o validadorDeEquipamento retorne um erro', async () => {
+    const { sut, validaEquipamentoStub } = makeSut()
+    jest.spyOn(validaEquipamentoStub, 'validar').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.alterar(FalhaAlterada)
+    await expect(resposta).rejects.toThrow()
+  })
 })
