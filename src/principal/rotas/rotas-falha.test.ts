@@ -162,5 +162,28 @@ describe('Rotas falha', () => {
         })
         .expect(403)
     })
+
+    test('Deve retornar um status 200 ao alterar uma falha com um token válido', async () => {
+      const senha = await hash('123', 12)
+      const resposta = await Funcionario.create({
+        nome: 'alguém',
+        email: 'email@email.com',
+        senha,
+        administrador: false,
+        areaId: 16
+      })
+      const chave_secreta = process.env.CHAVE_SECRETA //eslint-disable-line
+      const tokenDeAcesso = sign({ id: String(resposta.id) }, (chave_secreta as string), { expiresIn: 60 })
+      const equipamentos = await Equipamento.findAll({ raw: true })
+      await request(app).post('/falha').set('authorization', `Bearer ${tokenDeAcesso}`).send({ numFalha: '1234', equipamentoId: equipamentos[equipamentos.length - 1].id })
+      await request(app)
+        .patch('/falha/1')
+        .set('authorization', `Bearer ${tokenDeAcesso}`)
+        .send({
+          numFalha: '0',
+          equipamentoId: equipamentos[equipamentos.length - 1].id.toString()
+        })
+        .expect(200)
+    })
   })
 })
