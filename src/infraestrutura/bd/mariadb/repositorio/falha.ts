@@ -1,5 +1,7 @@
+import { RepositorioAlteraFalha } from '../../../../dados/protocolos/bd/falha/repositorio-altera-falha'
 import { RepositorioCadastroFalha } from '../../../../dados/protocolos/bd/falha/repositorio-cadastro-falha'
 import { RepositorioConsultaFalha } from '../../../../dados/protocolos/bd/falha/repositorio-consulta-falha'
+import { FalhaAlterada } from '../../../../dominio/casos-de-uso/falha/altera-falha'
 import { DadosFalha } from '../../../../dominio/casos-de-uso/falha/cadastro-de-falha'
 import { ModeloFalha } from '../../../../dominio/modelos/falha'
 import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
@@ -7,7 +9,8 @@ import { Falha } from '../models/modelo-falha'
 
 export class RepositorioFalhaMariaDB implements
 RepositorioCadastroFalha,
-RepositorioConsultaFalha {
+RepositorioConsultaFalha,
+RepositorioAlteraFalha {
   async inserir (dados: DadosFalha): Promise<string> {
     AuxiliaresMariaDB.verificaConexao()
     await Falha.create(this.transformaDados(dados))
@@ -15,6 +18,7 @@ RepositorioConsultaFalha {
   }
 
   async consultar (id?: number | undefined): Promise<ModeloFalha | ModeloFalha[] | null> {
+    AuxiliaresMariaDB.verificaConexao()
     if (id) { // eslint-disable-line
       const resultado: any = await Falha.findByPk(id)
       if (resultado) { // eslint-disable-line
@@ -29,6 +33,12 @@ RepositorioConsultaFalha {
       return resultado
     }
     return await Falha.findAll() as any
+  }
+
+  async alterar (dados: FalhaAlterada): Promise<string> {
+    AuxiliaresMariaDB.verificaConexao()
+    await Falha.update({ numFalha: dados.numFalha, equipamentoId: dados.equipamentoId }, { where: { id: dados.id } })
+    return 'Falha alterada com sucesso'
   }
 
   private transformaDados (dadosFalha: DadosFalha): any {
