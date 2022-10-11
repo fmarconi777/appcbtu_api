@@ -1,5 +1,5 @@
 import { CadastroDeTelefone } from '../../dominio/casos-de-uso/telefone/cadastro-de-telefone'
-import { requisicaoImpropria, resposta } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoImpropria, resposta } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
@@ -15,21 +15,23 @@ export class ControladorDeTelefone implements Controlador {
     const metodo = requisicaoHttp.metodo
     switch (metodo) {
       case 'POST':
-      {
-        const camposRequeridos = ['numero', 'estacaoId']
-        for (const campo of camposRequeridos) {
-          if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
-            return requisicaoImpropria(new ErroFaltaParametro(campo))
+        try {
+          const camposRequeridos = ['numero', 'estacaoId']
+          for (const campo of camposRequeridos) {
+            if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
+              return requisicaoImpropria(new ErroFaltaParametro(campo))
+            }
           }
+          const numero = +requisicaoHttp.corpo.numero
+          const estacaoId = +requisicaoHttp.corpo.estacaoId
+          if (!Number.isInteger(numero) || numero !== Math.abs(numero)) {
+            return requisicaoImpropria(new ErroParametroInvalido('numero'))
+          }
+          await this.cadastroDeTelefone.inserir(numero, estacaoId)
+          return resposta('')
+        } catch (erro: any) {
+          return erroDeServidor(erro)
         }
-        const numero = +requisicaoHttp.corpo.numero
-        const estacaoId = +requisicaoHttp.corpo.estacaoId
-        if (!Number.isInteger(numero) || numero !== Math.abs(numero)) {
-          return requisicaoImpropria(new ErroParametroInvalido('numero'))
-        }
-        await this.cadastroDeTelefone.inserir(numero, estacaoId)
-        return resposta('')
-      }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
