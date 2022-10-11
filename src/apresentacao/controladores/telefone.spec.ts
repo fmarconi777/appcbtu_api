@@ -1,3 +1,5 @@
+import { requisicaoImpropria } from '../auxiliares/auxiliar-http'
+import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ControladorDeTelefone } from './telefone'
 
@@ -21,5 +23,18 @@ describe('Controlador de telefone', () => {
     const respostaHttp = await sut.tratar(requisicaoHttp)
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
+  })
+  describe('Método POST', () => {
+    test('Deve retornar status 400 caso o parametro numero não seja fornecido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: {
+          estacaoId: '1'
+        },
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoImpropria(new ErroFaltaParametro('numero')))
+    })
   })
 })
