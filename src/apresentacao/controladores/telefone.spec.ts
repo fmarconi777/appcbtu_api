@@ -1,5 +1,5 @@
 import { CadastroDeTelefone } from '../../dominio/casos-de-uso/telefone/cadastro-de-telefone'
-import { erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoImpropria, resposta } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
@@ -113,6 +113,16 @@ describe('Controlador de telefone', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoImpropria(new ErroParametroInvalido('estacaoId')))
+    })
+
+    test('Deve retornar status 200 caso de sucesso ao cadastrar o telefone', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: dadoFalso,
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(resposta('Telefone cadastrado com sucesso'))
     })
   })
 })
