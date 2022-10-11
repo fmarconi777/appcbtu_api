@@ -41,4 +41,11 @@ describe('CadastroDeTelefoneBD', () => {
     const resposta = sut.inserir(numero, estacaoId)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar null caso o validaEstacao retorne false', async () => {
+    const { sut, validaEstacaoStub } = makeSut()
+    jest.spyOn(validaEstacaoStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
+    const resposta = await sut.inserir(numero, estacaoId)
+    expect(resposta).toBeNull()
+  })
 })
