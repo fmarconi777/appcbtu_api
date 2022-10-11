@@ -1,17 +1,35 @@
+import { CadastroDeTelefone } from '../../dominio/casos-de-uso/telefone/cadastro-de-telefone'
 import { requisicaoImpropria } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ControladorDeTelefone } from './telefone'
 
+const dadoFalso = {
+  numero: '3132505555',
+  estacaoId: '1'
+}
+
+const makeCadastroDeTelefoneStub = (): CadastroDeTelefone => {
+  class CadastroDeTelefoneStub implements CadastroDeTelefone {
+    async inserir (numero: number, estacaoId: number): Promise<string | null> {
+      return await Promise.resolve('Telefone cadastrado com sucesso')
+    }
+  }
+  return new CadastroDeTelefoneStub()
+}
+
 interface SubTipos {
   sut: ControladorDeTelefone
+  cadastroDeTelefoneStub: CadastroDeTelefone
 }
 
 const makeSut = (): SubTipos => {
-  const sut = new ControladorDeTelefone()
+  const cadastroDeTelefoneStub = makeCadastroDeTelefoneStub()
+  const sut = new ControladorDeTelefone(cadastroDeTelefoneStub)
   return {
-    sut
+    sut,
+    cadastroDeTelefoneStub
   }
 }
 
@@ -62,6 +80,17 @@ describe('Controlador de telefone', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoImpropria(new ErroParametroInvalido('numero')))
+    })
+
+    test('Deve chamar o cadastroDeTelefone com os parametros corretos', async () => {
+      const { sut, cadastroDeTelefoneStub } = makeSut()
+      const inserirSpy = jest.spyOn(cadastroDeTelefoneStub, 'inserir')
+      const requisicaoHttp = {
+        corpo: dadoFalso,
+        metodo: 'POST'
+      }
+      await sut.tratar(requisicaoHttp)
+      expect(inserirSpy).toHaveBeenCalledWith(+dadoFalso.numero, +dadoFalso.estacaoId)
     })
   })
 })
