@@ -68,4 +68,11 @@ describe('CadastroDeTelefoneBD', () => {
     await sut.inserir(numero, estacaoId)
     expect(inserirSpy).toHaveBeenCalledWith(numero, estacaoId)
   })
+
+  test('Deve retornar um erro caso o repositorioCadastroTelefone retorne erro', async () => {
+    const { sut, repositorioCadastroTelefoneStub } = makeSut()
+    jest.spyOn(repositorioCadastroTelefoneStub, 'inserir').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.inserir(numero, estacaoId)
+    await expect(resposta).rejects.toThrow()
+  })
 })
