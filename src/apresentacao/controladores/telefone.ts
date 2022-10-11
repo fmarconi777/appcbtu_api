@@ -31,7 +31,7 @@ export class ControladorDeTelefone implements Controlador {
           if (!telefone) { // eslint-disable-line
             return requisicaoImpropria(new ErroParametroInvalido('estacaoId'))
           }
-          return resposta('')
+          return resposta(telefone)
         } catch (erro: any) {
           return erroDeServidor(erro)
         }
