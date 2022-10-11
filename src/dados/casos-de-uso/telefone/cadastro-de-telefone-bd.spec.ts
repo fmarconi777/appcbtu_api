@@ -1,3 +1,4 @@
+import { RepositorioCadastroTelefone } from '../../protocolos/bd/telefone/repositorio-cadastro-telefone'
 import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 import { CadastroDeTelefoneBD } from './cadastro-de-telefone-bd'
 
@@ -13,17 +14,29 @@ const makeValidaEstacaoStub = (): ValidadorBD => {
   return new ValidaEstacaoStub()
 }
 
+const makeRepositorioCadastroTelefoneStub = (): RepositorioCadastroTelefone => {
+  class RepositorioCadastroTelefoneStub implements RepositorioCadastroTelefone {
+    async inserir (numero: number, estacaoId: number): Promise<string> {
+      return await Promise.resolve('Telefone cadastrado com sucesso')
+    }
+  }
+  return new RepositorioCadastroTelefoneStub()
+}
+
 interface SubTipos {
   sut: CadastroDeTelefoneBD
   validaEstacaoStub: ValidadorBD
+  repositorioCadastroTelefoneStub: RepositorioCadastroTelefone
 }
 
 const makeSut = (): SubTipos => {
+  const repositorioCadastroTelefoneStub = makeRepositorioCadastroTelefoneStub()
   const validaEstacaoStub = makeValidaEstacaoStub()
-  const sut = new CadastroDeTelefoneBD(validaEstacaoStub)
+  const sut = new CadastroDeTelefoneBD(validaEstacaoStub, repositorioCadastroTelefoneStub)
   return {
     sut,
-    validaEstacaoStub
+    validaEstacaoStub,
+    repositorioCadastroTelefoneStub
   }
 }
 
@@ -47,5 +60,12 @@ describe('CadastroDeTelefoneBD', () => {
     jest.spyOn(validaEstacaoStub, 'validar').mockReturnValueOnce(Promise.resolve(false))
     const resposta = await sut.inserir(numero, estacaoId)
     expect(resposta).toBeNull()
+  })
+
+  test('Deve chamar o repositorioCadastroTelefone com os valores corretos', async () => {
+    const { sut, repositorioCadastroTelefoneStub } = makeSut()
+    const inserirSpy = jest.spyOn(repositorioCadastroTelefoneStub, 'inserir')
+    await sut.inserir(numero, estacaoId)
+    expect(inserirSpy).toHaveBeenCalledWith(numero, estacaoId)
   })
 })
