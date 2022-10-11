@@ -1,5 +1,5 @@
 import { CadastroDeTelefone } from '../../dominio/casos-de-uso/telefone/cadastro-de-telefone'
-import { requisicaoImpropria } from '../auxiliares/auxiliar-http'
+import { erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
@@ -91,6 +91,17 @@ describe('Controlador de telefone', () => {
       }
       await sut.tratar(requisicaoHttp)
       expect(inserirSpy).toHaveBeenCalledWith(+dadoFalso.numero, +dadoFalso.estacaoId)
+    })
+
+    test('Deve retornar status 500 caso o cadastroDeTelefone retorne um erro', async () => {
+      const { sut, cadastroDeTelefoneStub } = makeSut()
+      jest.spyOn(cadastroDeTelefoneStub, 'inserir').mockReturnValueOnce(Promise.reject(new Error()))
+      const requisicaoHttp = {
+        corpo: dadoFalso,
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
   })
 })
