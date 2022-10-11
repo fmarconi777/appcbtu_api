@@ -9,10 +9,15 @@ export class ControladorDeTelefone implements Controlador {
     const metodo = requisicaoHttp.metodo
     switch (metodo) {
       case 'POST':
-      { if (!requisicaoHttp.corpo.numero) { // eslint-disable-line
-        return requisicaoImpropria(new ErroFaltaParametro('numero'))
+      {
+        const camposRequeridos = ['numero', 'estacaoId']
+        for (const campo of camposRequeridos) {
+          if (!requisicaoHttp.corpo[campo]) { // eslint-disable-line
+            return requisicaoImpropria(new ErroFaltaParametro(campo))
+          }
+        }
+        return resposta('')
       }
-      return resposta('') }
       default:
         return requisicaoImpropria(new ErroMetodoInvalido())
     }
