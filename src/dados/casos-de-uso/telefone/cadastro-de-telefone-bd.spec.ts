@@ -75,4 +75,11 @@ describe('CadastroDeTelefoneBD', () => {
     const resposta = sut.inserir(numero, estacaoId)
     await expect(resposta).rejects.toThrow()
   })
+
+  test('Deve retornar a menssagem "Telefone cadastrado com sucesso" em caso de sucesso', async () => {
+    const { sut, repositorioCadastroTelefoneStub } = makeSut()
+    jest.spyOn(repositorioCadastroTelefoneStub, 'inserir').mockReturnValueOnce(Promise.reject(new Error()))
+    const resposta = sut.inserir(numero, estacaoId)
+    await expect(resposta).rejects.toThrow()
+  })
 })
