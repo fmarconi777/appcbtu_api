@@ -7,7 +7,10 @@ export class CadastroDeTelefoneBD implements CadastroDeTelefone {
   ) {}
 
   async inserir (numero: number, estacaoId: number): Promise<string | null> {
-    await this.validaEstacao.validar(estacaoId)
-    return await Promise.resolve('')
+    const estacaoValida = await this.validaEstacao.validar(estacaoId)
+    if (estacaoValida) {
+      return ''
+    }
+    return null
   }
 }
