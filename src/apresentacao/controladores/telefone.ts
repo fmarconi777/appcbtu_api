@@ -27,7 +27,10 @@ export class ControladorDeTelefone implements Controlador {
           if (!Number.isInteger(numero) || numero !== Math.abs(numero)) {
             return requisicaoImpropria(new ErroParametroInvalido('numero'))
           }
-          await this.cadastroDeTelefone.inserir(numero, estacaoId)
+          const telefone = await this.cadastroDeTelefone.inserir(numero, estacaoId)
+          if (!telefone) { // eslint-disable-line
+            return requisicaoImpropria(new ErroParametroInvalido('estacaoId'))
+          }
           return resposta('')
         } catch (erro: any) {
           return erroDeServidor(erro)
