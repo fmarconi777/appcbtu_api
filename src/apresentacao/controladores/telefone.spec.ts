@@ -24,6 +24,7 @@ describe('Controlador de telefone', () => {
     expect(respostaHttp.status).toBe(400)
     expect(respostaHttp.corpo).toEqual(new ErroMetodoInvalido())
   })
+
   describe('Método POST', () => {
     test('Deve retornar status 400 caso o parametro numero não seja fornecido', async () => {
       const { sut } = makeSut()
@@ -35,6 +36,18 @@ describe('Controlador de telefone', () => {
       }
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(requisicaoImpropria(new ErroFaltaParametro('numero')))
+    })
+
+    test('Deve retornar status 400 caso o parametro estacaoId não seja fornecido', async () => {
+      const { sut } = makeSut()
+      const requisicaoHttp = {
+        corpo: {
+          numero: '3132505555'
+        },
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoImpropria(new ErroFaltaParametro('estacaoId')))
     })
   })
 })
