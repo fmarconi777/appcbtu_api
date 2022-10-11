@@ -103,5 +103,16 @@ describe('Controlador de telefone', () => {
       const respostaHttp = await sut.tratar(requisicaoHttp)
       expect(respostaHttp).toEqual(erroDeServidor(new Error()))
     })
+
+    test('Deve retornar status 400 caso o cadastroDeTelefone retorne null', async () => {
+      const { sut, cadastroDeTelefoneStub } = makeSut()
+      jest.spyOn(cadastroDeTelefoneStub, 'inserir').mockReturnValueOnce(Promise.resolve(null))
+      const requisicaoHttp = {
+        corpo: dadoFalso,
+        metodo: 'POST'
+      }
+      const respostaHttp = await sut.tratar(requisicaoHttp)
+      expect(respostaHttp).toEqual(requisicaoImpropria(new ErroParametroInvalido('estacaoId')))
+    })
   })
 })
