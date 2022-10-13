@@ -3,6 +3,7 @@ import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { ModeloEstacao } from '../../../../dominio/modelos/estacao'
 import { Equipamento } from './modelo-equipamento'
 import { Alerta } from './modelo-alerta'
+import { Telefone } from './modelo-telefone'
 
 interface AtributosEstacao extends Optional<ModeloEstacao, 'id'> {}
 
@@ -67,6 +68,17 @@ Estacao.hasMany(Alerta, {
 })
 
 Alerta.belongsTo(Estacao, {
+  foreignKey: 'estacaoId',
+  as: 'estacao'
+})
+
+Estacao.hasMany(Telefone, {
+  sourceKey: 'id',
+  foreignKey: 'estacaoId',
+  as: 'telefone'
+})
+
+Telefone.belongsTo(Estacao, {
   foreignKey: 'estacaoId',
   as: 'estacao'
 })
