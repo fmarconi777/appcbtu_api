@@ -1,3 +1,8 @@
+export interface DadosTelefone {
+  numero: number
+  estacaoId: number
+}
+
 export interface CadastroDeTelefone {
-  inserir: (numero: number, estacaoId: number) => Promise<string | null>
+  inserir: (dados: DadosTelefone) => Promise<string | null>
 }

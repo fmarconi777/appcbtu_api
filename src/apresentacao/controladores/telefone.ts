@@ -22,12 +22,14 @@ export class ControladorDeTelefone implements Controlador {
               return requisicaoImpropria(new ErroFaltaParametro(campo))
             }
           }
-          const numero = +requisicaoHttp.corpo.numero
-          const estacaoId = +requisicaoHttp.corpo.estacaoId
-          if (!Number.isInteger(numero) || numero !== Math.abs(numero)) {
+          const dados = {
+            numero: +requisicaoHttp.corpo.numero,
+            estacaoId: +requisicaoHttp.corpo.estacaoId
+          }
+          if (!Number.isInteger(dados.numero) || dados.numero !== Math.abs(dados.numero)) {
             return requisicaoImpropria(new ErroParametroInvalido('numero'))
           }
-          const telefone = await this.cadastroDeTelefone.inserir(numero, estacaoId)
+          const telefone = await this.cadastroDeTelefone.inserir(dados)
           if (!telefone) { // eslint-disable-line
             return requisicaoImpropria(new ErroParametroInvalido('estacaoId'))
           }

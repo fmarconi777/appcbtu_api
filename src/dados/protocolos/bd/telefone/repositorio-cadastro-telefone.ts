@@ -1,3 +1,5 @@
+import { DadosTelefone } from '../../../../dominio/casos-de-uso/telefone/cadastro-de-telefone'
+
 export interface RepositorioCadastroTelefone {
-  inserir: (numero: number, estacaoId: number) => Promise<string>
+  inserir: (dados: DadosTelefone) => Promise<string>
 }

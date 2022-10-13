@@ -1,4 +1,4 @@
-import { CadastroDeTelefone } from '../../dominio/casos-de-uso/telefone/cadastro-de-telefone'
+import { CadastroDeTelefone, DadosTelefone } from '../../dominio/casos-de-uso/telefone/cadastro-de-telefone'
 import { erroDeServidor, requisicaoImpropria, resposta } from '../auxiliares/auxiliar-http'
 import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
 import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
@@ -12,7 +12,7 @@ const dadoFalso = {
 
 const makeCadastroDeTelefoneStub = (): CadastroDeTelefone => {
   class CadastroDeTelefoneStub implements CadastroDeTelefone {
-    async inserir (numero: number, estacaoId: number): Promise<string | null> {
+    async inserir (dados: DadosTelefone): Promise<string | null> {
       return await Promise.resolve('Telefone cadastrado com sucesso')
     }
   }
@@ -90,7 +90,7 @@ describe('Controlador de telefone', () => {
         metodo: 'POST'
       }
       await sut.tratar(requisicaoHttp)
-      expect(inserirSpy).toHaveBeenCalledWith(+dadoFalso.numero, +dadoFalso.estacaoId)
+      expect(inserirSpy).toHaveBeenCalledWith({ numero: +dadoFalso.numero, estacaoId: +dadoFalso.estacaoId })
     })
 
     test('Deve retornar status 500 caso o cadastroDeTelefone retorne um erro', async () => {
