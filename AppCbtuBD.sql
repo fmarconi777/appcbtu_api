@@ -47,7 +47,7 @@ create table if not exists Falha(
 
 create table if not exists Telefone(
 	id int auto_increment primary key,
-    numero int(10) not null,
+    numero varchar(10) not null,
     estacaoId int not null,
     constraint fk_Telefone_Estacao
     foreign key (estacaoId)
