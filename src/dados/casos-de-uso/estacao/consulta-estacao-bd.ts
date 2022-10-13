@@ -3,17 +3,17 @@ import { ModeloEstacao } from '../../../dominio/modelos/estacao'
 import { RepositorioEstacao } from '../../protocolos/bd/estacao/repositorio-estacao'
 
 export class ConsultaEstacaoBD implements ConsultaEstacao {
-  private readonly consultaRepositorioEstacao: RepositorioEstacao
+  private readonly repositorioConsultaEstacao: RepositorioEstacao
 
-  constructor (consultaRepositorioEstacao: RepositorioEstacao) {
-    this.consultaRepositorioEstacao = consultaRepositorioEstacao
+  constructor (repositorioConsultaEstacao: RepositorioEstacao) {
+    this.repositorioConsultaEstacao = repositorioConsultaEstacao
   }
 
   async consultarTodas (): Promise<ModeloEstacao[]> {
-    return await this.consultaRepositorioEstacao.consultar()
+    return await this.repositorioConsultaEstacao.consultar()
   }
 
   async consultar (parametro: string): Promise<ModeloEstacao> {
-    return await this.consultaRepositorioEstacao.consultar(parametro)
+    return await this.repositorioConsultaEstacao.consultar(parametro)
   }
 }
