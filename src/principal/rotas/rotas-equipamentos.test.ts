@@ -86,7 +86,7 @@ describe('Rotas equipamentos', () => {
         estacaoId: '1'
       })
       await request(app)
-        .delete(`/equipamento/${equipamentos[0].id}`)
+        .delete(`/equipamento/${equipamentos[equipamentos.length - 1].id}`)
         .set('authorization', `Bearer ${tokenDeAcesso}`)
         .expect(200)
     })
