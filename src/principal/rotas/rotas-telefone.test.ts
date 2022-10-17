@@ -28,5 +28,16 @@ describe('Rotas Telefone', () => {
         })
         .expect(403)
     })
+
+    test('Deve retornar status 403 ao adicionar um telefone com authorization sem token de acesso', async () => {
+      await request(app)
+        .post('/telefone')
+        .set('authorization', 'Bearer ')
+        .send({
+          numero: '3132505555',
+          estacaoId: '1'
+        })
+        .expect(403)
+    })
   })
 })
