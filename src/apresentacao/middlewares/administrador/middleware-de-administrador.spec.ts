@@ -1,9 +1,9 @@
-import { CadastroAdministrador } from '../../../dominio/casos-de-uso/middleware/administrador/cadastro-de-adminstrador'
-import { ConsultaAdministrador } from '../../../dominio/casos-de-uso/middleware/administrador/consulta-administrador'
 import { MiddlewareDeAdministrador } from './middleware-de-administrador'
-import { Validador } from '../../protocolos/validador'
-import { LeitorDeTerminal } from '../../../dominio/casos-de-uso/middleware/terminal/leitor-de-terminal'
-import { LeitorDeSenhaTerminal } from '../../../dominio/casos-de-uso/middleware/terminal/leitor-de-senha-terminal'
+import { CadastroAdministrador } from '@/dominio/casos-de-uso/middleware/administrador/cadastro-de-adminstrador'
+import { ConsultaAdministrador } from '@/dominio/casos-de-uso/middleware/administrador/consulta-administrador'
+import { LeitorDeTerminal } from '@/dominio/casos-de-uso/middleware/terminal/leitor-de-terminal'
+import { LeitorDeSenhaTerminal } from '@/dominio/casos-de-uso/middleware/terminal/leitor-de-senha-terminal'
+import { Validador } from '@/apresentacao/protocolos/validador'
 
 const makeConsultaAdministradorStub = (): ConsultaAdministrador => {
   class ConsultaAdministradorStub implements ConsultaAdministrador {

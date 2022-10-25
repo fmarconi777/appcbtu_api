@@ -1,6 +1,6 @@
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
-import { Alerta } from '../models/modelo-alerta'
 import { RepositorioAlertaMariaDB } from './alerta'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Alerta } from '@/infraestrutura/bd/mariadb/models/modelo-alerta'
 
 describe('Repositorio mariaDB Alerta', () => {
   beforeAll(async () => {

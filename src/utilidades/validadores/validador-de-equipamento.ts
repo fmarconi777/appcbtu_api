@@ -1,5 +1,5 @@
-import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
-import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
+import { ConsultaEquipamento } from '@/dominio/casos-de-uso/equipamento/consulta-equipamento'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 export class ValidadorDeEquipamento implements ValidadorBD {
   constructor (private readonly consultaEquipamento: ConsultaEquipamento) {}

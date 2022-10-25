@@ -1,8 +1,8 @@
+import { requisicaoNegada } from '@/apresentacao/auxiliares/auxiliar-http'
+import { ErroAcessoNegado } from '@/apresentacao/erros/erro-acesso-negado'
+import { RequisicaoHttp } from '@/apresentacao/protocolos/http'
+import { Middleware } from '@/apresentacao/protocolos/middleware'
 import { NextFunction, Request, Response } from 'express'
-import { requisicaoNegada } from '../../apresentacao/auxiliares/auxiliar-http'
-import { ErroAcessoNegado } from '../../apresentacao/erros/erro-acesso-negado'
-import { RequisicaoHttp } from '../../apresentacao/protocolos/http'
-import { Middleware } from '../../apresentacao/protocolos/middleware'
 
 export const adaptadorDeMiddleware = (middleware: Middleware) => {
   return async (req: Request, res: Response, next: NextFunction) => {

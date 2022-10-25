@@ -1,10 +1,10 @@
-import { ControladorDeEstacao } from '../../apresentacao/controladores/estacao'
-import { ConsultaEstacaoBD } from '../../dados/casos-de-uso/estacao/consulta-estacao-bd'
-import { RepositorioEstacaoMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/estacao'
-import { RepositorioLogDeErroMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/log'
-import { ValidadorDeSigla } from '../../utilidades/validadores/validador-de-sigla'
-import { Controlador } from '../../apresentacao/protocolos/controlador'
-import { DecoradorControladorLog } from '../decoradores/log'
+import { DecoradorControladorLog } from '@/principal/decoradores/log'
+import { ControladorDeEstacao } from '@/apresentacao/controladores/estacao'
+import { Controlador } from '@/apresentacao/protocolos/controlador'
+import { ConsultaEstacaoBD } from '@/dados/casos-de-uso/estacao/consulta-estacao-bd'
+import { ValidadorDeSigla } from '@/utilidades/validadores/validador-de-sigla'
+import { RepositorioEstacaoMariaDB } from '@/infraestrutura/bd/mariadb/repositorio/estacao'
+import { RepositorioLogDeErroMariaDB } from '@/infraestrutura/bd/mariadb/repositorio/log'
 
 export const criaControladorDeEstacao = (): Controlador => {
   const consultaRepositorioEstacao = new RepositorioEstacaoMariaDB()

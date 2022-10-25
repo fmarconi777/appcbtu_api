@@ -1,6 +1,6 @@
-import { RepositorioDeletaArea } from '../../protocolos/bd/area/repositorio-deleta-area'
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 import { DeletaAreaBD } from './deleta-area-bd'
+import { RepositorioDeletaArea } from '@/dados/protocolos/bd/area/repositorio-deleta-area'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 const makeRepositorioArea = (): RepositorioDeletaArea => {
   class RepositorioDeletaAreaStub implements RepositorioDeletaArea {

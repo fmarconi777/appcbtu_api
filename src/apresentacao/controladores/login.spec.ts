@@ -1,12 +1,12 @@
-import { ErroDeServidor } from '../erros/erro-de-servidor'
-import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { Validador } from '../protocolos/validador'
 import { ControladorDeLogin } from './login'
-import { Autenticador, ModeloAutenticacao } from '../../dominio/casos-de-uso/autenticador/autenticador'
-import { ErroDeAutorizacao } from '../erros/erro-nao-autorizado'
-import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
-import { requisicaoNaoAutorizada } from '../auxiliares/auxiliar-http'
+import { Autenticador, ModeloAutenticacao } from '@/dominio/casos-de-uso/autenticador/autenticador'
+import { ErroDeServidor } from '@/apresentacao/erros/erro-de-servidor'
+import { ErroFaltaParametro } from '@/apresentacao/erros/erro-falta-parametro'
+import { ErroParametroInvalido } from '@/apresentacao/erros/erro-parametro-invalido'
+import { Validador } from '@/apresentacao/protocolos/validador'
+import { ErroDeAutorizacao } from '@/apresentacao/erros/erro-nao-autorizado'
+import { ErroMetodoInvalido } from '@/apresentacao/erros/erro-metodo-invalido'
+import { requisicaoNaoAutorizada } from '@/apresentacao/auxiliares/auxiliar-http'
 
 const makeValidadorDeEmail = (): Validador => {
   class ValidadorDeEmailStub implements Validador {

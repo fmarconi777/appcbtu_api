@@ -1,6 +1,6 @@
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
-import { Erros } from '../models/modelo-erros'
 import { RepositorioLogDeErroMariaDB } from './log'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Erros } from '@/infraestrutura/bd/mariadb/models/modelo-erros'
 
 describe('Repositório log de erro', () => {
   beforeAll(async () => {

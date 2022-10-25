@@ -1,6 +1,6 @@
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
-import { AlertaValidado, AlteraAlerta, DadosAlterados } from '../../../dominio/casos-de-uso/alerta/altera-alerta'
-import { RepositorioAlteraAlerta } from '../../protocolos/bd/alerta/repositorio-altera-alerta'
+import { AlertaValidado, AlteraAlerta, DadosAlterados } from '@/dominio/casos-de-uso/alerta/altera-alerta'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
+import { RepositorioAlteraAlerta } from '@/dados/protocolos/bd/alerta/repositorio-altera-alerta'
 
 export class AlteraAlertaBD implements AlteraAlerta {
   constructor (

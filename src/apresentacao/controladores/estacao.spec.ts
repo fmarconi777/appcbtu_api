@@ -1,11 +1,11 @@
 import { ControladorDeEstacao } from './estacao'
-import { ConsultaEstacao } from '../../dominio/casos-de-uso/estacao/consulta-estacao'
-import { ModeloEstacao } from '../../dominio/modelos/estacao'
-import { Validador } from '../protocolos/validador'
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { ErroDeServidor } from '../erros/erro-de-servidor'
-import { erroDeServidor } from '../auxiliares/auxiliar-http'
-import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
+import { ConsultaEstacao } from '@/dominio/casos-de-uso/estacao/consulta-estacao'
+import { ModeloEstacao } from '@/dominio/modelos/estacao'
+import { Validador } from '@/apresentacao/protocolos/validador'
+import { ErroParametroInvalido } from '@/apresentacao/erros/erro-parametro-invalido'
+import { ErroDeServidor } from '@/apresentacao/erros/erro-de-servidor'
+import { erroDeServidor } from '@/apresentacao/auxiliares/auxiliar-http'
+import { ErroMetodoInvalido } from '@/apresentacao/erros/erro-metodo-invalido'
 
 const makeConsultaEstacao = (): ConsultaEstacao => {
   class ConsultaEstacaoStub implements ConsultaEstacao {

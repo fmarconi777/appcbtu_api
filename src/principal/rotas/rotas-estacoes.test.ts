@@ -1,6 +1,6 @@
+import app from '@/principal/config/app'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 import request from 'supertest'
-import app from '../config/app'
-import { AuxiliaresMariaDB } from '../../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 
 describe('Rotas estações', () => {
   beforeAll(async () => {

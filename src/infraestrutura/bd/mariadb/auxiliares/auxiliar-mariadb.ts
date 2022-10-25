@@ -1,5 +1,5 @@
-import { Sequelize } from 'sequelize'
 import 'dotenv/config'
+import { Sequelize } from 'sequelize'
 
 type Auxiliares = { // eslint-disable-line
   bd: Sequelize

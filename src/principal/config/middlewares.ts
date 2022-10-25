@@ -1,7 +1,7 @@
+import { transformaCorpo } from '@/principal/middlewares/transforma-corpo'
+import { cors } from '@/principal/middlewares/cors'
+import { contentType } from '@/principal/middlewares/content-type'
 import { Express } from 'express'
-import { transformaCorpo } from '../middlewares/transforma-corpo'
-import { cors } from '../middlewares/cors'
-import { contentType } from '../middlewares/content-type'
 
 export default (app: Express): void => {
   app.use(transformaCorpo)

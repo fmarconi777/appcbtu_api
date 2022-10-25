@@ -1,6 +1,6 @@
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
-import { Telefone } from '../models/modelo-telefone'
 import { RepositorioTelefoneMariaDB } from './telefone'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Telefone } from '@/infraestrutura/bd/mariadb/models/modelo-telefone'
 
 describe('RepositorioTelefoneMariaDB', () => {
   beforeAll(async () => {

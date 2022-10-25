@@ -1,7 +1,7 @@
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
-import { DadosEquipamento } from '../../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
-import { RepositorioEquipamento } from '../../protocolos/bd/equipamento/repositorio-equipamento'
 import { CadastroDeEquipamentoBd } from './cadastro-de-equipamento-bd'
+import { DadosEquipamento } from '@/dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
+import { RepositorioEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-equipamento'
 
 const makeRepositorioEquimento = (): RepositorioEquipamento => {
   class RepositorioEquipamentoStub implements RepositorioEquipamento {

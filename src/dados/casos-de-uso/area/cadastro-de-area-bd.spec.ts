@@ -1,8 +1,8 @@
-import { ModeloArea } from '../../../dominio/modelos/area'
-import { ConsultaAreaPorId } from '../../protocolos/bd/area/repositorio-consulta-area-por-id'
-import { ConsultaAreaPorNome } from '../../protocolos/bd/area/repositorio-consulta-area-por-nome'
-import { RepositorioInserirArea } from '../../protocolos/bd/area/repositorio-inserir-area'
 import { CadastroDeAreaBD } from './cadastro-de-area-bd'
+import { ModeloArea } from '@/dominio/modelos/area'
+import { ConsultaAreaPorId } from '@/dados/protocolos/bd/area/repositorio-consulta-area-por-id'
+import { ConsultaAreaPorNome } from '@/dados/protocolos/bd/area/repositorio-consulta-area-por-nome'
+import { RepositorioInserirArea } from '@/dados/protocolos/bd/area/repositorio-inserir-area'
 
 describe('CadastroDeAreaBD', () => {
   const makeConsultaAreaPorNome = (): ConsultaAreaPorNome => {

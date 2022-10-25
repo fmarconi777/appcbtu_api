@@ -1,12 +1,12 @@
-import { AlteraFalha, FalhaAlterada, FalhaValida } from '../../dominio/casos-de-uso/falha/altera-falha'
-import { CadastroDeFalha, DadosFalha } from '../../dominio/casos-de-uso/falha/cadastro-de-falha'
-import { ConsultaFalha } from '../../dominio/casos-de-uso/falha/consulta-falha'
-import { ModeloFalha } from '../../dominio/modelos/falha'
-import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '../auxiliares/auxiliar-http'
-import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
-import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ControladorDeFalha } from './falha'
+import { AlteraFalha, FalhaAlterada, FalhaValida } from '@/dominio/casos-de-uso/falha/altera-falha'
+import { CadastroDeFalha, DadosFalha } from '@/dominio/casos-de-uso/falha/cadastro-de-falha'
+import { ConsultaFalha } from '@/dominio/casos-de-uso/falha/consulta-falha'
+import { ModeloFalha } from '@/dominio/modelos/falha'
+import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '@/apresentacao/auxiliares/auxiliar-http'
+import { ErroFaltaParametro } from '@/apresentacao/erros/erro-falta-parametro'
+import { ErroMetodoInvalido } from '@/apresentacao/erros/erro-metodo-invalido'
+import { ErroParametroInvalido } from '@/apresentacao/erros/erro-parametro-invalido'
 
 const falhaFalsa = {
   id: '1',

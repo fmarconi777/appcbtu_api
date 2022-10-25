@@ -1,13 +1,13 @@
-import { RepositorioAlteraArea } from '../../../../dados/protocolos/bd/area/repositorio-altera-area'
-import { RepositorioArea, ModelosAreas } from '../../../../dados/protocolos/bd/area/repositorio-area'
-import { ConsultaAreaPorId } from '../../../../dados/protocolos/bd/area/repositorio-consulta-area-por-id'
-import { ConsultaAreaPorNome } from '../../../../dados/protocolos/bd/area/repositorio-consulta-area-por-nome'
-import { RepositorioDeletaArea } from '../../../../dados/protocolos/bd/area/repositorio-deleta-area'
-import { RepositorioInserirArea } from '../../../../dados/protocolos/bd/area/repositorio-inserir-area'
-import { ModeloArea } from '../../../../dominio/modelos/area'
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
-import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
-import { Area } from '../models/modelo-area'
+import { ModeloArea } from '@/dominio/modelos/area'
+import { RepositorioAlteraArea } from '@/dados/protocolos/bd/area/repositorio-altera-area'
+import { RepositorioArea, ModelosAreas } from '@/dados/protocolos/bd/area/repositorio-area'
+import { ConsultaAreaPorId } from '@/dados/protocolos/bd/area/repositorio-consulta-area-por-id'
+import { ConsultaAreaPorNome } from '@/dados/protocolos/bd/area/repositorio-consulta-area-por-nome'
+import { RepositorioDeletaArea } from '@/dados/protocolos/bd/area/repositorio-deleta-area'
+import { RepositorioInserirArea } from '@/dados/protocolos/bd/area/repositorio-inserir-area'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { FuncoesAuxiliares } from '@/infraestrutura/bd/mariadb/auxiliares/funcoes-auxiliares'
+import { Area } from '@/infraestrutura/bd/mariadb/models/modelo-area'
 
 export class RepositorioAreaMariaDB implements
 RepositorioArea,

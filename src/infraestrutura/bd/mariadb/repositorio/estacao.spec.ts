@@ -1,5 +1,5 @@
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { RepositorioEstacaoMariaDB } from './estacao'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 
 describe('Repositorio mariaDB Estacao', () => {
   beforeAll(async () => {

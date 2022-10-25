@@ -1,7 +1,7 @@
-import bcrypt from 'bcrypt'
-import { GeradorDeHash } from '../../../dados/protocolos/criptografia/gerador-de-hash'
 import 'dotenv/config'
-import { ComparadorHash } from '../../../dados/protocolos/criptografia/comparador-hash'
+import { GeradorDeHash } from '@/dados/protocolos/criptografia/gerador-de-hash'
+import { ComparadorHash } from '@/dados/protocolos/criptografia/comparador-hash'
+import bcrypt from 'bcrypt'
 
 export class BcryptAdaptador implements GeradorDeHash, ComparadorHash {
   private readonly salt: number = +(process.env.SALT as string)

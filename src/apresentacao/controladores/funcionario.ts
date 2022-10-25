@@ -1,11 +1,11 @@
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
-import { erroDeServidor, requisicaoImpropria, requisicaoNegada, resposta } from '../auxiliares/auxiliar-http'
-import { Controlador } from '../protocolos/controlador'
-import { Validador } from '../protocolos/validador'
-import { CadastroDeFuncionario } from '../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
-import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
-import { ErroEmailEmUso } from '../erros/erro-parametro-email-em-uso'
+import { CadastroDeFuncionario } from '@/dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
+import { ErroParametroInvalido } from '@/apresentacao/erros/erro-parametro-invalido'
+import { RequisicaoHttp, RespostaHttp } from '@/apresentacao/protocolos/http'
+import { erroDeServidor, requisicaoImpropria, requisicaoNegada, resposta } from '@/apresentacao/auxiliares/auxiliar-http'
+import { Controlador } from '@/apresentacao/protocolos/controlador'
+import { Validador } from '@/apresentacao/protocolos/validador'
+import { ErroMetodoInvalido } from '@/apresentacao/erros/erro-metodo-invalido'
+import { ErroEmailEmUso } from '@/apresentacao/erros/erro-parametro-email-em-uso'
 
 export class ControladorDeFuncionario implements Controlador {
   private readonly validadorDeEmail: Validador

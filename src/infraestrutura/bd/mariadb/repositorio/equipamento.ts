@@ -1,11 +1,11 @@
-import { RepositorioEquipamento, DadosEquipamento, ModeloEquipamento } from '../../../../dados/protocolos/bd/equipamento/repositorio-equipamento'
-import { Equipamento } from '../models/modelo-equipamento'
-import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
-import { RepositorioConsultaEquipamento } from '../../../../dados/protocolos/bd/equipamento/repositorio-consulta-equipamento'
-import { RepositorioAlteraCadastroDeEquipamento } from '../../../../dados/protocolos/bd/equipamento/repositorio-altera-cadastro-de-equipamento'
-import { RepositorioAlteraEstadoDeEquipamento, EstadoEquipamento } from '../../../../dados/protocolos/bd/equipamento/repositorio-altera-estado-de-equipamento'
-import { RepositorioDeletaEquipamento } from '../../../../dados/protocolos/bd/equipamento/repositorio-deleta-equipamento'
+import { RepositorioEquipamento, DadosEquipamento, ModeloEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-equipamento'
+import { RepositorioConsultaEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-consulta-equipamento'
+import { RepositorioAlteraCadastroDeEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-altera-cadastro-de-equipamento'
+import { RepositorioAlteraEstadoDeEquipamento, EstadoEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-altera-estado-de-equipamento'
+import { RepositorioDeletaEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-deleta-equipamento'
+import { Equipamento } from '@/infraestrutura/bd/mariadb/models/modelo-equipamento'
+import { FuncoesAuxiliares } from '@/infraestrutura/bd/mariadb/auxiliares/funcoes-auxiliares'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 
 export class RepositorioEquipamentoMariaDB implements
 RepositorioEquipamento,

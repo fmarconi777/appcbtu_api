@@ -1,7 +1,7 @@
-import { AlteraArea } from '../../../dominio/casos-de-uso/area/altera-area'
-import { RepositorioAlteraArea } from '../../protocolos/bd/area/repositorio-altera-area'
-import { ConsultaAreaPorNome } from '../../protocolos/bd/area/repositorio-consulta-area-por-nome'
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
+import { AlteraArea } from '@/dominio/casos-de-uso/area/altera-area'
+import { RepositorioAlteraArea } from '@/dados/protocolos/bd/area/repositorio-altera-area'
+import { ConsultaAreaPorNome } from '@/dados/protocolos/bd/area/repositorio-consulta-area-por-nome'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 export class AlteraAreaBD implements AlteraArea {
   constructor (

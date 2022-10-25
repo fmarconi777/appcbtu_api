@@ -1,6 +1,6 @@
-import { RepositorioFuncionario, InserirModeloFuncionario, ModeloFuncionario } from '../../../protocolos/bd/funcionario/repositorio-funcionario'
 import { CadastroAdministradorBD } from './cadastro-de-administrador'
-import { GeradorDeHash } from '../../../protocolos/criptografia/gerador-de-hash'
+import { RepositorioFuncionario, InserirModeloFuncionario, ModeloFuncionario } from '@/dados/protocolos/bd/funcionario/repositorio-funcionario'
+import { GeradorDeHash } from '@/dados/protocolos/criptografia/gerador-de-hash'
 
 const administradorFalso = {
   nome: 'admin',

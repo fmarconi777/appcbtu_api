@@ -1,6 +1,6 @@
-import { ModeloFuncionario } from '../../../../dominio/modelos/funcionario'
-import { ConsultaFuncionarioPorNome } from '../../../protocolos/bd/funcionario/repositorio-consulta-funcionario-por-nome'
 import { ConsultaAdministradorBD } from './consulta-administrador'
+import { ModeloFuncionario } from '@/dominio/modelos/funcionario'
+import { ConsultaFuncionarioPorNome } from '@/dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-nome'
 
 const makeRepositorioConsultaFuncionarioPorNomeStub = (): ConsultaFuncionarioPorNome => {
   class RepositorioConsultaFuncionarioPorNomeStub implements ConsultaFuncionarioPorNome {

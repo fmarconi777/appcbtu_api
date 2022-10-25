@@ -1,5 +1,5 @@
-import { RepositorioAlteraAlertaAtivo } from '../../dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
-import { AuxiliarAlerta } from '../../dados/protocolos/utilidades/auxiliar-alerta'
+import { RepositorioAlteraAlertaAtivo } from '@/dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
+import { AuxiliarAlerta } from '@/dados/protocolos/utilidades/auxiliar-alerta'
 
 export class AuxiliarDadosAlerta implements AuxiliarAlerta {
   compararDatas (data: string): boolean {

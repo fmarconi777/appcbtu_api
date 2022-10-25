@@ -1,8 +1,8 @@
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
-import { AlteraCadastroDeEquipamento, EquipamentoValido } from '../../../dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
-import { RepositorioAlteraCadastroDeEquipamento } from '../../protocolos/bd/equipamento/repositorio-altera-cadastro-de-equipamento'
-import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
-import { ModeloEquipamento } from '../../protocolos/bd/equipamento/repositorio-equipamento'
+import { AlteraCadastroDeEquipamento, EquipamentoValido } from '@/dominio/casos-de-uso/equipamento/altera-cadastro-de-equipamento'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
+import { RepositorioAlteraCadastroDeEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-altera-cadastro-de-equipamento'
+import { RepositorioConsultaEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-consulta-equipamento'
+import { ModeloEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-equipamento'
 
 export class AlteraCadastroDeEquipamentoBD implements AlteraCadastroDeEquipamento {
   constructor (

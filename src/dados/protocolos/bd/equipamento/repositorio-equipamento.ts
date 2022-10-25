@@ -1,5 +1,5 @@
-import { DadosEquipamento } from '../../../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
-import { ModeloEquipamento } from '../../../../dominio/modelos/equipamento'
+import { DadosEquipamento } from '@/dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
+import { ModeloEquipamento } from '@/dominio/modelos/equipamento'
 
 export { DadosEquipamento, ModeloEquipamento }
 

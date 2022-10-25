@@ -1,7 +1,7 @@
-import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
 import { ValidadorDeArea } from './validador-de-area'
-import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
-import { ModeloArea } from '../../dominio/modelos/area'
+import { ConsultaArea } from '@/dominio/casos-de-uso/area/consulta-area'
+import { ModeloArea } from '@/dominio/modelos/area'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 const makeConsultaArea = (): ConsultaArea => {
   class ConsultaAreaStub implements ConsultaArea {

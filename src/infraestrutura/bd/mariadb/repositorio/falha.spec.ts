@@ -1,7 +1,7 @@
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
-import { Equipamento } from '../models/modelo-equipamento'
-import { Falha } from '../models/modelo-falha'
 import { RepositorioFalhaMariaDB } from './falha'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Equipamento } from '@/infraestrutura/bd/mariadb/models/modelo-equipamento'
+import { Falha } from '@/infraestrutura/bd/mariadb/models/modelo-falha'
 
 describe('RepositorioFalhaMariaDB', () => {
   beforeAll(async () => {

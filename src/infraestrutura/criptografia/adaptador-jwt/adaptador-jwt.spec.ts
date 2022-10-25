@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken'
 import 'dotenv/config'
 import { AdapatadorJwt } from './adaptador-jwt'
+import jwt from 'jsonwebtoken'
 
 const chaveSecreta = process.env.CHAVE_SECRETA
 

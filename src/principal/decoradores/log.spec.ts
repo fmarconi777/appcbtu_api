@@ -1,8 +1,8 @@
-import { Controlador } from '../../apresentacao/protocolos/controlador'
-import { RequisicaoHttp, RespostaHttp } from '../../apresentacao/protocolos/http'
 import { DecoradorControladorLog } from './log'
-import { erroDeServidor } from '../../apresentacao/auxiliares/auxiliar-http'
-import { RepositorioLogDeErro } from '../../dados/protocolos/bd/log-de-erro/repositorio-log-de-erro'
+import { Controlador } from '@/apresentacao/protocolos/controlador'
+import { RequisicaoHttp, RespostaHttp } from '@/apresentacao/protocolos/http'
+import { erroDeServidor } from '@/apresentacao/auxiliares/auxiliar-http'
+import { RepositorioLogDeErro } from '@/dados/protocolos/bd/log-de-erro/repositorio-log-de-erro'
 
 const makeControlador = (): Controlador => {
   class ControladorStub implements Controlador {

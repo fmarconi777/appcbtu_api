@@ -1,6 +1,6 @@
 import { ConsultaAreaBD } from './consulta-area-bd'
-import { RepositorioArea, ModelosAreas } from '../../protocolos/bd/area/repositorio-area'
-import { ModeloArea } from '../../../dominio/modelos/area'
+import { ModeloArea } from '@/dominio/modelos/area'
+import { RepositorioArea, ModelosAreas } from '@/dados/protocolos/bd/area/repositorio-area'
 
 const makeAreaFalsa = (): ModeloArea => ({
   id: 'id_qualquer',

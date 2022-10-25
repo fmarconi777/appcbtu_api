@@ -1,6 +1,6 @@
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
-import { CadastroDeEquipamento, DadosEquipamento } from '../../../dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
-import { RepositorioEquipamento } from '../../protocolos/bd/equipamento/repositorio-equipamento'
+import { CadastroDeEquipamento, DadosEquipamento } from '@/dominio/casos-de-uso/equipamento/cadastro-de-equipamento'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
+import { RepositorioEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-equipamento'
 
 export class CadastroDeEquipamentoBd implements CadastroDeEquipamento {
   constructor (

@@ -1,5 +1,5 @@
-import { RepositorioEstacao, ModelosEstacoes } from '../../protocolos/bd/estacao/repositorio-estacao'
 import { ConsultaEstacaoBD } from './consulta-estacao-bd'
+import { RepositorioEstacao, ModelosEstacoes } from '@/dados/protocolos/bd/estacao/repositorio-estacao'
 
 const makeRepositorioEstacao = (): RepositorioEstacao => {
   class RepositorioEstacaoStub implements RepositorioEstacao {

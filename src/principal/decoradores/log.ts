@@ -1,6 +1,6 @@
-import { Controlador } from '../../apresentacao/protocolos/controlador'
-import { RequisicaoHttp, RespostaHttp } from '../../apresentacao/protocolos/http'
-import { RepositorioLogDeErro } from '../../dados/protocolos/bd/log-de-erro/repositorio-log-de-erro'
+import { Controlador } from '@/apresentacao/protocolos/controlador'
+import { RequisicaoHttp, RespostaHttp } from '@/apresentacao/protocolos/http'
+import { RepositorioLogDeErro } from '@/dados/protocolos/bd/log-de-erro/repositorio-log-de-erro'
 
 export class DecoradorControladorLog implements Controlador {
   private readonly controlador: Controlador

@@ -1,7 +1,7 @@
-import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
-import { ConsultaEstacao } from '../../dominio/casos-de-uso/estacao/consulta-estacao'
-import { ModeloEstacao } from '../../dominio/modelos/estacao'
 import { ValidadorDeEstacao } from './validador-de-estacao'
+import { ConsultaEstacao } from '@/dominio/casos-de-uso/estacao/consulta-estacao'
+import { ModeloEstacao } from '@/dominio/modelos/estacao'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 const makeConsultaEstacao = (): ConsultaEstacao => {
   class ConsultaEstacaoStub implements ConsultaEstacao {

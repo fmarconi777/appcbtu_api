@@ -1,6 +1,6 @@
-import bcrypt from 'bcrypt'
-import { BcryptAdaptador } from './bcrypt-adaptador'
 import 'dotenv/config'
+import { BcryptAdaptador } from './bcrypt-adaptador'
+import bcrypt from 'bcrypt'
 
 jest.mock('bcrypt', () => ({
   async hash (): Promise<string> {

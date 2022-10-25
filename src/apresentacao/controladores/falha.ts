@@ -1,12 +1,12 @@
-import { AlteraFalha } from '../../dominio/casos-de-uso/falha/altera-falha'
-import { CadastroDeFalha } from '../../dominio/casos-de-uso/falha/cadastro-de-falha'
-import { ConsultaFalha } from '../../dominio/casos-de-uso/falha/consulta-falha'
-import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '../auxiliares/auxiliar-http'
-import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
-import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { Controlador } from '../protocolos/controlador'
-import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
+import { AlteraFalha } from '@/dominio/casos-de-uso/falha/altera-falha'
+import { CadastroDeFalha } from '@/dominio/casos-de-uso/falha/cadastro-de-falha'
+import { ConsultaFalha } from '@/dominio/casos-de-uso/falha/consulta-falha'
+import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '@/apresentacao/auxiliares/auxiliar-http'
+import { ErroFaltaParametro } from '@/apresentacao/erros/erro-falta-parametro'
+import { ErroMetodoInvalido } from '@/apresentacao/erros/erro-metodo-invalido'
+import { ErroParametroInvalido } from '@/apresentacao/erros/erro-parametro-invalido'
+import { Controlador } from '@/apresentacao/protocolos/controlador'
+import { RequisicaoHttp, RespostaHttp } from '@/apresentacao/protocolos/http'
 
 export class ControladorDeFalha implements Controlador {
   constructor (

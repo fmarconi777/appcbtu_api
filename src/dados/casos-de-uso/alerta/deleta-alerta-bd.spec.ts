@@ -1,6 +1,6 @@
-import { RepositorioAlteraAlertaAtivo } from '../../protocolos/bd/alerta/repositorio-altera-alerta-ativo'
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 import { DeletaAlertaBD } from './deleta-alerta-bd'
+import { RepositorioAlteraAlertaAtivo } from '@/dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 const makeRepositorioAlteraAlertaAtivoStub = (): RepositorioAlteraAlertaAtivo => {
   class RepositorioAlteraAlertaAtivoStub implements RepositorioAlteraAlertaAtivo {

@@ -1,8 +1,8 @@
-import { CadastroArea } from '../../../dominio/casos-de-uso/area/cadastro-de-area'
-import { ModeloArea } from '../../../dominio/modelos/area'
-import { ConsultaAreaPorId } from '../../protocolos/bd/area/repositorio-consulta-area-por-id'
-import { ConsultaAreaPorNome } from '../../protocolos/bd/area/repositorio-consulta-area-por-nome'
-import { RepositorioInserirArea } from '../../protocolos/bd/area/repositorio-inserir-area'
+import { CadastroArea } from '@/dominio/casos-de-uso/area/cadastro-de-area'
+import { ModeloArea } from '@/dominio/modelos/area'
+import { ConsultaAreaPorId } from '@/dados/protocolos/bd/area/repositorio-consulta-area-por-id'
+import { ConsultaAreaPorNome } from '@/dados/protocolos/bd/area/repositorio-consulta-area-por-nome'
+import { RepositorioInserirArea } from '@/dados/protocolos/bd/area/repositorio-inserir-area'
 
 export class CadastroDeAreaBD implements CadastroArea {
   constructor (

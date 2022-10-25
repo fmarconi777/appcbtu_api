@@ -1,6 +1,6 @@
-import { ConsultaFalha } from '../../../dominio/casos-de-uso/falha/consulta-falha'
-import { ModeloFalha } from '../../../dominio/modelos/falha'
-import { RepositorioConsultaFalha } from '../../protocolos/bd/falha/repositorio-consulta-falha'
+import { ConsultaFalha } from '@/dominio/casos-de-uso/falha/consulta-falha'
+import { ModeloFalha } from '@/dominio/modelos/falha'
+import { RepositorioConsultaFalha } from '@/dados/protocolos/bd/falha/repositorio-consulta-falha'
 
 export class ConsultaFalhaBD implements ConsultaFalha {
   constructor (private readonly repositorioConsultaFalha: RepositorioConsultaFalha) {}

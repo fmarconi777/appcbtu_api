@@ -1,6 +1,6 @@
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
-import { Funcionario } from '../models/modelo-funcionarios'
 import { RepositorioFuncionarioMariaDB } from './funcionario'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Funcionario } from '@/infraestrutura/bd/mariadb/models/modelo-funcionarios'
 
 describe('Repositorio mariaDB Funcionario', () => {
   beforeAll(async () => {

@@ -1,10 +1,10 @@
-import { AuxiliaresMariaDB } from '../../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import app from '@/principal/config/app'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Funcionario } from '@/infraestrutura/bd/mariadb/models/modelo-funcionarios'
+import { Area } from '@/infraestrutura/bd/mariadb/models/modelo-area'
 import request from 'supertest'
-import app from '../config/app'
 import { hash } from 'bcrypt'
-import { Funcionario } from '../../infraestrutura/bd/mariadb/models/modelo-funcionarios'
 import { sign } from 'jsonwebtoken'
-import { Area } from '../../infraestrutura/bd/mariadb/models/modelo-area'
 
 describe('Rotas Area', () => {
   beforeAll(async () => {

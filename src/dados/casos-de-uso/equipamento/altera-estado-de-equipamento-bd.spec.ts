@@ -1,8 +1,8 @@
-import { EstadoEquipamento } from '../../../dominio/casos-de-uso/equipamento/altera-estado-de-equipamento'
-import { ModeloEquipamento } from '../../../dominio/modelos/equipamento'
-import { RepositorioAlteraEstadoDeEquipamento } from '../../protocolos/bd/equipamento/repositorio-altera-estado-de-equipamento'
-import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
 import { AlteraEstadoDeEquipamentoBD } from './altera-estado-de-equipamento-bd'
+import { EstadoEquipamento } from '@/dominio/casos-de-uso/equipamento/altera-estado-de-equipamento'
+import { ModeloEquipamento } from '@/dominio/modelos/equipamento'
+import { RepositorioAlteraEstadoDeEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-altera-estado-de-equipamento'
+import { RepositorioConsultaEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-consulta-equipamento'
 
 const equipamentoFalso = {
   id: '1',

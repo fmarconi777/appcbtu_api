@@ -1,6 +1,6 @@
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
 import { RepositorioEquipamentoMariaDB } from './equipamento'
-import { Equipamento } from '../models/modelo-equipamento'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Equipamento } from '@/infraestrutura/bd/mariadb/models/modelo-equipamento'
 
 describe('Repositorio mariaDB Equipamento', () => {
   beforeAll(async () => {

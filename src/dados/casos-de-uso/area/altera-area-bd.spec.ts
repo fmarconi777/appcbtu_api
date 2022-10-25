@@ -1,8 +1,8 @@
 import { AlteraAreaBD } from './altera-area-bd'
-import { ConsultaAreaPorNome } from '../../protocolos/bd/area/repositorio-consulta-area-por-nome'
-import { ModeloArea } from '../../../dominio/modelos/area'
-import { RepositorioAlteraArea } from '../../protocolos/bd/area/repositorio-altera-area'
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
+import { ModeloArea } from '@/dominio/modelos/area'
+import { ConsultaAreaPorNome } from '@/dados/protocolos/bd/area/repositorio-consulta-area-por-nome'
+import { RepositorioAlteraArea } from '@/dados/protocolos/bd/area/repositorio-altera-area'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 const makeConsultaAreaPorNome = (): ConsultaAreaPorNome => {
   class ConsultaAreaPorNomeStub implements ConsultaAreaPorNome {

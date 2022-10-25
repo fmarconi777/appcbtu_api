@@ -1,19 +1,11 @@
-import { ConsultaEstacao } from '../../dominio/casos-de-uso/estacao/consulta-estacao'
-import { Controlador } from '../protocolos/controlador'
-import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
-import { resposta, requisicaoNaoEncontrada, erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
-import { Validador } from '../protocolos/validador'
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
+import { ConsultaEstacao } from '@/dominio/casos-de-uso/estacao/consulta-estacao'
+import { Controlador } from '@/apresentacao/protocolos/controlador'
+import { RequisicaoHttp, RespostaHttp } from '@/apresentacao/protocolos/http'
+import { resposta, requisicaoNaoEncontrada, erroDeServidor, requisicaoImpropria } from '@/apresentacao/auxiliares/auxiliar-http'
+import { Validador } from '@/apresentacao/protocolos/validador'
+import { ErroParametroInvalido } from '@/apresentacao/erros/erro-parametro-invalido'
+import { ErroMetodoInvalido } from '@/apresentacao/erros/erro-metodo-invalido'
 
-/*
-A classe ControladorDeEstacao ao ser instanciada recebe duas outras classes
-como parâmetro, as classes ConsultaEstacao e ValidaParametro.
-O método tratar desta classes tem duas responsabilidades, que é retornar
-todas as estações, caso o parâmetro passado seja nulo ou produza o valor false
-no teste booleano, e retornar uma estação especifica caso o parâmetro recebido
-seja válido.
-*/
 export class ControladorDeEstacao implements Controlador {
   private readonly consultaEstacao: ConsultaEstacao
   private readonly validaParametro: Validador

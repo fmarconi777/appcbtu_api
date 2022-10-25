@@ -1,6 +1,6 @@
-import { CadastroDeFalha, DadosFalha } from '../../../dominio/casos-de-uso/falha/cadastro-de-falha'
-import { RepositorioCadastroFalha } from '../../protocolos/bd/falha/repositorio-cadastro-falha'
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
+import { CadastroDeFalha, DadosFalha } from '@/dominio/casos-de-uso/falha/cadastro-de-falha'
+import { RepositorioCadastroFalha } from '@/dados/protocolos/bd/falha/repositorio-cadastro-falha'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 export class CadastroDeFalhaBD implements CadastroDeFalha {
   constructor (

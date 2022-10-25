@@ -1,10 +1,10 @@
-import { CadastroDeTelefone } from '../../dominio/casos-de-uso/telefone/cadastro-de-telefone'
-import { erroDeServidor, requisicaoImpropria, resposta } from '../auxiliares/auxiliar-http'
-import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
-import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { Controlador } from '../protocolos/controlador'
-import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
+import { CadastroDeTelefone } from '@/dominio/casos-de-uso/telefone/cadastro-de-telefone'
+import { erroDeServidor, requisicaoImpropria, resposta } from '@/apresentacao/auxiliares/auxiliar-http'
+import { ErroFaltaParametro } from '@/apresentacao/erros/erro-falta-parametro'
+import { ErroMetodoInvalido } from '@/apresentacao/erros/erro-metodo-invalido'
+import { ErroParametroInvalido } from '@/apresentacao/erros/erro-parametro-invalido'
+import { Controlador } from '@/apresentacao/protocolos/controlador'
+import { RequisicaoHttp, RespostaHttp } from '@/apresentacao/protocolos/http'
 
 export class ControladorDeTelefone implements Controlador {
   constructor (

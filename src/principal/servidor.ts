@@ -1,4 +1,5 @@
-import { AuxiliaresMariaDB } from '../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import 'module-alias/register'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 import 'dotenv/config'
 
 AuxiliaresMariaDB.conectar()

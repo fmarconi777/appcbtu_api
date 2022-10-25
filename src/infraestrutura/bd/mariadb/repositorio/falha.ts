@@ -1,11 +1,11 @@
-import { RepositorioAlteraFalha } from '../../../../dados/protocolos/bd/falha/repositorio-altera-falha'
-import { RepositorioCadastroFalha } from '../../../../dados/protocolos/bd/falha/repositorio-cadastro-falha'
-import { RepositorioConsultaFalha } from '../../../../dados/protocolos/bd/falha/repositorio-consulta-falha'
-import { FalhaAlterada } from '../../../../dominio/casos-de-uso/falha/altera-falha'
-import { DadosFalha } from '../../../../dominio/casos-de-uso/falha/cadastro-de-falha'
-import { ModeloFalha } from '../../../../dominio/modelos/falha'
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
-import { Falha } from '../models/modelo-falha'
+import { FalhaAlterada } from '@/dominio/casos-de-uso/falha/altera-falha'
+import { DadosFalha } from '@/dominio/casos-de-uso/falha/cadastro-de-falha'
+import { ModeloFalha } from '@/dominio/modelos/falha'
+import { RepositorioAlteraFalha } from '@/dados/protocolos/bd/falha/repositorio-altera-falha'
+import { RepositorioCadastroFalha } from '@/dados/protocolos/bd/falha/repositorio-cadastro-falha'
+import { RepositorioConsultaFalha } from '@/dados/protocolos/bd/falha/repositorio-consulta-falha'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Falha } from '@/infraestrutura/bd/mariadb/models/modelo-falha'
 
 export class RepositorioFalhaMariaDB implements
 RepositorioCadastroFalha,

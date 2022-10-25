@@ -1,5 +1,5 @@
-import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
-import { ConsultaAlerta } from '../../dominio/casos-de-uso/alerta/consulta-alerta'
+import { ConsultaAlerta } from '@/dominio/casos-de-uso/alerta/consulta-alerta'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 export class ValidadorDeAlerta implements ValidadorBD {
   constructor (private readonly consultaAlerta: ConsultaAlerta) {}

@@ -1,12 +1,12 @@
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ControladorDeFuncionario } from './funcionario'
-import { Validador } from '../protocolos/validador'
-import { ErroDeServidor } from '../erros/erro-de-servidor'
-import { CadastroDeFuncionario, InserirModeloFuncionario } from '../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
-import { ModeloFuncionario } from '../../dominio/modelos/funcionario'
-import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
-import { ErroEmailEmUso } from '../erros/erro-parametro-email-em-uso'
-import { requisicaoNegada } from '../auxiliares/auxiliar-http'
+import { CadastroDeFuncionario, InserirModeloFuncionario } from '@/dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
+import { ModeloFuncionario } from '@/dominio/modelos/funcionario'
+import { ErroParametroInvalido } from '@/apresentacao/erros/erro-parametro-invalido'
+import { Validador } from '@/apresentacao/protocolos/validador'
+import { ErroDeServidor } from '@/apresentacao/erros/erro-de-servidor'
+import { ErroMetodoInvalido } from '@/apresentacao/erros/erro-metodo-invalido'
+import { ErroEmailEmUso } from '@/apresentacao/erros/erro-parametro-email-em-uso'
+import { requisicaoNegada } from '@/apresentacao/auxiliares/auxiliar-http'
 
 const makeCadastroDeFuncionario = (): CadastroDeFuncionario => {
   class CadastroDeFuncionarioStub implements CadastroDeFuncionario {

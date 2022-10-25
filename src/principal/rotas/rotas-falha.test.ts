@@ -1,12 +1,12 @@
+import app from '@/principal/config/app'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Funcionario } from '@/infraestrutura/bd/mariadb/models/modelo-funcionarios'
+import { Falha } from '@/infraestrutura/bd/mariadb/models/modelo-falha'
+import { Equipamento } from '@/infraestrutura/bd/mariadb/models/modelo-equipamento'
+import 'dotenv/config'
 import request from 'supertest'
-import app from '../config/app'
-import { AuxiliaresMariaDB } from '../../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Funcionario } from '../../infraestrutura/bd/mariadb/models/modelo-funcionarios'
 import { hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
-import 'dotenv/config'
-import { Falha } from '../../infraestrutura/bd/mariadb/models/modelo-falha'
-import { Equipamento } from '../../infraestrutura/bd/mariadb/models/modelo-equipamento'
 
 describe('Rotas falha', () => {
   beforeAll(async () => {

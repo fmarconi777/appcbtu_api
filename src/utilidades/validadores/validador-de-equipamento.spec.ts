@@ -1,7 +1,7 @@
-import { ValidadorBD } from '../../dados/protocolos/utilidades/validadorBD'
-import { ConsultaEquipamento } from '../../dominio/casos-de-uso/equipamento/consulta-equipamento'
-import { ModeloEquipamento } from '../../dominio/modelos/equipamento'
 import { ValidadorDeEquipamento } from './validador-de-equipamento'
+import { ConsultaEquipamento } from '@/dominio/casos-de-uso/equipamento/consulta-equipamento'
+import { ModeloEquipamento } from '@/dominio/modelos/equipamento'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 const dadosFalsos = {
   id: '1',

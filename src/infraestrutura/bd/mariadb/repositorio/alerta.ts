@@ -1,10 +1,10 @@
+import { RepositorioAlerta, DadosAlerta, ModeloAlerta } from '@/dados/protocolos/bd/alerta/repositorio-alerta'
+import { RepositorioAlteraAlerta } from '@/dados/protocolos/bd/alerta/repositorio-altera-alerta'
+import { RepositorioAlteraAlertaAtivo } from '@/dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
+import { ModelosAlertas, RepositorioConsultaAlerta } from '@/dados/protocolos/bd/alerta/repositorio-consulta-alerta-todas'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Alerta } from '@/infraestrutura/bd/mariadb/models/modelo-alerta'
 import { QueryTypes } from 'sequelize'
-import { RepositorioAlerta, DadosAlerta, ModeloAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-alerta'
-import { RepositorioAlteraAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-altera-alerta'
-import { RepositorioAlteraAlertaAtivo } from '../../../../dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
-import { ModelosAlertas, RepositorioConsultaAlerta } from '../../../../dados/protocolos/bd/alerta/repositorio-consulta-alerta-todas'
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
-import { Alerta } from '../models/modelo-alerta'
 
 export class RepositorioAlertaMariaDB implements RepositorioAlerta,
 RepositorioConsultaAlerta,

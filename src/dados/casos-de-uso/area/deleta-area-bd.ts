@@ -1,6 +1,6 @@
-import { DeletaArea } from '../../../dominio/casos-de-uso/area/deleta-area'
-import { RepositorioDeletaArea } from '../../protocolos/bd/area/repositorio-deleta-area'
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
+import { DeletaArea } from '@/dominio/casos-de-uso/area/deleta-area'
+import { RepositorioDeletaArea } from '@/dados/protocolos/bd/area/repositorio-deleta-area'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 export class DeletaAreaBD implements DeletaArea {
   constructor (

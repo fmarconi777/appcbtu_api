@@ -1,12 +1,12 @@
-import { Autenticador } from '../../dominio/casos-de-uso/autenticador/autenticador'
-import { erroDeServidor, requisicaoImpropria, requisicaoNaoAutorizada, resposta } from '../auxiliares/auxiliar-http'
-import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
-import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
-import { ErroDeAutorizacao } from '../erros/erro-nao-autorizado'
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { Controlador } from '../protocolos/controlador'
-import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
-import { Validador } from '../protocolos/validador'
+import { Autenticador } from '@/dominio/casos-de-uso/autenticador/autenticador'
+import { erroDeServidor, requisicaoImpropria, requisicaoNaoAutorizada, resposta } from '@/apresentacao/auxiliares/auxiliar-http'
+import { ErroFaltaParametro } from '@/apresentacao/erros/erro-falta-parametro'
+import { ErroMetodoInvalido } from '@/apresentacao/erros/erro-metodo-invalido'
+import { ErroDeAutorizacao } from '@/apresentacao/erros/erro-nao-autorizado'
+import { ErroParametroInvalido } from '@/apresentacao/erros/erro-parametro-invalido'
+import { Controlador } from '@/apresentacao/protocolos/controlador'
+import { RequisicaoHttp, RespostaHttp } from '@/apresentacao/protocolos/http'
+import { Validador } from '@/apresentacao/protocolos/validador'
 
 export class ControladorDeLogin implements Controlador {
   private readonly validadorDeEmail: Validador

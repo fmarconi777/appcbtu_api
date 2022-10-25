@@ -1,6 +1,6 @@
-import { DeletaEquipamento } from '../../../dominio/casos-de-uso/equipamento/deleta-equipamento'
-import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
-import { RepositorioDeletaEquipamento } from '../../protocolos/bd/equipamento/repositorio-deleta-equipamento'
+import { DeletaEquipamento } from '@/dominio/casos-de-uso/equipamento/deleta-equipamento'
+import { RepositorioConsultaEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-consulta-equipamento'
+import { RepositorioDeletaEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-deleta-equipamento'
 
 export class DeletaEquipamentoBD implements DeletaEquipamento {
   constructor (

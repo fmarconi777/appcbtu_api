@@ -1,8 +1,8 @@
+import { adaptadorDeMiddleware } from '@/principal/adaptadores/adaptador-de-middleware-express'
+import { adaptadorDeRota } from '@/principal/adaptadores/adaptador-de-rota-express'
+import { criaControladorDeFalha } from '@/principal/fabrica/falha'
+import { criaMiddlewareDeAutenticacao } from '@/principal/fabrica/middleware-de-autenticacao'
 import { Router } from 'express'
-import { adaptadorDeMiddleware } from '../adaptadores/adaptador-de-middleware-express'
-import { adaptadorDeRota } from '../adaptadores/adaptador-de-rota-express'
-import { criaControladorDeFalha } from '../fabrica/falha'
-import { criaMiddlewareDeAutenticacao } from '../fabrica/middleware-de-autenticacao'
 
 export default (router: Router): Router => {
   const autentificacaoArea = adaptadorDeMiddleware(criaMiddlewareDeAutenticacao('16'))

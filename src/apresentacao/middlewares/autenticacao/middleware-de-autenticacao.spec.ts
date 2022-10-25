@@ -1,9 +1,9 @@
 import { MiddlewareDeAutenticacao } from './middleware-de-autenticacao'
-import { erroDeServidor, requisicaoNegada, resposta } from '../../auxiliares/auxiliar-http'
-import { ErroAcessoNegado } from '../../erros/erro-acesso-negado'
-import { ConsultaFuncionarioPeloToken } from '../../../dominio/casos-de-uso/middleware/autenticacao/consulta-funcionario-por-token'
-import { ModeloFuncionario } from '../../../dominio/modelos/funcionario'
-import { RequisicaoHttp } from '../../protocolos/http'
+import { ConsultaFuncionarioPeloToken } from '@/dominio/casos-de-uso/middleware/autenticacao/consulta-funcionario-por-token'
+import { ModeloFuncionario } from '@/dominio/modelos/funcionario'
+import { erroDeServidor, requisicaoNegada, resposta } from '@/apresentacao/auxiliares/auxiliar-http'
+import { ErroAcessoNegado } from '@/apresentacao/erros/erro-acesso-negado'
+import { RequisicaoHttp } from '@/apresentacao/protocolos/http'
 
 const makeContaFalsa = (): ModeloFuncionario => ({
   id: 'id_valido',

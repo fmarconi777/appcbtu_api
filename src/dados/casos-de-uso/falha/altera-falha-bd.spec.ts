@@ -1,9 +1,9 @@
-import { FalhaAlterada } from '../../../dominio/casos-de-uso/falha/altera-falha'
-import { ModeloFalha } from '../../../dominio/modelos/falha'
-import { RepositorioAlteraFalha } from '../../protocolos/bd/falha/repositorio-altera-falha'
-import { RepositorioConsultaFalha } from '../../protocolos/bd/falha/repositorio-consulta-falha'
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 import { AlteraFalhaBD } from './altera-falha-bd'
+import { FalhaAlterada } from '@/dominio/casos-de-uso/falha/altera-falha'
+import { ModeloFalha } from '@/dominio/modelos/falha'
+import { RepositorioAlteraFalha } from '@/dados/protocolos/bd/falha/repositorio-altera-falha'
+import { RepositorioConsultaFalha } from '@/dados/protocolos/bd/falha/repositorio-consulta-falha'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 const falhaFalsa = {
   id: '1',

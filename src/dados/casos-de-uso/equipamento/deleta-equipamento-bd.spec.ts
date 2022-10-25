@@ -1,7 +1,7 @@
-import { ModeloEquipamento } from '../../../dominio/modelos/equipamento'
-import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
-import { RepositorioDeletaEquipamento } from '../../protocolos/bd/equipamento/repositorio-deleta-equipamento'
 import { DeletaEquipamentoBD } from './deleta-equipamento-bd'
+import { ModeloEquipamento } from '@/dominio/modelos/equipamento'
+import { RepositorioConsultaEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-consulta-equipamento'
+import { RepositorioDeletaEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-deleta-equipamento'
 
 const equipamentoFalso = {
   id: '1',

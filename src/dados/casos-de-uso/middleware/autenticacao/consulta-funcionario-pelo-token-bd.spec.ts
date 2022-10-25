@@ -1,7 +1,7 @@
 import { ConsultaFuncionarioPeloTokenBd } from './consulta-funcionario-pelo-token-bd'
-import { Decriptador } from '../../../protocolos/criptografia/decriptador'
-import { RepositorioConsultaFuncionarioPorId } from '../../../protocolos/bd/funcionario/repositorio-consulta-funcionario-por-id'
-import { ModeloFuncionario } from '../../funcionario/bd-adicionar-conta-protocolos'
+import { ModeloFuncionario } from '@/dominio/modelos/funcionario'
+import { Decriptador } from '@/dados/protocolos/criptografia/decriptador'
+import { RepositorioConsultaFuncionarioPorId } from '@/dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-id'
 
 const makeDecriptador = (): Decriptador => {
   class DecriptadorStub implements Decriptador {

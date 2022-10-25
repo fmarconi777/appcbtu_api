@@ -1,11 +1,11 @@
-import { MiddlewareDeAdministrador } from '../../apresentacao/middlewares/administrador/middleware-de-administrador'
-import { Administrador } from '../../apresentacao/protocolos/administrador'
-import { CadastroAdministradorBD } from '../../dados/casos-de-uso/middleware/administrador/cadastro-de-administrador'
-import { ConsultaAdministradorBD } from '../../dados/casos-de-uso/middleware/administrador/consulta-administrador'
-import { AdaptadorDoReadlineSync } from '../../dados/casos-de-uso/middleware/terminal/adaptador-do-readline-sync'
-import { RepositorioFuncionarioMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/funcionario'
-import { BcryptAdaptador } from '../../infraestrutura/criptografia/bcrypt-adaptador/bcrypt-adaptador'
-import { ValidadorDeEmailAdaptador } from '../../utilidades/validadores/validador-de-email'
+import { MiddlewareDeAdministrador } from '@/apresentacao/middlewares/administrador/middleware-de-administrador'
+import { Administrador } from '@/apresentacao/protocolos/administrador'
+import { CadastroAdministradorBD } from '@/dados/casos-de-uso/middleware/administrador/cadastro-de-administrador'
+import { ConsultaAdministradorBD } from '@/dados/casos-de-uso/middleware/administrador/consulta-administrador'
+import { AdaptadorDoReadlineSync } from '@/dados/casos-de-uso/middleware/terminal/adaptador-do-readline-sync'
+import { ValidadorDeEmailAdaptador } from '@/utilidades/validadores/validador-de-email'
+import { RepositorioFuncionarioMariaDB } from '@/infraestrutura/bd/mariadb/repositorio/funcionario'
+import { BcryptAdaptador } from '@/infraestrutura/criptografia/bcrypt-adaptador/bcrypt-adaptador'
 
 const criaContaAdministrador = (): Administrador => {
   const geradorDeHash = new BcryptAdaptador()

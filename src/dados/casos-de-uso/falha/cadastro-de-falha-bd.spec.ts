@@ -1,7 +1,7 @@
-import { RepositorioCadastroFalha } from '../../protocolos/bd/falha/repositorio-cadastro-falha'
 import { CadastroDeFalhaBD } from './cadastro-de-falha-bd'
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
-import { DadosFalha } from '../../../dominio/casos-de-uso/falha/cadastro-de-falha'
+import { DadosFalha } from '@/dominio/casos-de-uso/falha/cadastro-de-falha'
+import { RepositorioCadastroFalha } from '@/dados/protocolos/bd/falha/repositorio-cadastro-falha'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 const dadosFalsos = {
   numFalha: 'numFalha_qualquer',

@@ -1,8 +1,8 @@
-import { CadastroDeFuncionario, InserirModeloFuncionario } from '../../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
-import { ModeloFuncionario } from '../../../dominio/modelos/funcionario'
-import { GeradorDeHash } from '../../protocolos/criptografia/gerador-de-hash'
-import { RepositorioFuncionario } from '../../protocolos/bd/funcionario/repositorio-funcionario'
-import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/bd/funcionario/repositorio-consulta-funcionario-por-email'
+import { CadastroDeFuncionario, InserirModeloFuncionario } from '@/dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
+import { ModeloFuncionario } from '@/dominio/modelos/funcionario'
+import { GeradorDeHash } from '@/dados/protocolos/criptografia/gerador-de-hash'
+import { RepositorioFuncionario } from '@/dados/protocolos/bd/funcionario/repositorio-funcionario'
+import { RepositorioConsultaFuncionarioPorEmail } from '@/dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-email'
 
 export class BdAdicionarConta implements CadastroDeFuncionario {
   private readonly geradorDeHash: GeradorDeHash

@@ -1,4 +1,4 @@
-import { EstadoEquipamento } from '../../../../dominio/casos-de-uso/equipamento/altera-estado-de-equipamento'
+import { EstadoEquipamento } from '@/dominio/casos-de-uso/equipamento/altera-estado-de-equipamento'
 
 export { EstadoEquipamento }
 

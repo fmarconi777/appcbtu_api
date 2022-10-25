@@ -1,6 +1,6 @@
-import { ModeloFalha } from '../../../dominio/modelos/falha'
-import { RepositorioConsultaFalha } from '../../protocolos/bd/falha/repositorio-consulta-falha'
 import { ConsultaFalhaBD } from './consulta-falha-bd'
+import { ModeloFalha } from '@/dominio/modelos/falha'
+import { RepositorioConsultaFalha } from '@/dados/protocolos/bd/falha/repositorio-consulta-falha'
 
 const falhaFalsa = {
   id: '1',

@@ -1,9 +1,9 @@
-import { Autenticador } from '../../../dominio/casos-de-uso/autenticador/autenticador'
-import { ModeloFuncionario } from '../../../dominio/modelos/funcionario'
-import { RepositorioConsultaFuncionarioPorEmail } from '../../protocolos/bd/funcionario/repositorio-consulta-funcionario-por-email'
 import { AutenticadorBD } from './autenticador-bd'
-import { ComparadorHash } from '../../protocolos/criptografia/comparador-hash'
-import { Encriptador } from '../../protocolos/criptografia/encriptador'
+import { Autenticador } from '@/dominio/casos-de-uso/autenticador/autenticador'
+import { ModeloFuncionario } from '@/dominio/modelos/funcionario'
+import { RepositorioConsultaFuncionarioPorEmail } from '@/dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-email'
+import { ComparadorHash } from '@/dados/protocolos/criptografia/comparador-hash'
+import { Encriptador } from '@/dados/protocolos/criptografia/encriptador'
 
 const makeRepositorioConsultaFuncionarioPorEmail = (): RepositorioConsultaFuncionarioPorEmail => {
   class RepositorioConsultaFuncionarioPorEmailStub implements RepositorioConsultaFuncionarioPorEmail {

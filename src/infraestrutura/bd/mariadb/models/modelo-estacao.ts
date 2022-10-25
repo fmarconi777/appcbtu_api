@@ -1,9 +1,9 @@
-import { DataTypes, Model, Optional } from 'sequelize'
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
-import { ModeloEstacao } from '../../../../dominio/modelos/estacao'
 import { Equipamento } from './modelo-equipamento'
 import { Alerta } from './modelo-alerta'
 import { Telefone } from './modelo-telefone'
+import { ModeloEstacao } from '@/dominio/modelos/estacao'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { DataTypes, Model, Optional } from 'sequelize'
 
 interface AtributosEstacao extends Optional<ModeloEstacao, 'id'> {}
 

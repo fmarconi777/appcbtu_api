@@ -1,13 +1,13 @@
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '../auxiliares/auxiliar-http'
-import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
 import { ControladorDeArea } from './area'
-import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
-import { ModeloArea } from '../../dominio/modelos/area'
-import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
-import { CadastroArea } from '../../dominio/casos-de-uso/area/cadastro-de-area'
-import { DeletaArea } from '../../dominio/casos-de-uso/area/deleta-area'
-import { AlteraArea } from '../../dominio/casos-de-uso/area/altera-area'
+import { ConsultaArea } from '@/dominio/casos-de-uso/area/consulta-area'
+import { ModeloArea } from '@/dominio/modelos/area'
+import { CadastroArea } from '@/dominio/casos-de-uso/area/cadastro-de-area'
+import { DeletaArea } from '@/dominio/casos-de-uso/area/deleta-area'
+import { AlteraArea } from '@/dominio/casos-de-uso/area/altera-area'
+import { ErroParametroInvalido } from '@/apresentacao/erros/erro-parametro-invalido'
+import { erroDeServidor, requisicaoImpropria, requisicaoNaoEncontrada, resposta } from '@/apresentacao/auxiliares/auxiliar-http'
+import { ErroMetodoInvalido } from '@/apresentacao/erros/erro-metodo-invalido'
+import { ErroFaltaParametro } from '@/apresentacao/erros/erro-falta-parametro'
 
 describe('Controlador de estações', () => {
   const makeConsultaArea = (): ConsultaArea => {

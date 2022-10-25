@@ -1,5 +1,5 @@
+import app from '@/principal/config/app'
 import request from 'supertest'
-import app from '../config/app'
 
 describe('Transforma corpo middleware', () => {
   test('Deve transformar o corpo da requisicao do formato json para objeto', async () => {

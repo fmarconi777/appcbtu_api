@@ -1,11 +1,11 @@
+import app from '@/principal/config/app'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Alerta } from '@/infraestrutura/bd/mariadb/models/modelo-alerta'
+import { Funcionario } from '@/infraestrutura/bd/mariadb/models/modelo-funcionarios'
+import 'dotenv/config'
 import request from 'supertest'
-import app from '../config/app'
-import { AuxiliaresMariaDB } from '../../infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Alerta } from '../../infraestrutura/bd/mariadb/models/modelo-alerta'
-import { Funcionario } from '../../infraestrutura/bd/mariadb/models/modelo-funcionarios'
 import { hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
-import 'dotenv/config'
 
 describe('Rotas Alerta', () => {
   beforeAll(async () => {

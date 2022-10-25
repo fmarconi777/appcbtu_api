@@ -1,7 +1,7 @@
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
-import { ModeloAlerta } from '../../../dominio/modelos/alerta'
 import { AlteraAlertaBD } from './altera-alerta-bd'
-import { RepositorioAlteraAlerta } from '../../protocolos/bd/alerta/repositorio-altera-alerta'
+import { ModeloAlerta } from '@/dominio/modelos/alerta'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
+import { RepositorioAlteraAlerta } from '@/dados/protocolos/bd/alerta/repositorio-altera-alerta'
 
 const dados: ModeloAlerta = {
   id: '1',

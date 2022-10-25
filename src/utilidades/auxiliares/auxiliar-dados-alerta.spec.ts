@@ -1,5 +1,5 @@
-import { RepositorioAlteraAlertaAtivo } from '../../dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
 import { AuxiliarDadosAlerta } from './auxiliar-dados-alerta'
+import { RepositorioAlteraAlertaAtivo } from '@/dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
 
 const makeRepositorioAlteraAlertaAtivoStub = (): RepositorioAlteraAlertaAtivo => {
   class RepositorioAlteraAlertaAtivoStub implements RepositorioAlteraAlertaAtivo {

@@ -1,10 +1,10 @@
-import { RepositorioFuncionario, InserirModeloFuncionario, ModeloFuncionario } from '../../../../dados/protocolos/bd/funcionario/repositorio-funcionario'
-import { Funcionario, Op } from '../models/modelo-funcionarios'
-import { FuncoesAuxiliares } from '../auxiliares/funcoes-auxiliares'
-import { RepositorioConsultaFuncionarioPorEmail } from '../../../../dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-email'
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
-import { RepositorioConsultaFuncionarioPorId } from '../../../../dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-id'
-import { ConsultaFuncionarioPorNome } from '../../../../dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-nome'
+import { RepositorioFuncionario, InserirModeloFuncionario, ModeloFuncionario } from '@/dados/protocolos/bd/funcionario/repositorio-funcionario'
+import { RepositorioConsultaFuncionarioPorEmail } from '@/dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-email'
+import { RepositorioConsultaFuncionarioPorId } from '@/dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-id'
+import { ConsultaFuncionarioPorNome } from '@/dados/protocolos/bd/funcionario/repositorio-consulta-funcionario-por-nome'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Funcionario, Op } from '@/infraestrutura/bd/mariadb/models/modelo-funcionarios'
+import { FuncoesAuxiliares } from '@/infraestrutura/bd/mariadb/auxiliares/funcoes-auxiliares'
 
 export class RepositorioFuncionarioMariaDB implements RepositorioFuncionario,
 RepositorioConsultaFuncionarioPorEmail,

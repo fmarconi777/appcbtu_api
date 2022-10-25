@@ -1,7 +1,7 @@
-import { DadosTelefone } from '../../../dominio/casos-de-uso/telefone/cadastro-de-telefone'
-import { RepositorioCadastroTelefone } from '../../protocolos/bd/telefone/repositorio-cadastro-telefone'
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
 import { CadastroDeTelefoneBD } from './cadastro-de-telefone-bd'
+import { DadosTelefone } from '@/dominio/casos-de-uso/telefone/cadastro-de-telefone'
+import { RepositorioCadastroTelefone } from '@/dados/protocolos/bd/telefone/repositorio-cadastro-telefone'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 const dadoFalso = {
   numero: 3132505555,

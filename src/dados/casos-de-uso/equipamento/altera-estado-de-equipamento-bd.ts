@@ -1,6 +1,6 @@
-import { AlteraEstadoDeEquipamento, EstadoEquipamento } from '../../../dominio/casos-de-uso/equipamento/altera-estado-de-equipamento'
-import { RepositorioAlteraEstadoDeEquipamento } from '../../protocolos/bd/equipamento/repositorio-altera-estado-de-equipamento'
-import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
+import { AlteraEstadoDeEquipamento, EstadoEquipamento } from '@/dominio/casos-de-uso/equipamento/altera-estado-de-equipamento'
+import { RepositorioAlteraEstadoDeEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-altera-estado-de-equipamento'
+import { RepositorioConsultaEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-consulta-equipamento'
 
 export class AlteraEstadoDeEquipamentoBD implements AlteraEstadoDeEquipamento {
   constructor (

@@ -1,6 +1,6 @@
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
-import { Area } from '../models/modelo-area'
 import { RepositorioAreaMariaDB } from './area'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import { Area } from '@/infraestrutura/bd/mariadb/models/modelo-area'
 
 describe('RepositorioAreaMariaDB', () => {
   beforeAll(async () => {

@@ -1,11 +1,11 @@
-import { ControladorDeFuncionario } from '../../apresentacao/controladores/funcionario'
-import { ValidadorDeEmailAdaptador } from '../../utilidades/validadores/validador-de-email'
-import { BdAdicionarConta } from '../../dados/casos-de-uso/funcionario/bd-adicionar-conta'
-import { BcryptAdaptador } from '../../infraestrutura/criptografia/bcrypt-adaptador/bcrypt-adaptador'
-import { DecoradorControladorLog } from '../decoradores/log'
-import { Controlador } from '../../apresentacao/protocolos/controlador'
-import { RepositorioLogDeErroMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/log'
-import { RepositorioFuncionarioMariaDB } from '../../infraestrutura/bd/mariadb/repositorio/funcionario'
+import { DecoradorControladorLog } from '@/principal/decoradores/log'
+import { Controlador } from '@/apresentacao/protocolos/controlador'
+import { ControladorDeFuncionario } from '@/apresentacao/controladores/funcionario'
+import { BdAdicionarConta } from '@/dados/casos-de-uso/funcionario/bd-adicionar-conta'
+import { ValidadorDeEmailAdaptador } from '@/utilidades/validadores/validador-de-email'
+import { BcryptAdaptador } from '@/infraestrutura/criptografia/bcrypt-adaptador/bcrypt-adaptador'
+import { RepositorioLogDeErroMariaDB } from '@/infraestrutura/bd/mariadb/repositorio/log'
+import { RepositorioFuncionarioMariaDB } from '@/infraestrutura/bd/mariadb/repositorio/funcionario'
 
 export const criaControladorDeFuncionario = (): Controlador => {
   const validadorDeEmail = new ValidadorDeEmailAdaptador()

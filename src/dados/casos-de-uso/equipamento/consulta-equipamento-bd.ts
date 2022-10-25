@@ -1,6 +1,6 @@
-import { ConsultaEquipamento } from '../../../dominio/casos-de-uso/equipamento/consulta-equipamento'
-import { ModeloEquipamento } from '../../../dominio/modelos/equipamento'
-import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
+import { ConsultaEquipamento } from '@/dominio/casos-de-uso/equipamento/consulta-equipamento'
+import { ModeloEquipamento } from '@/dominio/modelos/equipamento'
+import { RepositorioConsultaEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-consulta-equipamento'
 
 export class ConsultaEquipamentoBD implements ConsultaEquipamento {
   constructor (private readonly repositorioConsultaEquipamento: RepositorioConsultaEquipamento) {}

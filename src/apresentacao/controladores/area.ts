@@ -1,13 +1,13 @@
-import { Controlador } from '../protocolos/controlador'
-import { RequisicaoHttp, RespostaHttp } from '../protocolos/http'
-import { resposta, requisicaoNaoEncontrada, erroDeServidor, requisicaoImpropria } from '../auxiliares/auxiliar-http'
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
-import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
-import { ConsultaArea } from '../../dominio/casos-de-uso/area/consulta-area'
-import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
-import { CadastroArea } from '../../dominio/casos-de-uso/area/cadastro-de-area'
-import { DeletaArea } from '../../dominio/casos-de-uso/area/deleta-area'
-import { AlteraArea } from '../../dominio/casos-de-uso/area/altera-area'
+import { Controlador } from '@/apresentacao/protocolos/controlador'
+import { RequisicaoHttp, RespostaHttp } from '@/apresentacao/protocolos/http'
+import { resposta, requisicaoNaoEncontrada, erroDeServidor, requisicaoImpropria } from '@/apresentacao/auxiliares/auxiliar-http'
+import { ErroParametroInvalido } from '@/apresentacao/erros/erro-parametro-invalido'
+import { ErroMetodoInvalido } from '@/apresentacao/erros/erro-metodo-invalido'
+import { ConsultaArea } from '@/dominio/casos-de-uso/area/consulta-area'
+import { ErroFaltaParametro } from '@/apresentacao/erros/erro-falta-parametro'
+import { CadastroArea } from '@/dominio/casos-de-uso/area/cadastro-de-area'
+import { DeletaArea } from '@/dominio/casos-de-uso/area/deleta-area'
+import { AlteraArea } from '@/dominio/casos-de-uso/area/altera-area'
 
 export class ControladorDeArea implements Controlador {
   constructor (

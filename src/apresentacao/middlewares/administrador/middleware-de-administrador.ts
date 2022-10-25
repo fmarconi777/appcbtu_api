@@ -1,9 +1,9 @@
-import { Administrador } from '../../protocolos/administrador'
-import { CadastroAdministrador } from '../../../dominio/casos-de-uso/middleware/administrador/cadastro-de-adminstrador'
-import { ConsultaAdministrador } from '../../../dominio/casos-de-uso/middleware/administrador/consulta-administrador'
-import { Validador } from '../../protocolos/validador'
-import { LeitorDeTerminal } from '../../../dominio/casos-de-uso/middleware/terminal/leitor-de-terminal'
-import { LeitorDeSenhaTerminal } from '../../../dominio/casos-de-uso/middleware/terminal/leitor-de-senha-terminal'
+import { CadastroAdministrador } from '@/dominio/casos-de-uso/middleware/administrador/cadastro-de-adminstrador'
+import { ConsultaAdministrador } from '@/dominio/casos-de-uso/middleware/administrador/consulta-administrador'
+import { LeitorDeTerminal } from '@/dominio/casos-de-uso/middleware/terminal/leitor-de-terminal'
+import { LeitorDeSenhaTerminal } from '@/dominio/casos-de-uso/middleware/terminal/leitor-de-senha-terminal'
+import { Administrador } from '@/apresentacao/protocolos/administrador'
+import { Validador } from '@/apresentacao/protocolos/validador'
 
 export class MiddlewareDeAdministrador implements Administrador {
   constructor (

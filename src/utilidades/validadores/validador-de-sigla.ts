@@ -1,5 +1,5 @@
-import { Validador } from '../../apresentacao/protocolos/validador'
-import { validador } from '../auxiliares/auxiliar-validador'
+import { Validador } from '@/apresentacao/protocolos/validador'
+import { validador } from '@/utilidades/auxiliares/auxiliar-validador'
 
 /*
 A classe ValidadorDeSigla faz uso do módulo validador para auxiliar

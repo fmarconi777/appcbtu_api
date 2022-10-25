@@ -1,8 +1,8 @@
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
-import { ModeloEquipamento } from '../../../dominio/modelos/equipamento'
-import { RepositorioAlteraCadastroDeEquipamento } from '../../protocolos/bd/equipamento/repositorio-altera-cadastro-de-equipamento'
-import { RepositorioConsultaEquipamento } from '../../protocolos/bd/equipamento/repositorio-consulta-equipamento'
 import { AlteraCadastroDeEquipamentoBD } from './altera-cadastro-de-equipamento-bd'
+import { ModeloEquipamento } from '@/dominio/modelos/equipamento'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
+import { RepositorioAlteraCadastroDeEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-altera-cadastro-de-equipamento'
+import { RepositorioConsultaEquipamento } from '@/dados/protocolos/bd/equipamento/repositorio-consulta-equipamento'
 
 const dadosFalsos = {
   id: '1',

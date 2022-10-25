@@ -1,7 +1,7 @@
-import express from 'express'
 import configuraMiddlewares from './middlewares'
 import configuraRotas from './rotas'
 import { middlewareDeAdministrador } from './conta-administrador'
+import express from 'express'
 
 const app = express()
 configuraMiddlewares(app)

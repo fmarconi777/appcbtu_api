@@ -1,6 +1,6 @@
-import { CadastroDeTelefone, DadosTelefone } from '../../../dominio/casos-de-uso/telefone/cadastro-de-telefone'
-import { RepositorioCadastroTelefone } from '../../protocolos/bd/telefone/repositorio-cadastro-telefone'
-import { ValidadorBD } from '../../protocolos/utilidades/validadorBD'
+import { CadastroDeTelefone, DadosTelefone } from '@/dominio/casos-de-uso/telefone/cadastro-de-telefone'
+import { RepositorioCadastroTelefone } from '@/dados/protocolos/bd/telefone/repositorio-cadastro-telefone'
+import { ValidadorBD } from '@/dados/protocolos/utilidades/validadorBD'
 
 export class CadastroDeTelefoneBD implements CadastroDeTelefone {
   constructor (

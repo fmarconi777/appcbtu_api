@@ -1,5 +1,5 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
-import { AuxiliaresMariaDB } from '../auxiliares/auxiliar-mariadb'
+import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 
 const sequelize = AuxiliaresMariaDB.bd
 

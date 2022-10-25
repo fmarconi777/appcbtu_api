@@ -1,5 +1,5 @@
-import { InserirModeloFuncionario } from '../../../../dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
-import { ModeloFuncionario } from '../../../../dominio/modelos/funcionario'
+import { InserirModeloFuncionario } from '@/dominio/casos-de-uso/funcionario/cadastro-de-funcionario'
+import { ModeloFuncionario } from '@/dominio/modelos/funcionario'
 
 export { InserirModeloFuncionario, ModeloFuncionario }
 

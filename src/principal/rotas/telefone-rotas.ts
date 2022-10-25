@@ -1,8 +1,8 @@
+import { adaptadorDeMiddleware } from '@/principal/adaptadores/adaptador-de-middleware-express'
+import { adaptadorDeRota } from '@/principal/adaptadores/adaptador-de-rota-express'
+import { criaMiddlewareDeAutenticacao } from '@/principal/fabrica/middleware-de-autenticacao'
+import { criaControladorDeTelefone } from '@/principal/fabrica/telefone'
 import { Router } from 'express'
-import { adaptadorDeMiddleware } from '../adaptadores/adaptador-de-middleware-express'
-import { adaptadorDeRota } from '../adaptadores/adaptador-de-rota-express'
-import { criaMiddlewareDeAutenticacao } from '../fabrica/middleware-de-autenticacao'
-import { criaControladorDeTelefone } from '../fabrica/telefone'
 
 export default (router: Router): Router => {
   const autentificacaoArea = adaptadorDeMiddleware(criaMiddlewareDeAutenticacao('16'))

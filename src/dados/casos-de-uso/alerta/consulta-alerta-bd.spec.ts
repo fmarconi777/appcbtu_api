@@ -1,8 +1,8 @@
 import { ConsultaAlertaBD } from './consulta-alerta-bd'
-import { RepositorioConsultaAlerta, ModelosAlertas } from '../../protocolos/bd/alerta/repositorio-consulta-alerta-todas'
-import { ModeloAlerta } from '../../../dominio/modelos/alerta'
-import { RepositorioAlteraAlertaAtivo } from '../../protocolos/bd/alerta/repositorio-altera-alerta-ativo'
-import { AuxiliarAlerta } from '../../protocolos/utilidades/auxiliar-alerta'
+import { ModeloAlerta } from '@/dominio/modelos/alerta'
+import { RepositorioConsultaAlerta, ModelosAlertas } from '@/dados/protocolos/bd/alerta/repositorio-consulta-alerta-todas'
+import { RepositorioAlteraAlertaAtivo } from '@/dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
+import { AuxiliarAlerta } from '@/dados/protocolos/utilidades/auxiliar-alerta'
 
 const makeAlertaFalsa = (): ModeloAlerta => ({
   id: '1',

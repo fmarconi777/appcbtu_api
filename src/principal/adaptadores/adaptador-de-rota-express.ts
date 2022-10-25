@@ -1,6 +1,6 @@
+import { Controlador } from '@/apresentacao/protocolos/controlador'
+import { RequisicaoHttp } from '@/apresentacao/protocolos/http'
 import { Request, Response } from 'express'
-import { Controlador } from '../../apresentacao/protocolos/controlador'
-import { RequisicaoHttp } from '../../apresentacao/protocolos/http'
 
 export const adaptadorDeRota = (controlador: Controlador) => {
   return async (req: Request, res: Response) => {

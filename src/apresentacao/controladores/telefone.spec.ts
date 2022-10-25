@@ -1,9 +1,9 @@
-import { CadastroDeTelefone, DadosTelefone } from '../../dominio/casos-de-uso/telefone/cadastro-de-telefone'
-import { erroDeServidor, requisicaoImpropria, resposta } from '../auxiliares/auxiliar-http'
-import { ErroFaltaParametro } from '../erros/erro-falta-parametro'
-import { ErroMetodoInvalido } from '../erros/erro-metodo-invalido'
-import { ErroParametroInvalido } from '../erros/erro-parametro-invalido'
 import { ControladorDeTelefone } from './telefone'
+import { CadastroDeTelefone, DadosTelefone } from '@/dominio/casos-de-uso/telefone/cadastro-de-telefone'
+import { erroDeServidor, requisicaoImpropria, resposta } from '@/apresentacao/auxiliares/auxiliar-http'
+import { ErroFaltaParametro } from '@/apresentacao/erros/erro-falta-parametro'
+import { ErroMetodoInvalido } from '@/apresentacao/erros/erro-metodo-invalido'
+import { ErroParametroInvalido } from '@/apresentacao/erros/erro-parametro-invalido'
 
 const dadoFalso = {
   numero: '3132505555',

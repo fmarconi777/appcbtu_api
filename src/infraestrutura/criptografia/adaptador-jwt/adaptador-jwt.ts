@@ -1,7 +1,7 @@
 import 'dotenv/config'
+import { Decriptador } from '@/dados/protocolos/criptografia/decriptador'
+import { Encriptador } from '@/dados/protocolos/criptografia/encriptador'
 import jwt from 'jsonwebtoken'
-import { Decriptador } from '../../../dados/protocolos/criptografia/decriptador'
-import { Encriptador } from '../../../dados/protocolos/criptografia/encriptador'
 
 export class AdapatadorJwt implements Encriptador, Decriptador {
   private readonly chaveSecreta = process.env.CHAVE_SECRETA
