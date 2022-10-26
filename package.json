@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/principal/servidor.js",
+    "dev": "ts-node-dev --respawn src/principal/servidor.ts",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
@@ -50,6 +51,9 @@
     "readline-sync": "^1.4.10",
     "sequelize": "^6.21.4",
     "validator": "^13.7.0"
+  },
+  "engines": {
+    "node": "16.x"
   },
   "_moduleAliases": {
     "@": "dist"
