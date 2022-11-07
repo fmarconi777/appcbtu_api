@@ -1,0 +1,42 @@
+version: "3.5"
+
+networks:
+  docker-service:
+    driver: bridge
+
+services:
+  mariadb:
+    build: 
+      context: .
+      dockerfile: Dockerfiles/MariaDB/Dockerfile
+    image:  bd_appcbtu_api
+    container_name: mariadb_appcbtu
+    command: --default-authentication-plugin=mysql_native_password
+    environment: 
+      MARIADB_ROOT_PASSWORD: 654321
+      MARIADB_USER: admin
+      MARIADB_PASSWORD: 123456
+      MARIADB_DATABASE: appcbtubd
+    restart: always
+    volumes: 
+      - ./dados:/var/lib/mysql
+    networks:
+      - docker-service
+    ports:
+      - "3300:3306"
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfiles/API/Dockerfile
+    image: appcbtu_api
+    container_name: appcbtu_api
+    command: npm start
+    restart: always
+    volumes: 
+      - ./dist:/appcbtu-api/dist
+    networks:
+      - docker-service
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mariadb

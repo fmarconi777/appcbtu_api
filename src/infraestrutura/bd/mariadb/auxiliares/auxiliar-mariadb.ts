@@ -16,8 +16,8 @@ export const AuxiliaresMariaDB: Auxiliares = {
     process.env.SENHA_BANCODEDADOS,
     {
       dialect: 'mariadb',
-      host: process.env.ENDERECO_BANCODEDADOS,
-      port: +(process.env.PORTA_BANCODEDADOS as string)
+      host: process.env.ENDERECO_BANCODEDADOS
+      // port: +(process.env.PORTA_BANCODEDADOS as string)
     }
   ),
 
