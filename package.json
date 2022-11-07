@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/principal/servidor.js",
-    "dev": "ts-node-dev --respawn src/principal/servidor.ts",
+    "first-up": "npm run build && sudo docker-compose build && sudo docker-compose run --rm api",
+    "up": "npm run build && sudo docker-compose up -d",
+    "down": "docker-compose down",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
