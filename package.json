@@ -9,8 +9,8 @@
     "up": "npm run build && sudo docker-compose up -d",
     "down": "docker-compose down",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
-    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
-    "test:verbose": "jest --passWithNoTests --runInBand",
+    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand --forceExit",
+    "test:verbose": "jest --passWithNoTests --runInBand --detectOpenHandles",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js"
   },
