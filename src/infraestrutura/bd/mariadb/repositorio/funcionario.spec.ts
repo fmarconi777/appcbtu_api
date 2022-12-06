@@ -1,10 +1,10 @@
 import { RepositorioFuncionarioMariaDB } from './funcionario'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Funcionario } from '@/infraestrutura/bd/mariadb/models/modelo-funcionarios'
+import { Funcionario } from '@/infraestrutura/sequelize/models/modelo-funcionarios'
 
 describe('Repositorio mariaDB Funcionario', () => {
   beforeAll(async () => {
-    await AuxiliaresMariaDB.conectar()
+    await AuxiliaresMariaDB.conectar('test')
     console.log('conexão aberta')
   })
   afterAll(async () => {

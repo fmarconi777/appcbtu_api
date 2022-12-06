@@ -4,7 +4,7 @@ import request from 'supertest'
 
 describe('Rotas estações', () => {
   beforeAll(async () => {
-    await AuxiliaresMariaDB.conectar()
+    await AuxiliaresMariaDB.conectar('test')
     console.log('conexão aberta')
   })
 

@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/principal/servidor.js",
-    "first-up": "npm run build && sudo docker-compose build && sudo docker-compose run --rm api",
-    "up": "npm run build && sudo docker-compose up -d",
+    "first-up": "sudo npm run build && sudo docker-compose build && sudo docker-compose run --rm api",
+    "up": "npm run build && docker-compose up &",
     "down": "docker-compose down",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand --forceExit",
@@ -30,7 +30,6 @@
     "jest": "^27.5.1",
     "rimraf": "^3.0.2",
     "sequelize-cli": "^6.5.2",
-    "sequelize-typescript": "^2.1.5",
     "supertest": "^6.2.3",
     "ts-jest": "^27.1.3",
     "ts-node-dev": "^1.1.8",
@@ -55,6 +54,7 @@
     "module-alias": "^2.2.2",
     "readline-sync": "^1.4.10",
     "sequelize": "^6.21.4",
+    "sequelize-typescript": "^2.1.5",
     "validator": "^13.7.0"
   },
   "engines": {

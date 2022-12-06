@@ -1,8 +1,8 @@
 import app from '@/principal/config/app'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Funcionario } from '@/infraestrutura/bd/mariadb/models/modelo-funcionarios'
-import { Falha } from '@/infraestrutura/bd/mariadb/models/modelo-falha'
-import { Equipamento } from '@/infraestrutura/bd/mariadb/models/modelo-equipamento'
+import { Funcionario } from '@/infraestrutura/sequelize/models/modelo-funcionarios'
+import { Falha } from '@/infraestrutura/sequelize/models/modelo-falha'
+import { Equipamento } from '@/infraestrutura//sequelize/models/modelo-equipamento'
 import 'dotenv/config'
 import request from 'supertest'
 import { hash } from 'bcrypt'
@@ -10,7 +10,7 @@ import { sign } from 'jsonwebtoken'
 
 describe('Rotas falha', () => {
   beforeAll(async () => {
-    await AuxiliaresMariaDB.conectar()
+    await AuxiliaresMariaDB.conectar('test')
     console.log('conexão aberta')
   })
 

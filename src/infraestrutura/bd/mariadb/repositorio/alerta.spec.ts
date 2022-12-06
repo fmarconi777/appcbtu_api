@@ -1,10 +1,10 @@
 import { RepositorioAlertaMariaDB } from './alerta'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Alerta } from '@/infraestrutura/bd/mariadb/models/modelo-alerta'
+import { Alerta } from '@/infraestrutura/sequelize/models/modelo-alerta'
 
 describe('Repositorio mariaDB Alerta', () => {
   beforeAll(async () => {
-    await AuxiliaresMariaDB.conectar()
+    await AuxiliaresMariaDB.conectar('test')
     console.log('conexão aberta')
   })
 

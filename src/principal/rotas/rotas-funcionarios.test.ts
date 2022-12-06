@@ -1,7 +1,7 @@
 import app from '@/principal/config/app'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 import { RepositorioFuncionarioMariaDB } from '@/infraestrutura/bd/mariadb/repositorio/funcionario'
-import { Funcionario } from '@/infraestrutura/bd/mariadb/models/modelo-funcionarios'
+import { Funcionario } from '@/infraestrutura/sequelize/models/modelo-funcionarios'
 import 'dotenv/config'
 import request from 'supertest'
 import { hash } from 'bcrypt'
@@ -9,7 +9,7 @@ import { sign } from 'jsonwebtoken'
 
 describe('Rotas Funcionarios', () => {
   beforeAll(async () => {
-    await AuxiliaresMariaDB.conectar()
+    await AuxiliaresMariaDB.conectar('test')
     console.log('conexao aberta')
   })
 

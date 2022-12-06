@@ -1,30 +1,17 @@
-import 'dotenv/config'
+import conexao from '@/infraestrutura/sequelize/models/index'
 import { Sequelize } from 'sequelize'
 
-type Auxiliares = { // eslint-disable-line
-  bd: Sequelize
-  cliente: null | Sequelize
-  conectar: Function
-  desconectar: Function
-  verificaConexao: Function
-}
+const conexaoSequelize = conexao.sequelize
 
-export const AuxiliaresMariaDB: Auxiliares = {
-  bd: new Sequelize(
-    process.env.NOME_BANCODEDADOS as string,
-    process.env.USUARIO_BANCODEDADOS as string,
-    process.env.SENHA_BANCODEDADOS,
-    {
-      dialect: 'mariadb',
-      host: process.env.ENDERECO_BANCODEDADOS
-      // port: +(process.env.PORTA_BANCODEDADOS as string)
-    }
-  ),
+export const AuxiliaresMariaDB = {
+  cliente: null as unknown as Sequelize,
 
-  cliente: null,
+  ambiente: '',
 
-  async conectar (): Promise<void> {
-    this.cliente = this.bd
+  async conectar (env: string): Promise<void> {
+    this.ambiente = env
+    process.env.NODE_ENV = env
+    this.cliente = conexaoSequelize
     await this.cliente.authenticate()
   },
 
@@ -32,22 +19,12 @@ export const AuxiliaresMariaDB: Auxiliares = {
     if (this.cliente !== null) {
       await this.cliente.close()
     }
-    this.cliente = null
+    this.cliente = null as unknown as Sequelize
   },
 
   async verificaConexao (): Promise<void> {
     if (!this.cliente?.authenticate()) { // eslint-disable-line
-      this.bd = new Sequelize(
-        process.env.NOME_BANCODEDADOS as string,
-        process.env.USUARIO_BANCODEDADOS as string,
-        process.env.SENHA_BANCODEDADOS,
-        {
-          dialect: 'mariadb',
-          host: process.env.ENDERECO_BANCODEDADOS,
-          port: +(process.env.PORTA_BANCODEDADOS as string)
-        }
-      )
-      await this.conectar()
+      await this.conectar(this.ambiente)
     }
   }
 }

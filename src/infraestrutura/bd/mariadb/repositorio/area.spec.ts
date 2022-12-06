@@ -1,10 +1,10 @@
 import { RepositorioAreaMariaDB } from './area'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Area } from '@/infraestrutura/bd/mariadb/models/modelo-area'
+import { Area } from '@/infraestrutura/sequelize/models/modelo-area'
 
 describe('RepositorioAreaMariaDB', () => {
   beforeAll(async () => {
-    await AuxiliaresMariaDB.conectar()
+    await AuxiliaresMariaDB.conectar('test')
     console.log('conexão aberta')
   })
 

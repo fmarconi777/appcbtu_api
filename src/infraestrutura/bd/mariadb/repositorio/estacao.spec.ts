@@ -3,7 +3,7 @@ import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxili
 
 describe('Repositorio mariaDB Estacao', () => {
   beforeAll(async () => {
-    await AuxiliaresMariaDB.conectar()
+    await AuxiliaresMariaDB.conectar('test')
     console.log('conexão aberta')
   })
 

@@ -1,10 +1,10 @@
 import { RepositorioEquipamentoMariaDB } from './equipamento'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Equipamento } from '@/infraestrutura/bd/mariadb/models/modelo-equipamento'
+import { Equipamento } from '@/infraestrutura//sequelize/models/modelo-equipamento'
 
 describe('Repositorio mariaDB Equipamento', () => {
   beforeAll(async () => {
-    await AuxiliaresMariaDB.conectar()
+    await AuxiliaresMariaDB.conectar('test')
     console.log('conexão aberta')
   })
 

@@ -1,10 +1,10 @@
 import { RepositorioLogDeErroMariaDB } from './log'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Erros } from '@/infraestrutura/bd/mariadb/models/modelo-erros'
+import { Erros } from '@/infraestrutura/sequelize/models/modelo-erros'
 
 describe('Repositório log de erro', () => {
   beforeAll(async () => {
-    await AuxiliaresMariaDB.conectar()
+    await AuxiliaresMariaDB.conectar('test')
     console.log('conexão aberta')
   })
 

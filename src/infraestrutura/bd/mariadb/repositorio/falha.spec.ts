@@ -1,11 +1,11 @@
 import { RepositorioFalhaMariaDB } from './falha'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Equipamento } from '@/infraestrutura/bd/mariadb/models/modelo-equipamento'
-import { Falha } from '@/infraestrutura/bd/mariadb/models/modelo-falha'
+import { Equipamento } from '@/infraestrutura//sequelize/models/modelo-equipamento'
+import { Falha } from '@/infraestrutura/sequelize/models/modelo-falha'
 
 describe('RepositorioFalhaMariaDB', () => {
   beforeAll(async () => {
-    await AuxiliaresMariaDB.conectar()
+    await AuxiliaresMariaDB.conectar('test')
     console.log('conexão aberta')
   })
 

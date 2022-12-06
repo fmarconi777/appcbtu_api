@@ -1,18 +1,18 @@
-import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import conexao from './index'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 
-const sequelize = AuxiliaresMariaDB.bd
+const sequelize = conexao.sequelize
 
-export class Erros extends Model<
-InferAttributes<Erros>,
-InferCreationAttributes<Erros>
+export class Telefone extends Model<
+InferAttributes<Telefone>,
+InferCreationAttributes<Telefone>
 > {
   declare id: CreationOptional<number>
-  declare stack: string
-  declare dataDoErro: Date
+  declare numero: number
+  declare estacaoId: number
 }
 
-Erros.init(
+Telefone.init(
   {
     id: {
       allowNull: false,
@@ -21,18 +21,18 @@ Erros.init(
       type: DataTypes.UUID,
       unique: true
     },
-    stack: {
+    numero: {
       allowNull: false,
-      type: DataTypes.TEXT
+      type: DataTypes.INTEGER
     },
-    dataDoErro: {
+    estacaoId: {
       allowNull: false,
-      type: DataTypes.DATE
+      type: DataTypes.INTEGER
     }
   },
   {
     sequelize,
-    tableName: 'Erros',
+    tableName: 'Telefone',
     timestamps: false
   }
 )

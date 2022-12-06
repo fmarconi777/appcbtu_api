@@ -3,7 +3,7 @@ import { RepositorioAlteraAlerta } from '@/dados/protocolos/bd/alerta/repositori
 import { RepositorioAlteraAlertaAtivo } from '@/dados/protocolos/bd/alerta/repositorio-altera-alerta-ativo'
 import { ModelosAlertas, RepositorioConsultaAlerta } from '@/dados/protocolos/bd/alerta/repositorio-consulta-alerta-todas'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Alerta } from '@/infraestrutura/bd/mariadb/models/modelo-alerta'
+import { Alerta } from '@/infraestrutura/sequelize/models/modelo-alerta'
 import { QueryTypes } from 'sequelize'
 
 export class RepositorioAlertaMariaDB implements RepositorioAlerta,
@@ -11,7 +11,7 @@ RepositorioConsultaAlerta,
 RepositorioAlteraAlertaAtivo,
 RepositorioAlteraAlerta {
   async inserir (dadosAlerta: DadosAlerta): Promise<ModeloAlerta> {
-    AuxiliaresMariaDB.verificaConexao()
+    await AuxiliaresMariaDB.verificaConexao()
     const alerta = await Alerta.create(this.transformaDados(dadosAlerta))
     const dataInicio = new Date(alerta.dataInicio).toISOString()
     const dataFim = new Date(alerta.dataFim).toISOString()
@@ -27,7 +27,7 @@ RepositorioAlteraAlerta {
   }
 
   async consultar (sigla?: string, idAlerta?: number): Promise<ModelosAlertas> { // refatorar consulta conforme o select do mysql
-    AuxiliaresMariaDB.verificaConexao()
+    await AuxiliaresMariaDB.verificaConexao()
     if (sigla) { //eslint-disable-line
       if(idAlerta) { //eslint-disable-line
         const consulta: any = await Alerta.sequelize?.query('select a.id, a.descricao, a.prioridade, a.dataInicio, a.dataFim, a.ativo, e.sigla from Alerta as a ' +
@@ -71,13 +71,13 @@ RepositorioAlteraAlerta {
   }
 
   async alterarAtivo (ativo: boolean, id: number): Promise<null> {
-    AuxiliaresMariaDB.verificaConexao()
+    await AuxiliaresMariaDB.verificaConexao()
     await Alerta.update({ ativo }, { where: { id } })
     return null
   }
 
   async alterar (dados: ModeloAlerta): Promise<string> {
-    AuxiliaresMariaDB.verificaConexao()
+    await AuxiliaresMariaDB.verificaConexao()
     await Alerta.update(this.transformaDados(dados), { where: { id: +dados.id } })
     return 'Alerta alterado com sucesso'
   }

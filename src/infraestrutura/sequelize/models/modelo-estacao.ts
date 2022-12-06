@@ -1,15 +1,15 @@
+import conexao from './index'
 import { Equipamento } from './modelo-equipamento'
 import { Alerta } from './modelo-alerta'
 import { Telefone } from './modelo-telefone'
 import { ModeloEstacao } from '@/dominio/modelos/estacao'
-import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 import { DataTypes, Model, Optional } from 'sequelize'
 
 interface AtributosEstacao extends Optional<ModeloEstacao, 'id'> {}
 
 export interface InstanciaEstacao extends Model<ModeloEstacao, AtributosEstacao> {}
 
-export const Estacao = AuxiliaresMariaDB.bd.define<InstanciaEstacao>(
+export const Estacao = conexao.sequelize.define<InstanciaEstacao>(
   'Estacao',
   {
     id: {

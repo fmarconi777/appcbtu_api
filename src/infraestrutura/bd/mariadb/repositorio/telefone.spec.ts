@@ -1,10 +1,10 @@
 import { RepositorioTelefoneMariaDB } from './telefone'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Telefone } from '@/infraestrutura/bd/mariadb/models/modelo-telefone'
+import { Telefone } from '@/infraestrutura/sequelize/models/modelo-telefone'
 
 describe('RepositorioTelefoneMariaDB', () => {
   beforeAll(async () => {
-    await AuxiliaresMariaDB.conectar()
+    await AuxiliaresMariaDB.conectar('test')
     console.log('conexão aberta')
   })
 

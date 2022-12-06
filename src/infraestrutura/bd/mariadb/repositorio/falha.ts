@@ -5,20 +5,20 @@ import { RepositorioAlteraFalha } from '@/dados/protocolos/bd/falha/repositorio-
 import { RepositorioCadastroFalha } from '@/dados/protocolos/bd/falha/repositorio-cadastro-falha'
 import { RepositorioConsultaFalha } from '@/dados/protocolos/bd/falha/repositorio-consulta-falha'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Falha } from '@/infraestrutura/bd/mariadb/models/modelo-falha'
+import { Falha } from '@/infraestrutura/sequelize/models/modelo-falha'
 
 export class RepositorioFalhaMariaDB implements
 RepositorioCadastroFalha,
 RepositorioConsultaFalha,
 RepositorioAlteraFalha {
   async inserir (dados: DadosFalha): Promise<string> {
-    AuxiliaresMariaDB.verificaConexao()
+    await AuxiliaresMariaDB.verificaConexao()
     await Falha.create(this.transformaDados(dados))
     return 'Falha cadastrada com sucesso'
   }
 
   async consultar (id?: number | undefined): Promise<ModeloFalha | ModeloFalha[] | null> {
-    AuxiliaresMariaDB.verificaConexao()
+    await AuxiliaresMariaDB.verificaConexao()
     if (id) { // eslint-disable-line
       const resultado: any = await Falha.findByPk(id)
       if (resultado) { // eslint-disable-line
@@ -36,7 +36,7 @@ RepositorioAlteraFalha {
   }
 
   async alterar (dados: FalhaAlterada): Promise<string> {
-    AuxiliaresMariaDB.verificaConexao()
+    await AuxiliaresMariaDB.verificaConexao()
     await Falha.update({ numFalha: dados.numFalha, equipamentoId: dados.equipamentoId }, { where: { id: dados.id } })
     return 'Falha alterada com sucesso'
   }

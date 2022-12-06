@@ -1,7 +1,7 @@
 import app from '@/principal/config/app'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
-import { Telefone } from '@/infraestrutura/bd/mariadb/models/modelo-telefone'
-import { Funcionario } from '@/infraestrutura/bd/mariadb/models/modelo-funcionarios'
+import { Telefone } from '@/infraestrutura/sequelize/models/modelo-telefone'
+import { Funcionario } from '@/infraestrutura/sequelize/models/modelo-funcionarios'
 import 'dotenv/config'
 import request from 'supertest'
 import { hash } from 'bcrypt'
@@ -9,7 +9,7 @@ import { sign } from 'jsonwebtoken'
 
 describe('Rotas Telefone', () => {
   beforeAll(async () => {
-    await AuxiliaresMariaDB.conectar()
+    await AuxiliaresMariaDB.conectar('test')
     console.log('conexao aberta')
   })
 

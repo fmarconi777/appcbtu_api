@@ -1,7 +1,7 @@
-import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
+import conexao from './index'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 
-const sequelize = AuxiliaresMariaDB.bd
+const sequelize = conexao.sequelize
 
 export class Falha extends Model<
 InferAttributes<Falha>,
