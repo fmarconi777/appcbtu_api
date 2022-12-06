@@ -15,7 +15,7 @@
     "test:integration": "npm test -- --watch -c jest-integration-config.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Felipe Pedrosa",
   "license": "ISC",
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

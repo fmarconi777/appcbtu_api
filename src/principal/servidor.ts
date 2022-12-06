@@ -2,7 +2,7 @@ import 'module-alias/register'
 import { AuxiliaresMariaDB } from '@/infraestrutura/bd/mariadb/auxiliares/auxiliar-mariadb'
 import 'dotenv/config'
 
-AuxiliaresMariaDB.conectar('')
+AuxiliaresMariaDB.conectar(process.env.AMBIENTE as string)
   .then(async () => {
     const app = (await import('./config/app')).default
     console.log('Conexão estabelecida com sucesso.')
